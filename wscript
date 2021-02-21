@@ -3,6 +3,7 @@ from waflib.extras.test_base import summary
 
 def depends(dep):
     dep("pynn-brainscales")
+    dep("hxtorch")
 
 
 def options(opt):
@@ -25,7 +26,7 @@ def build(bld):
     bld(name="doc-much-demos-such-wow_shelltests",
         tests=bld.path.ant_glob("tests/shell/**/*"),
         features="use shelltest",
-        use="doc-much-demos-such-wow-jupyter pynn_brainscales2",
+        use="doc-much-demos-such-wow-jupyter pynn_brainscales2 hxtorch",
         test_environ=dict(BLD_DIR=str(blddir)))
 
     bld.add_post_fun(summary)
