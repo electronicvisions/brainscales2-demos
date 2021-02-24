@@ -1,0 +1,101 @@
+@Library("jenlib") _
+
+import org.electronicvisions.jenlib.ShellManipulator
+
+final String PROJECT_NAME = "much-demos-such-wow"
+
+try {
+	String virtualEnvPath = null
+
+	// sphinxcontrib-jupyter is not yet in the latest container
+	stage("Prepare venv") {
+		runOnSlave(label: "frontend") {
+			inSingularity(app: "dls") {
+				virtualEnvPath = "${WORKSPACE}/venv"
+				jesh("virtualenv --system-site-packages ${virtualEnvPath}")
+
+				inVirtualEnv(virtualEnvPath) {
+					jesh("pip install sphinxcontrib-jupyter")
+				}
+			}
+		}
+	}
+
+	// Cannot use wafDefaultPipeline with venv, because venv needs to be activated inside the container:
+	//   * venv does not fill the SINGULARITY prefixed environment variables
+	//   * our singularity container overrides $PYTHONHOME
+	withCcache() {
+		inSingularity(app: "dls") {
+			inVirtualEnv(virtualEnvPath) {
+				withWaf() {
+					wafSetup(projects: ["${PROJECT_NAME}"])
+
+					stage("Build") {
+						onSlurmResource(partition: "jenkins", "cpus-per-task": "8") {
+							jesh("waf configure install --test-execnone")
+						}
+					}
+
+					stage("Tests") {
+						onSlurmResource(partition: "cube", wafer: 62, "fpga-without-aout": 0) {
+							configureHxCubeBitfile()
+							jesh("waf build --test-execall -j1")
+						}
+					}
+				}
+			}
+		}
+	}
+
+	stage("Test Evaluation") {
+		runOnSlave(label: "frontend") {
+			String xmlResultPattern = "build/test_results/**/*.xml"
+			archiveArtifacts xmlResultPattern
+
+			step([$class       : 'XUnitPublisher',
+			      thresholdMode: 1,
+			      thresholds   : [[$class           : 'FailedThreshold',
+			                       unstableThreshold: '0'],
+			      ],
+			      tools        : [[$class               : 'GoogleTestType',
+			                       deleteOutputFiles    : true,
+			                       failIfNotNew         : true,
+			                       pattern              : xmlResultPattern,
+			                       skipNoTestFiles      : false,
+			                       stopProcessingIfError: true]
+			      ]
+			])
+		}
+	}
+
+	stage("Archive Results") {
+		runOnSlave(label: "frontend") {
+			archiveArtifacts("build/${PROJECT_NAME}/jupyter/**/*")
+			publishHTML([allowMissing: false,
+			             reportDir   : "build/${PROJECT_NAME}/html",
+			             reportFiles : "index.html",
+			             reportName  : "HTML Output"])
+		}
+	}
+} catch (Throwable t) {
+	notifyFailure(mattermostChannel: "#1nicedemo")
+	throw t
+}
+
+if (currentBuild.currentResult != "SUCCESS") {
+	notifyFailure(mattermostChannel: "#1nicedemo")
+}
+
+
+void inVirtualEnv(String path, Closure content) {
+	ShellManipulator manipulator = ShellManipulator.fromEnvironment(this)
+	manipulator.add(". ${path}/bin/activate && ", "")
+
+	try {
+		content()
+	} catch (Throwable anything) {
+		throw anything
+	} finally {
+		manipulator.restore()
+	}
+}
