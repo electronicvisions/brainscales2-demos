@@ -11,7 +11,7 @@ To add a code block you can use ``code-block`` directives such as:
 
 .. code-block:: python3
 
-    %matplotlib inline
+    print("This is a python cell from simple_example.rst")
 
 .. code-block:: python3
 
