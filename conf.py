@@ -1,9 +1,6 @@
 #!/usr/bin/env python3
 # -*- coding: utf-8 -*-
 #
-# sphinxcontrib-jupyter.minimal documentation build configuration file, created by
-# sphinx-quickstart on Tue Jan 30 14:46:58 2018.
-#
 # This file is execfile()d with the current directory set to its
 # containing dir.
 #
@@ -46,9 +43,9 @@ source_suffix = '.rst'
 master_doc = 'index'
 
 # General information about the project.
-project = 'sphinxcontrib-jupyter.minimal'
-copyright = '2018, QuantEcon Development Team'
-author = 'QuantEcon Development Team'
+project = 'brainscales2-demos'
+copyright = '2021, Electronic Vision(s)'
+author = 'Electronic Vision(s) Group'
 
 # The version info for the project you're documenting, acts as replacement for
 # |version| and |release|, also used in various other places throughout the
@@ -107,7 +104,6 @@ html_sidebars = {
         'navigation.html',
         'relations.html',  # needs 'show_related': True theme option to display
         'searchbox.html',
-        'donate.html',
     ]
 }
 
@@ -115,7 +111,7 @@ html_sidebars = {
 # -- Options for HTMLHelp output ------------------------------------------
 
 # Output file base name for HTML help builder.
-htmlhelp_basename = 'sphinxcontrib-jupyterminimaldoc'
+htmlhelp_basename = 'demosdoc'
 
 
 # -- Options for LaTeX output ---------------------------------------------
@@ -142,8 +138,8 @@ latex_elements = {
 # (source start file, target name, title,
 #  author, documentclass [howto, manual, or own class]).
 latex_documents = [
-    (master_doc, 'sphinxcontrib-jupyterminimal.tex', 'sphinxcontrib-jupyter.minimal Documentation',
-     'QuantEcon Development Team', 'manual'),
+    (master_doc, 'brainscales2-demos.tex', 'BrainScaleS-2 Demos',
+     'Electronic Vision(s) Group', 'manual'),
 ]
 
 
@@ -152,7 +148,7 @@ latex_documents = [
 # One entry per manual page. List of tuples
 # (source start file, name, description, authors, manual section).
 man_pages = [
-    (master_doc, 'sphinxcontrib-jupyterminimal', 'sphinxcontrib-jupyter.minimal Documentation',
+    (master_doc, 'brainscales2-demos', 'BrainScaleS-2 Demos',
      [author], 1)
 ]
 
@@ -163,8 +159,8 @@ man_pages = [
 # (source start file, target name, title, author,
 #  dir menu entry, description, category)
 texinfo_documents = [
-    (master_doc, 'sphinxcontrib-jupyterminimal', 'sphinxcontrib-jupyter.minimal Documentation',
-     author, 'sphinxcontrib-jupyterminimal', 'One line description of project.',
+    (master_doc, 'sphinxcontrib-jupyterminimal', 'BrainScaleS-2 Demos',
+     author, 'brainscales2-demos', 'Demos and tutorials for BrainScaleS-2',
      'Miscellaneous'),
 ]
 
@@ -191,14 +187,6 @@ jupyter_kernels = {
             "name": "python3"
         },
         "file_extension": ".py",
-    },
-    "julia": {
-        "kernelspec": {
-            "display_name": "Julia 0.6.0",
-            "language": "julia",
-            "name": "julia-0.6"
-        },
-        "file_extension": ".jl"
     }
 }
 
@@ -206,8 +194,6 @@ jupyter_kernels = {
 jupyter_headers = {
     "python3": [
         # nbformat.v4.new_code_cell("%autosave 0")      #@mmcky please make this an option
-    ],
-    "julia": [
     ],
 }
 

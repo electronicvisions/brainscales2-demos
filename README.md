@@ -1,30 +1,8 @@
-# sphinxcontrib-jupyter.minimal
+# BrainScaleS-2 Demos and Tutorials
 
-A Minimal Example of the Jupyter Sphinx Extension
+This repository contains usuage examples for the BrainScaleS-2 toplevel APIs.
 
-This is a minimal example of a Sphinx project that is setup
-to use the [Jupyter Extension](https://github.com/QuantEcon/sphinxcontrib-jupyter)
-
-This requires you to install the extension:
-
-    pip install sphinxcontrib-jupyter
-
-> **Note:** This example currently only works using the latest [master](https://github.com/QuantEcon/sphinxcontrib-jupyter)
-> and installing using `python setup.py install`. Awaiting for PyPI credentials to update releases. 
-
-Once cloned you should be able to run:
-
-    make jupyter
-
-to generate a small set of demo jupyter notebooks.
-
-Generated notebooks can be found in the `_build/jupyter/` folder.
-
-## simple_notebook.rst
-
-![simple_notebook.rst](_static/simple_notebook.png)
-
-# Visionary Flow
+## Visionary Flow
 
 Run in container (`singularity shell --app dls /containers/stable/latest`):
 
@@ -37,4 +15,4 @@ make html
 make jupyter
 ```
 
-To look at the result file: `jupyter-notebook _build/jupyter/simple_notebook.ipynb`.
+To look at the result files: `jupyter-notebook _build/jupyter`.
