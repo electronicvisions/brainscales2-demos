@@ -12,6 +12,7 @@ Welcome to the BrainScaleS-2 Demos & Examples!
    4-hagen_properties
    5-plasticity_rate_coding
    6-multicompartment
+   7-yin_yang_itl
 
 .. toctree::
    :maxdepth: 1
