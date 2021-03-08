@@ -24,6 +24,14 @@ try {
 			             reportName  : "HTML Output"])
 		}
 	}
+
+	if (env.GERRIT_EVENT_TYPE == "change-merged") {
+		stage("Deploy HTML as github pages") {
+			runOnSlave(label: "frontend") {
+				jesh("bash ${PROJECT_NAME}/.ci/deploy_html_gh-pages.sh")
+			}
+		}
+	}
 } catch (Throwable t) {
 	notifyFailure(mattermostChannel: "#1nicedemo")
 	throw t
