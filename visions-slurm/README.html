@@ -1,0 +1,177 @@
+
+<!DOCTYPE html>
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta charset="utf-8" />
+    <title>Slurm Workload Manager &#8212; sphinxcontrib-jupyter.minimal 0.1 documentation</title>
+    <link rel="stylesheet" href="../_static/alabaster.css" type="text/css" />
+    <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
+    <script type="text/javascript" id="documentation_options" data-url_root="../" src="../_static/documentation_options.js"></script>
+    <script type="text/javascript" src="../_static/jquery.js"></script>
+    <script type="text/javascript" src="../_static/underscore.js"></script>
+    <script type="text/javascript" src="../_static/doctools.js"></script>
+    <script type="text/javascript" src="../_static/language_data.js"></script>
+    <script async="async" type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/latest.js?config=TeX-AMS-MML_HTMLorMML"></script>
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" />
+   
+  <link rel="stylesheet" href="../_static/custom.css" type="text/css" />
+  
+  
+  <meta name="viewport" content="width=device-width, initial-scale=0.9, maximum-scale=0.9" />
+
+  </head><body>
+  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          
+
+          <div class="body" role="main">
+            
+  <div class="section" id="slurm-workload-manager">
+<h1>Slurm Workload Manager<a class="headerlink" href="#slurm-workload-manager" title="Permalink to this headline">¶</a></h1>
+<p>This is the Slurm Workload Manager. Slurm
+is an open-source cluster resource management and job scheduling system
+that strives to be simple, scalable, portable, fault-tolerant, and
+interconnect agnostic. Slurm currently has been tested only under Linux.</p>
+<p>As a cluster resource manager, Slurm provides three key functions. First,
+it allocates exclusive and/or non-exclusive access to resources
+(compute nodes) to users for some duration of time so they can perform
+work. Second, it provides a framework for starting, executing, and
+monitoring work (normally a parallel job) on the set of allocated
+nodes. Finally, it arbitrates conflicting requests for resources by
+managing a queue of pending work.</p>
+</div>
+<div class="section" id="notes-for-github-developers">
+<h1>NOTES FOR GITHUB DEVELOPERS<a class="headerlink" href="#notes-for-github-developers" title="Permalink to this headline">¶</a></h1>
+<dl class="simple">
+<dt>The official issue tracker for Slurm is at</dt><dd><p><a class="reference external" href="https://bugs.schedmd.com/">https://bugs.schedmd.com/</a></p>
+</dd>
+</dl>
+<p>We welcome code contributions and patches, but <strong>we do not accept Pull Requests
+through Github at this time.</strong> Please submit patches as attachments to new
+issues under the “C - Contributions” severity level.</p>
+</div>
+<div class="section" id="source-distribution-hierarchy">
+<h1>SOURCE DISTRIBUTION HIERARCHY<a class="headerlink" href="#source-distribution-hierarchy" title="Permalink to this headline">¶</a></h1>
+<p>The top-level distribution directory contains this README as well as
+other high-level documentation files, and the scripts used to configure
+and build Slurm (see INSTALL). Subdirectories contain the source-code
+for Slurm as well as a DejaGNU test suite and further documentation. A
+quick description of the subdirectories of the Slurm distribution follows:</p>
+<blockquote>
+<div><dl class="simple">
+<dt>src/        [ Slurm source ]</dt><dd><p>Slurm source code is further organized into self explanatory
+subdirectories such as src/api, src/slurmctld, etc.</p>
+</dd>
+<dt>doc/        [ Slurm documentation ]</dt><dd><p>The documentation directory contains some latex, html, and ascii
+text papers, READMEs, and guides. Manual pages for the Slurm
+commands and configuration files are also under the doc/ directory.</p>
+</dd>
+<dt>etc/        [ Slurm configuration ]</dt><dd><p>The etc/ directory contains a sample config file, as well as
+some scripts useful for running Slurm.</p>
+</dd>
+<dt>slurm/      [ Slurm include files ]</dt><dd><p>This directory contains installed include files, such as slurm.h
+and slurm_errno.h, needed for compiling against the Slurm API.</p>
+</dd>
+<dt>testsuite/  [ Slurm test suite ]</dt><dd><p>The testsuite directory contains the framework for a set of
+DejaGNU and “make check” type tests for Slurm components.
+There is also an extensive collection of Expect scripts.</p>
+</dd>
+<dt>auxdir/     [ autotools directory ]</dt><dd><p>Directory for autotools scripts and files used to configure and
+build Slurm</p>
+</dd>
+<dt>contribs/   [ helpful tools outside of Slurm proper ]</dt><dd><p>Directory for anything that is outside of slurm proper such as a
+different api or such.  To have this build you need to do a
+make contrib/install-contrib.</p>
+</dd>
+</dl>
+</div></blockquote>
+</div>
+<div class="section" id="compiling-and-installing-the-distribution">
+<h1>COMPILING AND INSTALLING THE DISTRIBUTION<a class="headerlink" href="#compiling-and-installing-the-distribution" title="Permalink to this headline">¶</a></h1>
+<dl class="simple">
+<dt>Please see the instructions at</dt><dd><p><a class="reference external" href="https://slurm.schedmd.com/quickstart_admin.html">https://slurm.schedmd.com/quickstart_admin.html</a></p>
+</dd>
+<dt>Extensive documentation is available from our home page at</dt><dd><p><a class="reference external" href="https://slurm.schedmd.com/slurm.html">https://slurm.schedmd.com/slurm.html</a></p>
+</dd>
+</dl>
+</div>
+<div class="section" id="legal">
+<h1>LEGAL<a class="headerlink" href="#legal" title="Permalink to this headline">¶</a></h1>
+<p>Slurm is provided “as is” and with no warranty. This software is
+distributed under the GNU General Public License, please see the files
+COPYING, DISCLAIMER, and LICENSE.OpenSSL for details.</p>
+</div>
+
+
+          </div>
+          
+        </div>
+      </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper">
+<h1 class="logo"><a href="../index.html">sphinxcontrib-jupyter.minimal</a></h1>
+
+
+
+
+
+
+
+
+<h3>Navigation</h3>
+<p class="caption"><span class="caption-text">Contents:</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../simple_notebook.html">Simple Notebook Example</a></li>
+</ul>
+
+<div class="relations">
+<h3>Related Topics</h3>
+<ul>
+  <li><a href="../index.html">Documentation overview</a><ul>
+  </ul></li>
+</ul>
+</div>
+<div id="searchbox" style="display: none" role="search">
+  <h3 id="searchlabel">Quick search</h3>
+    <div class="searchformwrapper">
+    <form class="search" action="../search.html" method="get">
+      <input type="text" name="q" aria-labelledby="searchlabel" />
+      <input type="submit" value="Go" />
+    </form>
+    </div>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+
+
+
+
+
+
+
+
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="footer">
+      &copy;2018, QuantEcon Development Team.
+      
+      |
+      Powered by <a href="http://sphinx-doc.org/">Sphinx 2.2.0</a>
+      &amp; <a href="https://github.com/bitprophet/alabaster">Alabaster 0.7.12</a>
+      
+      |
+      <a href="../_sources/visions-slurm/README.rst.txt"
+          rel="nofollow">Page source</a>
+    </div>
+
+    
+
+    
+  </body>
+</html>
