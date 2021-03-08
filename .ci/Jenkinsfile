@@ -17,7 +17,7 @@ try {
 
 	stage("Archive Results") {
 		runOnSlave(label: "frontend") {
-			archiveArtifacts("build/${PROJECT_NAME}/jupyter/**/*")
+			archiveArtifacts("build/${PROJECT_NAME}/**/*")
 			publishHTML([allowMissing: false,
 			             reportDir   : "build/${PROJECT_NAME}/html",
 			             reportFiles : "index.html",
