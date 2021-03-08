@@ -1,0 +1,385 @@
+
+
+<!DOCTYPE html>
+<!--[if IE 8]><html class="no-js lt-ie9" lang="en" > <![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js" lang="en" > <!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  <title>Exploring the analog MAC operation &mdash; BrainScaleS-2 Demos &amp; Examples 2021-03-18 documentation</title>
+  
+
+  
+  
+  
+  
+
+  
+  <script type="text/javascript" src="_static/js/modernizr.min.js"></script>
+  
+    
+      <script type="text/javascript" id="documentation_options" data-url_root="./" src="_static/documentation_options.js"></script>
+        <script type="text/javascript" src="_static/jquery.js"></script>
+        <script type="text/javascript" src="_static/underscore.js"></script>
+        <script type="text/javascript" src="_static/doctools.js"></script>
+        <script type="text/javascript" src="_static/language_data.js"></script>
+        <script async="async" type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/latest.js?config=TeX-AMS-MML_HTMLorMML"></script>
+    
+    <script type="text/javascript" src="_static/js/theme.js"></script>
+
+    
+
+  
+  <link rel="stylesheet" href="_static/css/theme.css" type="text/css" />
+  <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+    <link rel="index" title="Index" href="genindex.html" />
+    <link rel="search" title="Search" href="search.html" />
+    <link rel="next" title="Train DNNs on BrainScaleS-2" href="5-yin_yang_itl.html" />
+    <link rel="prev" title="Introduction to matrix multiplication" href="3-hagen_intro.html" /> 
+</head>
+
+<body class="wy-body-for-nav">
+
+   
+  <div class="wy-grid-for-nav">
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+          
+
+          
+            <a href="index.html" class="icon icon-home"> BrainScaleS-2 Demos & Examples
+          
+
+          
+          </a>
+
+          
+            
+            
+              <div class="version">
+                2021-03-18
+              </div>
+            
+          
+
+          
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+
+          
+        </div>
+
+        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+          
+            
+            
+              
+            
+            
+              <p class="caption"><span class="caption-text">Contents:</span></p>
+<ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="0-welcome.html">Welcome to the BrainScaleS-2 Tutorial</a></li>
+<li class="toctree-l1"><a class="reference internal" href="1-single_neuron_demo.html">BrainScaleS-2 single neuron experiments</a></li>
+<li class="toctree-l1"><a class="reference internal" href="2-superspike.html">Learning with the SuperSpike rule</a></li>
+<li class="toctree-l1"><a class="reference internal" href="3-hagen_intro.html">Introduction to matrix multiplication</a></li>
+<li class="toctree-l1 current"><a class="current reference internal" href="#">Exploring the analog MAC operation</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="#the-hxtorch-api">The <code class="docutils literal notranslate"><span class="pre">hxtorch</span></code> API</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#noise-and-fixed-pattern-deviations">Noise and fixed-pattern deviations</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#linearity-of-the-mac-operation">Linearity of the MAC operation</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#possible-questions">Possible questions:</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#how-does-the-result-change-with-several-successive-calls-to-hxtorch-matmul">How does the result change with several successive calls to <code class="docutils literal notranslate"><span class="pre">hxtorch.matmul</span></code>?</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#what-is-the-relationship-between-input-and-output-is-it-linear">What is the relationship between input and output? Is it linear?</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#negative-inputs">Negative inputs?</a></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="5-yin_yang_itl.html">Train DNNs on BrainScaleS-2</a></li>
+</ul>
+
+            
+          
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" aria-label="top navigation">
+        
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="index.html">BrainScaleS-2 Demos & Examples</a>
+        
+      </nav>
+
+
+      <div class="wy-nav-content">
+        
+        <div class="rst-content">
+        
+          
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation">
+
+  <ul class="wy-breadcrumbs">
+    
+      <li><a href="index.html">Docs</a> &raquo;</li>
+        
+          <li><a href="0-welcome.html">Welcome to the BrainScaleS-2 Tutorial</a> &raquo;</li>
+        
+      <li>Exploring the analog MAC operation</li>
+    
+    
+      <li class="wy-breadcrumbs-aside">
+        
+            
+            <a href="_sources/4-hagen_basics.rst.txt" rel="nofollow"> View page source</a>
+          
+        
+      </li>
+    
+  </ul>
+
+  
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+            
+  <div class="section" id="exploring-the-analog-mac-operation">
+<h1>Exploring the analog MAC operation<a class="headerlink" href="#exploring-the-analog-mac-operation" title="Permalink to this headline">¶</a></h1>
+<p>This example presents the non-spiking mode of the BrainScaleS-2 ASIC and
+some of its characteristics. The operation of this so-called hagen mode
+is explained in more detail at the end of the <a class="reference external" href="single_neuron">single neuron
+tutorial</a>.</p>
+<p>First, we import some things needed later:</p>
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="o">%</span><span class="k">matplotlib</span> notebook
+<span class="kn">import</span> <span class="nn">numpy</span> <span class="kn">as</span> <span class="nn">np</span>
+<span class="kn">import</span> <span class="nn">torch</span>
+<span class="kn">import</span> <span class="nn">hxtorch</span>
+
+<span class="kn">import</span> <span class="nn">matplotlib</span> <span class="kn">as</span> <span class="nn">mpl</span>
+<span class="kn">import</span> <span class="nn">matplotlib.pyplot</span> <span class="kn">as</span> <span class="nn">plt</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">style</span><span class="o">.</span><span class="n">use</span><span class="p">(</span><span class="s2">&quot;_static/matplotlibrc&quot;</span><span class="p">)</span>
+
+<span class="kn">from</span> <span class="nn">IPython.display</span> <span class="kn">import</span> <span class="n">clear_output</span>
+<span class="kn">from</span> <span class="nn">ipywidgets</span> <span class="kn">import</span> <span class="n">interact</span><span class="p">,</span> <span class="n">IntSlider</span>
+<span class="kn">from</span> <span class="nn">functools</span> <span class="kn">import</span> <span class="n">partial</span>
+<span class="n">IntSlider</span> <span class="o">=</span> <span class="n">partial</span><span class="p">(</span><span class="n">IntSlider</span><span class="p">,</span> <span class="n">continuous_update</span><span class="o">=</span><span class="bp">False</span><span class="p">)</span>
+</pre></div>
+</div>
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="o">%%html</span>
+<span class="p">&lt;</span><span class="nt">style</span><span class="p">&gt;.</span><span class="nc">output_wrapper</span> <span class="nt">button</span><span class="p">.</span><span class="nc">btn-default</span><span class="o">,</span><span class="p">.</span><span class="nc">output_wrapper</span> <span class="p">.</span><span class="nc">ui-dialog-titlebar</span><span class="p">{</span><span class="k">display</span><span class="p">:</span><span class="kc">none</span><span class="p">}&lt;/</span><span class="nt">style</span><span class="p">&gt;</span>
+</pre></div>
+</div>
+<div class="section" id="the-hxtorch-api">
+<h2>The <code class="docutils literal notranslate"><span class="pre">hxtorch</span></code> API<a class="headerlink" href="#the-hxtorch-api" title="Permalink to this headline">¶</a></h2>
+<div class="line-block">
+<div class="line">The hagen mode provides an analog multiply accumulate operation (MAC)
+which is performed on the ASIC.</div>
+<div class="line"><strong>hxtorch</strong> represents the corresponding high-level API that integrates
+this functionality into <a class="reference external" href="https://pytorch.org/">PyTorch</a>.
+In analogy to some functions of this  machine-learning framework,
+operations with similar API are provided, e.g. <code class="docutils literal notranslate"><span class="pre">matmul</span></code> for
+multiplication of two matrices:</div>
+</div>
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="k">print</span><span class="p">(</span><span class="n">hxtorch</span><span class="o">.</span><span class="n">matmul</span><span class="o">.</span><span class="vm">__doc__</span><span class="p">)</span>
+</pre></div>
+</div>
+<pre class="solution literal-block">matmul(input: at::Tensor, other: at::Tensor, num_sends: int = 1,
+       wait_between_events: int = 5, mock: bool = False) -&gt; at::Tensor
+
+Drop-in replacement for <code class="xref py py-meth docutils literal notranslate"><span class="pre">torch.matmul()</span></code> that uses HICANN-X.
+The current implementation only supports <code class="docutils literal notranslate"><span class="pre">other</span></code> to be 1D or 2D.
+
+:param input: First input tensor, allowed range [0, 31]
+:param other: Second input tensor, allowed range: [-63, 63]
+:param num_sends: How often to send the (same) input vector
+:param wait_between_events: How long to wait (in FPGA cycles) between events
+:returns: Resulting tensor</pre>
+<p>Before the hardware can be used, a connection must be created and a
+default calibration must be loaded using <code class="docutils literal notranslate"><span class="pre">hxtorch.init</span></code>:</p>
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># initializes the hardware connection</span>
+<span class="c1"># and applies a default calibration</span>
+<span class="n">hxtorch</span><span class="o">.</span><span class="n">init</span><span class="p">()</span>
+</pre></div>
+</div>
+<p><code class="docutils literal notranslate"><span class="pre">hxtorch</span></code> integrates the MAC operation into PyTorch on a per-operation
+basis (but also supports the combination of multiple operations) and is
+executed just-in-time on the BrainScaleS-2 hardware.</p>
+<a class="reference internal image-reference" href="_images/hxtorch_matmul.png"><img alt="_images/hxtorch_matmul.png" class="align-center" src="_images/hxtorch_matmul.png" style="width: 80%;" /></a>
+<p>A decisive advantage of the matrix multiplication mode is the possibility
+to decompose large operations and smaller parts and either multiplex them
+in time or even divide them among several BrainScaleS-2 ASICs:</p>
+<a class="reference internal image-reference" href="_images/hxtorch_partitioning.png"><img alt="_images/hxtorch_partitioning.png" class="align-center" src="_images/hxtorch_partitioning.png" style="width: 80%;" /></a>
+</div>
+<div class="section" id="noise-and-fixed-pattern-deviations">
+<h2>Noise and fixed-pattern deviations<a class="headerlink" href="#noise-and-fixed-pattern-deviations" title="Permalink to this headline">¶</a></h2>
+<p>Despite calibration and even with the same inputs and weights, the
+outputs of the different neurons are not identical. On the one hand,
+each output has a statistical noise due to the analog nature of the
+neuron, on the other hand, fixed-pattern deviations show up between the
+individual neurons.Especially in the case of small inputs, a spatial
+correlation may also become apparent, resulting from different distances
+to the synapse drivers.</p>
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">neurons</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">arange</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">256</span><span class="p">)</span>
+<span class="n">slices</span> <span class="o">=</span> <span class="p">[</span><span class="nb">slice</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">128</span><span class="p">),</span> <span class="nb">slice</span><span class="p">(</span><span class="mi">128</span><span class="p">,</span> <span class="mi">256</span><span class="p">)]</span>
+
+<span class="n">fig</span><span class="p">,</span> <span class="n">axes</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">subplots</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="n">sharey</span><span class="o">=</span><span class="bp">True</span><span class="p">)</span>
+
+<span class="nd">@interact</span><span class="p">(</span>
+    <span class="n">num_sends</span><span class="o">=</span><span class="n">IntSlider</span><span class="p">(</span><span class="mi">100</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">256</span><span class="p">,</span> <span class="n">description</span><span class="o">=</span><span class="s2">&quot;num sends&quot;</span><span class="p">),</span>
+    <span class="n">input_value</span><span class="o">=</span><span class="n">IntSlider</span><span class="p">(</span><span class="mi">12</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">31</span><span class="p">,</span> <span class="n">description</span><span class="o">=</span><span class="s2">&quot;input value&quot;</span><span class="p">),</span>
+    <span class="n">weight_value</span><span class="o">=</span><span class="n">IntSlider</span><span class="p">(</span><span class="mi">21</span><span class="p">,</span> <span class="o">-</span><span class="mi">63</span><span class="p">,</span> <span class="mi">63</span><span class="p">,</span> <span class="n">description</span><span class="o">=</span><span class="s2">&quot;weight value&quot;</span><span class="p">),</span>
+    <span class="n">row_number</span><span class="o">=</span><span class="n">IntSlider</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">127</span><span class="p">,</span> <span class="n">description</span><span class="o">=</span><span class="s2">&quot;row number&quot;</span><span class="p">),</span>
+<span class="p">)</span>
+<span class="k">def</span> <span class="nf">update_plot</span><span class="p">(</span><span class="n">num_sends</span><span class="p">,</span> <span class="n">input_value</span><span class="p">,</span> <span class="n">weight_value</span><span class="p">,</span> <span class="n">row_number</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot; Updates the plot with the outputs from the hardware &quot;&quot;&quot;</span>
+    <span class="n">out</span> <span class="o">=</span> <span class="n">hxtorch</span><span class="o">.</span><span class="n">matmul</span><span class="p">(</span>
+        <span class="n">torch</span><span class="o">.</span><span class="n">tensor</span><span class="p">([</span><span class="mf">0.</span><span class="p">]</span> <span class="o">*</span> <span class="n">row_number</span> <span class="o">+</span> <span class="p">[</span><span class="n">input_value</span><span class="p">],</span> <span class="n">dtype</span><span class="o">=</span><span class="n">torch</span><span class="o">.</span><span class="n">float</span><span class="p">),</span>
+        <span class="n">torch</span><span class="o">.</span><span class="n">full</span><span class="p">((</span><span class="n">row_number</span> <span class="o">+</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">256</span><span class="p">),</span> <span class="n">weight_value</span><span class="p">,</span> <span class="n">dtype</span><span class="o">=</span><span class="n">torch</span><span class="o">.</span><span class="n">float</span><span class="p">),</span>
+        <span class="n">num_sends</span><span class="o">=</span><span class="n">num_sends</span><span class="p">)</span>
+    <span class="k">for</span> <span class="n">ax</span><span class="p">,</span> <span class="n">s</span> <span class="ow">in</span> <span class="nb">zip</span><span class="p">(</span><span class="n">axes</span><span class="p">,</span> <span class="n">slices</span><span class="p">):</span>
+        <span class="n">ax</span><span class="o">.</span><span class="n">clear</span><span class="p">()</span>
+        <span class="n">ax</span><span class="o">.</span><span class="n">set_ylim</span><span class="p">(</span><span class="o">-</span><span class="mi">130</span><span class="p">,</span> <span class="mi">130</span><span class="p">)</span>
+        <span class="n">ax</span><span class="o">.</span><span class="n">set_xlabel</span><span class="p">(</span><span class="s2">&quot;neuron #&quot;</span><span class="p">)</span>
+        <span class="n">ax</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">neurons</span><span class="p">[</span><span class="n">s</span><span class="p">],</span> <span class="n">out</span><span class="p">[</span><span class="n">s</span><span class="p">],</span> <span class="n">c</span><span class="o">=</span><span class="s2">&quot;C0&quot;</span><span class="p">)</span>
+    <span class="n">axes</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">set_ylabel</span><span class="p">(</span><span class="s2">&quot;output&quot;</span><span class="p">);</span> <span class="n">axes</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">invert_xaxis</span><span class="p">()</span>
+</pre></div>
+</div>
+<a class="reference internal image-reference" href="_images/hagen_properties_fig1.png"><img alt="_images/hagen_properties_fig1.png" class="align-center" src="_images/hagen_properties_fig1.png" style="width: 90%;" /></a>
+</div>
+<div class="section" id="linearity-of-the-mac-operation">
+<h2>Linearity of the MAC operation<a class="headerlink" href="#linearity-of-the-mac-operation" title="Permalink to this headline">¶</a></h2>
+<p>The next plot shows the linear relationship between input, weight and
+output. For this purpose, a constant input is multiplied by a linearly
+increasing weight vector.</p>
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">weight</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">arange</span><span class="p">(</span><span class="o">-</span><span class="mi">63</span><span class="p">,</span> <span class="mf">64.</span><span class="p">)</span><span class="o">.</span><span class="n">repeat_interleave</span><span class="p">(</span><span class="mi">2</span><span class="p">)</span>
+
+<span class="n">fig</span><span class="p">,</span> <span class="n">ax</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">subplots</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">)</span>
+
+<span class="nd">@interact</span><span class="p">(</span>
+    <span class="n">num_sends</span><span class="o">=</span><span class="n">IntSlider</span><span class="p">(</span><span class="mi">100</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">256</span><span class="p">,</span> <span class="n">description</span><span class="o">=</span><span class="s2">&quot;num sends&quot;</span><span class="p">),</span>
+    <span class="n">input_value</span><span class="o">=</span><span class="n">IntSlider</span><span class="p">(</span><span class="mi">12</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">31</span><span class="p">,</span> <span class="n">description</span><span class="o">=</span><span class="s2">&quot;input value&quot;</span><span class="p">),</span>
+    <span class="n">row_number</span><span class="o">=</span><span class="n">IntSlider</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">127</span><span class="p">,</span> <span class="n">description</span><span class="o">=</span><span class="s2">&quot;row number&quot;</span><span class="p">),</span>
+<span class="p">)</span>
+<span class="k">def</span> <span class="nf">update</span><span class="p">(</span><span class="n">num_sends</span><span class="p">,</span> <span class="n">input_value</span><span class="p">,</span> <span class="n">row_number</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot; Updates the plot with the outputs from the hardware &quot;&quot;&quot;</span>
+    <span class="n">out</span> <span class="o">=</span> <span class="n">hxtorch</span><span class="o">.</span><span class="n">matmul</span><span class="p">(</span>
+        <span class="n">torch</span><span class="o">.</span><span class="n">tensor</span><span class="p">([</span><span class="mf">0.</span><span class="p">]</span> <span class="o">*</span> <span class="n">row_number</span> <span class="o">+</span> <span class="p">[</span><span class="n">input_value</span><span class="p">],</span> <span class="n">dtype</span><span class="o">=</span><span class="n">torch</span><span class="o">.</span><span class="n">float</span><span class="p">),</span>
+        <span class="n">weight</span><span class="o">.</span><span class="n">unsqueeze</span><span class="p">(</span><span class="mi">0</span><span class="p">)</span><span class="o">.</span><span class="n">expand</span><span class="p">(</span><span class="n">row_number</span> <span class="o">+</span> <span class="mi">1</span><span class="p">,</span> <span class="o">-</span><span class="mi">1</span><span class="p">),</span>
+        <span class="n">num_sends</span><span class="o">=</span><span class="n">num_sends</span><span class="p">)</span>
+    <span class="n">ax</span><span class="o">.</span><span class="n">clear</span><span class="p">()</span>
+    <span class="n">ax</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">weight</span><span class="p">,</span> <span class="n">out</span><span class="p">)</span>
+    <span class="n">ax</span><span class="o">.</span><span class="n">set_ylim</span><span class="p">(</span><span class="o">-</span><span class="mi">130</span><span class="p">,</span> <span class="mi">130</span><span class="p">)</span>
+    <span class="n">ax</span><span class="o">.</span><span class="n">set_xlabel</span><span class="p">(</span><span class="s2">&quot;weight&quot;</span><span class="p">);</span> <span class="n">ax</span><span class="o">.</span><span class="n">set_ylabel</span><span class="p">(</span><span class="s2">&quot;output&quot;</span><span class="p">);</span>
+</pre></div>
+</div>
+<a class="reference internal image-reference" href="_images/hagen_properties_fig2.png"><img alt="_images/hagen_properties_fig2.png" class="align-center" src="_images/hagen_properties_fig2.png" style="width: 90%;" /></a>
+<p>At output values of about -80 to 80 a good linear correlation can be
+observed. For smaller or larger values, the used ADC saturates; this
+happens earlier for some neurons and later for others.</p>
+<div class="section" id="possible-questions">
+<h3>Possible questions:<a class="headerlink" href="#possible-questions" title="Permalink to this headline">¶</a></h3>
+<div class="section" id="how-does-the-result-change-with-several-successive-calls-to-hxtorch-matmul">
+<h4>How does the result change with several successive calls to <code class="docutils literal notranslate"><span class="pre">hxtorch.matmul</span></code>?<a class="headerlink" href="#how-does-the-result-change-with-several-successive-calls-to-hxtorch-matmul" title="Permalink to this headline">¶</a></h4>
+<p>Due to its analog nature, the BrainScaleS-2 ASIC provides slightly
+different values for each call. Quantify the noise on each neuron!</p>
+</div>
+<div class="section" id="what-is-the-relationship-between-input-and-output-is-it-linear">
+<h4>What is the relationship between input and output? Is it linear?<a class="headerlink" href="#what-is-the-relationship-between-input-and-output-is-it-linear" title="Permalink to this headline">¶</a></h4>
+<p>We have seen that the relationship between weight and output is quite
+linear at intermediate values. How, on the other hand, does the output
+change with changing inputs and constant weight? Is the relationship
+linear?</p>
+</div>
+<div class="section" id="negative-inputs">
+<h4>Negative inputs?<a class="headerlink" href="#negative-inputs" title="Permalink to this headline">¶</a></h4>
+<p>The inputs to the multiply accumulate operation correspond to the time a
+current flows on neuron membranes, which means they must be positive
+only. How would it still be possible to allow negative inputs in a
+calculation?</p>
+<p>The integration with PyTorch allows the MAC to be used very easily for
+conventional machine learning. For this, the forward pass is computed with
+the ASIC, the backward pass on the host computer. The <a class="reference external" href="yin_yang_itl">Yin-Yang
+example</a> shows such a usage.</p>
+</div>
+</div>
+</div>
+</div>
+
+
+           </div>
+           
+          </div>
+          <footer>
+  
+    <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
+      
+        <a href="5-yin_yang_itl.html" class="btn btn-neutral float-right" title="Train DNNs on BrainScaleS-2" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right"></span></a>
+      
+      
+        <a href="3-hagen_intro.html" class="btn btn-neutral float-left" title="Introduction to matrix multiplication" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left"></span> Previous</a>
+      
+    </div>
+  
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>
+        &copy; Copyright 2021, Electronic Vision(s), Kirchhoff-Institute for Physics, Heidelberg University
+
+    </p>
+  </div> 
+
+</footer>
+
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+  
+
+
+  <script type="text/javascript">
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script>
+
+  
+  
+    
+   
+
+</body>
+</html>

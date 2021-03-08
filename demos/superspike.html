@@ -1,0 +1,545 @@
+
+
+<!DOCTYPE html>
+<!--[if IE 8]><html class="no-js lt-ie9" lang="en" > <![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js" lang="en" > <!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  <title>Learning with the SuperSpike rule &mdash; BrainScaleS-2 Demos &amp; Examples 2021-03-15 documentation</title>
+  
+
+  
+  
+  
+  
+
+  
+  <script type="text/javascript" src="../_static/js/modernizr.min.js"></script>
+  
+    
+      <script type="text/javascript" id="documentation_options" data-url_root="../" src="../_static/documentation_options.js"></script>
+        <script type="text/javascript" src="../_static/jquery.js"></script>
+        <script type="text/javascript" src="../_static/underscore.js"></script>
+        <script type="text/javascript" src="../_static/doctools.js"></script>
+        <script type="text/javascript" src="../_static/language_data.js"></script>
+        <script async="async" type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/latest.js?config=TeX-AMS-MML_HTMLorMML"></script>
+    
+    <script type="text/javascript" src="../_static/js/theme.js"></script>
+
+    
+
+  
+  <link rel="stylesheet" href="../_static/css/theme.css" type="text/css" />
+  <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" />
+    <link rel="next" title="Train DNNs on BrainScaleS-2" href="yin_yang_itl.html" />
+    <link rel="prev" title="The non-spiking mode" href="hagen_basics.html" /> 
+</head>
+
+<body class="wy-body-for-nav">
+
+   
+  <div class="wy-grid-for-nav">
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+          
+
+          
+            <a href="../index.html" class="icon icon-home"> BrainScaleS-2 Demos & Examples
+          
+
+          
+          </a>
+
+          
+            
+            
+              <div class="version">
+                2021-03-15
+              </div>
+            
+          
+
+          
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+
+          
+        </div>
+
+        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+          
+            
+            
+              
+            
+            
+              <p class="caption"><span class="caption-text">Contents:</span></p>
+<ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="minimal_hardware_execution.html">Minimal Experiment Execution on BSS-2</a></li>
+<li class="toctree-l1"><a class="reference internal" href="hagen_basics.html">The non-spiking mode</a></li>
+<li class="toctree-l1 current"><a class="current reference internal" href="#">Learning with the SuperSpike rule</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="#training-spiking-networks-with-surrogate-gradients">Training spiking networks with surrogate gradients</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#references-for-further-reading">References for further reading</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="#helper-functions">Helper functions</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#define-network-in-pynn">Define network in PyNN</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#the-superspike-learning-rule">The SuperSpike learning rule</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="yin_yang_itl.html">Train DNNs on BrainScaleS-2</a></li>
+</ul>
+
+            
+          
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" aria-label="top navigation">
+        
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../index.html">BrainScaleS-2 Demos & Examples</a>
+        
+      </nav>
+
+
+      <div class="wy-nav-content">
+        
+        <div class="rst-content">
+        
+          
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation">
+
+  <ul class="wy-breadcrumbs">
+    
+      <li><a href="../index.html">Docs</a> &raquo;</li>
+        
+      <li>Learning with the SuperSpike rule</li>
+    
+    
+      <li class="wy-breadcrumbs-aside">
+        
+            
+            <a href="../_sources/demos/superspike.rst.txt" rel="nofollow"> View page source</a>
+          
+        
+      </li>
+    
+  </ul>
+
+  
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+            
+  <div class="section" id="learning-with-the-superspike-rule">
+<h1>Learning with the SuperSpike rule<a class="headerlink" href="#learning-with-the-superspike-rule" title="Permalink to this headline">¶</a></h1>
+<p>In the previous example, you have learned to tune an analog neuron
+circuit. Here, we will build on this knowledge and train a single neuron
+to reproduce a pre-defined target spike train. For this purpose, we will
+implement the SuperSpike learning [1] rule to minimize the van Rossum
+distance between the targets and the spikes produced by our neuron.</p>
+<p>Specifically, we will</p>
+<ul class="simple">
+<li><p>set up a network using PyNN,</p></li>
+<li><p>generate a target spike train,</p></li>
+<li><p>re-initialize the network’s weights,</p></li>
+<li><p>and implement an in-the-loop training scheme directly in Python.</p></li>
+</ul>
+<div class="section" id="training-spiking-networks-with-surrogate-gradients">
+<h2>Training spiking networks with surrogate gradients<a class="headerlink" href="#training-spiking-networks-with-surrogate-gradients" title="Permalink to this headline">¶</a></h2>
+<p>The discontinuity introduced by the spiking threshold introduces
+challenges when it comes to training networks of spiking neurons,
+especially when employing sparse coding techniques far away from the
+rate coding limit. Recently, efforts have been made by “smoothing” out
+the true activation function when calculating weight updates
+[1,2,3,4,5]. These “surrogate gradients” allow to easily train
+feed-forward as well as recurrent SNNs on common benchmark datasets.</p>
+<p>For BrainScaleS-2, we have developed a powerful in-the-loop training
+scheme that allows to perform backpropagation through time using
+auto-differentiation frameworks [6]. With a feed-forward network, we
+reached 97.6 % test accuracy on the MNIST dataset and the accelerated
+emulation allowed to classify more than 85k images per second. Moreover,
+we trained a recurrent SNN on natural language data from the SHD dataset
+[7].</p>
+<div class="section" id="references-for-further-reading">
+<h3>References for further reading<a class="headerlink" href="#references-for-further-reading" title="Permalink to this headline">¶</a></h3>
+<ol class="arabic simple">
+<li><p>Zenke, Friedemann, and Surya Ganguli. “Superspike: Supervised
+learning in multilayer spiking neural networks.” <em>Neural computation</em>
+30.6 (2018): 1514-1541.</p></li>
+<li><p>Neftci, Emre O., Hesham Mostafa, and Friedemann Zenke. “Surrogate
+gradient learning in spiking neural networks: Bringing the power of
+gradient-based optimization to spiking neural networks.” IEEE Signal
+Processing Magazine 36.6 (2019): 51-63.</p></li>
+<li><p>Bellec, Guillaume, et al. “A solution to the learning dilemma for
+recurrent networks of spiking neurons.” Nature communications 11.1
+(2020): 1-15.</p></li>
+<li><p>Bohte, Sander M. “Error-backpropagation in networks of fractionally
+predictive spiking neurons.” International Conference on Artificial
+Neural Networks. Springer, Berlin, Heidelberg, 2011.</p></li>
+<li><p>Esser, Steven K., et al. “Convolutional networks for fast,
+energy-efficient neuromorphic computing.” Proceedings of the national
+academy of sciences 113.41 (2016): 11441-11446.</p></li>
+<li><p>Cramer, Benjamin, et al. “Training spiking multi-layer networks with
+surrogate gradients on an analog neuromorphic substrate.” arXiv
+preprint arXiv:2006.07239 (2020).</p></li>
+<li><p>Cramer, Benjamin, et al. “The Heidelberg Spiking Data Sets for the
+Systematic Evaluation of Spiking Neural Networks.” IEEE Transactions
+on Neural Networks and Learning Systems (2020).</p></li>
+</ol>
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="o">%</span><span class="k">matplotlib</span> notebook
+
+<span class="kn">from</span> <span class="nn">IPython</span> <span class="kn">import</span> <span class="n">display</span>
+<span class="kn">import</span> <span class="nn">numpy</span> <span class="kn">as</span> <span class="nn">np</span>
+<span class="kn">import</span> <span class="nn">matplotlib.pyplot</span> <span class="kn">as</span> <span class="nn">plt</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">style</span><span class="o">.</span><span class="n">use</span><span class="p">(</span><span class="s2">&quot;../_static/matplotlibrc&quot;</span><span class="p">)</span>
+
+<span class="kn">import</span> <span class="nn">pynn_brainscales.brainscales2</span> <span class="kn">as</span> <span class="nn">pynn</span>
+
+<span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">seed</span><span class="p">(</span><span class="mi">1234</span><span class="p">)</span>
+</pre></div>
+</div>
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="o">%%html</span>
+<span class="p">&lt;</span><span class="nt">style</span><span class="p">&gt;.</span><span class="nc">output_wrapper</span> <span class="nt">button</span><span class="p">.</span><span class="nc">btn-default</span><span class="o">,</span><span class="p">.</span><span class="nc">output_wrapper</span> <span class="p">.</span><span class="nc">ui-dialog-titlebar</span><span class="p">{</span><span class="k">display</span><span class="p">:</span><span class="kc">none</span><span class="p">}&lt;/</span><span class="nt">style</span><span class="p">&gt;</span>
+</pre></div>
+</div>
+</div>
+</div>
+<div class="section" id="helper-functions">
+<h2>Helper functions<a class="headerlink" href="#helper-functions" title="Permalink to this headline">¶</a></h2>
+<p>In the following, we will defined a few helper functions, e.g. for
+plotting.</p>
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="k">def</span> <span class="nf">create_figure</span><span class="p">():</span>
+    <span class="n">fig</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">figure</span><span class="p">(</span><span class="n">figsize</span><span class="o">=</span><span class="p">(</span><span class="mi">7</span><span class="p">,</span> <span class="mi">4</span><span class="p">),</span> <span class="n">dpi</span><span class="o">=</span><span class="mf">120.</span><span class="p">)</span>
+    <span class="n">axes</span> <span class="o">=</span> <span class="p">[</span><span class="n">fig</span><span class="o">.</span><span class="n">add_subplot</span><span class="p">(</span><span class="mi">2</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="o">+</span><span class="n">i</span><span class="p">)</span> <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">2</span><span class="p">)]</span>
+
+    <span class="n">axes</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">set_ylabel</span><span class="p">(</span><span class="s2">&quot;norm. membrane&quot;</span><span class="p">)</span>
+    <span class="n">axes</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">set_xlim</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="n">duration</span> <span class="o">*</span> <span class="mf">1e6</span><span class="p">)</span>
+    <span class="n">axes</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">set_xticklabels</span><span class="p">([])</span>
+    <span class="n">axes</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">plot</span><span class="p">([],</span> <span class="p">[],</span> <span class="n">c</span><span class="o">=</span><span class="s2">&quot;C0&quot;</span><span class="p">)</span>
+    <span class="n">axes</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">set_ylim</span><span class="p">(</span><span class="o">-</span><span class="mf">0.1</span><span class="p">,</span> <span class="mf">1.1</span><span class="p">)</span>
+
+    <span class="n">axes</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">set_xlabel</span><span class="p">(</span><span class="s2">&quot;time / μs&quot;</span><span class="p">)</span>
+    <span class="n">axes</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">set_ylabel</span><span class="p">(</span><span class="s2">&quot;error trace&quot;</span><span class="p">)</span>
+    <span class="n">axes</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">set_xlim</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="n">duration</span> <span class="o">*</span> <span class="mf">1e6</span><span class="p">)</span>
+    <span class="n">axes</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">plot</span><span class="p">([],</span> <span class="p">[],</span> <span class="n">c</span><span class="o">=</span><span class="s2">&quot;C0&quot;</span><span class="p">)</span>
+    <span class="n">axes</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">set_ylim</span><span class="p">(</span><span class="o">-</span><span class="mf">0.5</span><span class="p">,</span> <span class="mf">0.5</span><span class="p">)</span>
+
+    <span class="k">return</span> <span class="n">fig</span><span class="p">,</span> <span class="n">axes</span>
+
+
+<span class="k">def</span> <span class="nf">update_figure</span><span class="p">(</span><span class="n">axes</span><span class="p">,</span> <span class="o">*</span><span class="n">data</span><span class="p">):</span>
+    <span class="k">for</span> <span class="n">a</span><span class="p">,</span> <span class="n">ax</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">axes</span><span class="p">):</span>
+        <span class="n">ax</span><span class="o">.</span><span class="n">get_lines</span><span class="p">()[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">set_data</span><span class="p">(</span><span class="n">data</span><span class="p">[</span><span class="n">a</span><span class="p">][</span><span class="mi">0</span><span class="p">]</span> <span class="o">*</span> <span class="mf">1e6</span><span class="p">,</span> <span class="n">data</span><span class="p">[</span><span class="n">a</span><span class="p">][</span><span class="mi">1</span><span class="p">])</span>
+        <span class="n">ax</span><span class="o">.</span><span class="n">figure</span><span class="o">.</span><span class="n">canvas</span><span class="o">.</span><span class="n">draw</span><span class="p">()</span>
+</pre></div>
+</div>
+</div>
+<div class="section" id="define-network-in-pynn">
+<h2>Define network in PyNN<a class="headerlink" href="#define-network-in-pynn" title="Permalink to this headline">¶</a></h2>
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">n_inputs</span> <span class="o">=</span> <span class="mi">60</span>
+
+<span class="n">duration</span> <span class="o">=</span> <span class="mf">200e-6</span>
+<span class="n">dt</span> <span class="o">=</span> <span class="mf">0.1e-6</span>
+
+<span class="n">n_steps</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">int</span><span class="p">(</span><span class="n">duration</span> <span class="o">/</span> <span class="n">dt</span><span class="p">)</span>
+
+
+<span class="n">time</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">arange</span><span class="p">(</span><span class="n">n_steps</span><span class="p">)</span> <span class="o">*</span> <span class="n">dt</span>
+<span class="n">bins</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">arange</span><span class="p">(</span><span class="n">n_steps</span> <span class="o">+</span> <span class="mi">1</span><span class="p">)</span> <span class="o">*</span> <span class="n">dt</span>
+</pre></div>
+</div>
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># load calibration data</span>
+<span class="n">full_coco</span> <span class="o">=</span> <span class="n">pynn</span><span class="o">.</span><span class="n">helper</span><span class="o">.</span><span class="n">coco_from_file</span><span class="p">(</span><span class="n">pynn</span><span class="o">.</span><span class="n">helper</span><span class="o">.</span><span class="n">nightly_calib_path</span><span class="p">())</span>
+<span class="n">general_coco</span> <span class="o">=</span> <span class="n">pynn</span><span class="o">.</span><span class="n">helper</span><span class="o">.</span><span class="n">filter_non_atomic_neuron</span><span class="p">(</span><span class="n">full_coco</span><span class="p">)</span>
+<span class="n">neuron_coco</span> <span class="o">=</span> <span class="n">pynn</span><span class="o">.</span><span class="n">helper</span><span class="o">.</span><span class="n">filter_atomic_neuron</span><span class="p">(</span><span class="n">full_coco</span><span class="p">)</span>
+
+<span class="c1"># setup PyNN and inect calibration data</span>
+<span class="n">pynn</span><span class="o">.</span><span class="n">setup</span><span class="p">(</span><span class="n">injected_config</span><span class="o">=</span><span class="n">pynn</span><span class="o">.</span><span class="n">InjectedConfiguration</span><span class="p">(</span><span class="n">post_non_realtime</span><span class="o">=</span><span class="n">general_coco</span><span class="p">))</span>
+
+<span class="c1"># create output population (one neuron) and record its observables</span>
+<span class="n">pop_output</span> <span class="o">=</span> <span class="n">pynn</span><span class="o">.</span><span class="n">Population</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="n">pynn</span><span class="o">.</span><span class="n">cells</span><span class="o">.</span><span class="n">HXNeuron</span><span class="p">(</span><span class="n">neuron_coco</span><span class="p">))</span>
+<span class="n">pop_output</span><span class="o">.</span><span class="n">record</span><span class="p">([</span><span class="s2">&quot;spikes&quot;</span><span class="p">,</span> <span class="s2">&quot;v&quot;</span><span class="p">])</span>
+
+<span class="c1"># create spike sources</span>
+<span class="n">pop_input</span> <span class="o">=</span> <span class="n">pynn</span><span class="o">.</span><span class="n">Population</span><span class="p">(</span><span class="n">n_inputs</span><span class="p">,</span> <span class="n">pynn</span><span class="o">.</span><span class="n">cells</span><span class="o">.</span><span class="n">SpikeSourceArray</span><span class="p">,</span> <span class="n">cellparams</span><span class="o">=</span><span class="p">{</span><span class="s2">&quot;spike_times&quot;</span><span class="p">:</span> <span class="p">[]})</span>
+
+<span class="c1"># define two projections (excitatory + inhibitory) to allow signed weights</span>
+<span class="n">synapse</span> <span class="o">=</span> <span class="n">pynn</span><span class="o">.</span><span class="n">standardmodels</span><span class="o">.</span><span class="n">synapses</span><span class="o">.</span><span class="n">StaticSynapse</span><span class="p">(</span><span class="n">weight</span><span class="o">=</span><span class="mi">42</span><span class="p">)</span>
+<span class="n">projection_io_inh</span> <span class="o">=</span> <span class="n">pynn</span><span class="o">.</span><span class="n">Projection</span><span class="p">(</span><span class="n">pop_input</span><span class="p">,</span> <span class="n">pop_output</span><span class="p">,</span>
+                             <span class="n">pynn</span><span class="o">.</span><span class="n">AllToAllConnector</span><span class="p">(),</span>
+                             <span class="n">synapse_type</span><span class="o">=</span><span class="n">synapse</span><span class="p">,</span>
+                             <span class="n">receptor_type</span><span class="o">=</span><span class="s2">&quot;inhibitory&quot;</span><span class="p">)</span>
+<span class="n">projection_io_exc</span> <span class="o">=</span> <span class="n">pynn</span><span class="o">.</span><span class="n">Projection</span><span class="p">(</span><span class="n">pop_input</span><span class="p">,</span> <span class="n">pop_output</span><span class="p">,</span>
+                             <span class="n">pynn</span><span class="o">.</span><span class="n">AllToAllConnector</span><span class="p">(),</span>
+                             <span class="n">synapse_type</span><span class="o">=</span><span class="n">synapse</span><span class="p">,</span>
+                             <span class="n">receptor_type</span><span class="o">=</span><span class="s2">&quot;excitatory&quot;</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>To work around Dale’s law, we have to merge two projections together to
+form signed synapses. The following function assigns the signed weight
+matrix to the two projections.</p>
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="k">def</span> <span class="nf">set_weights</span><span class="p">(</span><span class="n">weights</span><span class="p">,</span> <span class="n">w_max</span><span class="o">=</span><span class="mi">63</span><span class="p">):</span>
+    <span class="c1"># limit weights to hw boundaries</span>
+    <span class="n">weights</span> <span class="o">=</span> <span class="n">weights</span><span class="o">.</span><span class="n">clip</span><span class="p">(</span><span class="o">-</span><span class="n">w_max</span><span class="p">,</span> <span class="n">w_max</span><span class="p">)</span>
+
+    <span class="n">integer_weights</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">round</span><span class="p">(</span><span class="n">weights</span><span class="p">)</span><span class="o">.</span><span class="n">astype</span><span class="p">(</span><span class="nb">int</span><span class="p">)</span>
+    <span class="n">w_exc</span> <span class="o">=</span> <span class="n">integer_weights</span> <span class="o">*</span> <span class="p">(</span><span class="n">integer_weights</span> <span class="o">&gt;=</span> <span class="mi">0</span><span class="p">)</span><span class="o">.</span><span class="n">astype</span><span class="p">(</span><span class="nb">int</span><span class="p">)</span>
+    <span class="n">w_inh</span> <span class="o">=</span> <span class="o">-</span> <span class="n">integer_weights</span> <span class="o">*</span> <span class="p">(</span><span class="n">integer_weights</span> <span class="o">&lt;</span> <span class="mi">0</span><span class="p">)</span><span class="o">.</span><span class="n">astype</span><span class="p">(</span><span class="nb">int</span><span class="p">)</span>
+
+    <span class="n">projection_io_inh</span><span class="o">.</span><span class="n">set</span><span class="p">(</span><span class="n">weight</span><span class="o">=</span><span class="n">w_inh</span><span class="p">)</span>
+    <span class="n">projection_io_exc</span><span class="o">.</span><span class="n">set</span><span class="p">(</span><span class="n">weight</span><span class="o">=</span><span class="n">w_exc</span><span class="p">)</span>
+</pre></div>
+</div>
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">seed</span><span class="p">(</span><span class="mi">123456</span><span class="p">)</span>
+
+<span class="n">freq</span> <span class="o">=</span> <span class="mf">10e3</span>  <span class="c1"># 10 kHz (remember the acceleration factor!)</span>
+<span class="n">input_spikes</span> <span class="o">=</span> <span class="p">[]</span>
+<span class="n">stimuli_dense</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">rand</span><span class="p">(</span><span class="n">n_inputs</span><span class="p">,</span> <span class="n">n_steps</span><span class="p">)</span> <span class="o">&lt;</span> <span class="n">freq</span> <span class="o">*</span> <span class="n">dt</span>
+<span class="n">stimuli_dense</span><span class="p">[:,</span> <span class="p">(</span><span class="n">time</span> <span class="o">&gt;</span> <span class="p">(</span><span class="n">duration</span> <span class="o">-</span> <span class="mf">20e-6</span><span class="p">))]</span> <span class="o">=</span> <span class="mi">0</span>
+
+<span class="k">for</span> <span class="n">s</span> <span class="ow">in</span> <span class="n">stimuli_dense</span><span class="p">:</span>
+    <span class="n">input_spikes</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">where</span><span class="p">(</span><span class="n">s</span><span class="p">)[</span><span class="mi">0</span><span class="p">]</span> <span class="o">*</span> <span class="n">dt</span> <span class="o">*</span> <span class="mf">1e3</span><span class="p">)</span> <span class="c1"># convert to ms for pyNN</span>
+
+<span class="n">pop_input</span><span class="o">.</span><span class="n">set</span><span class="p">(</span><span class="n">spike_times</span><span class="o">=</span><span class="n">input_spikes</span><span class="p">)</span>
+</pre></div>
+</div>
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">seed</span><span class="p">(</span><span class="mi">123</span><span class="p">)</span>
+<span class="n">weights</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">normal</span><span class="p">(</span><span class="mi">10</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="n">size</span><span class="o">=</span><span class="p">(</span><span class="n">n_inputs</span><span class="p">,</span> <span class="mi">1</span><span class="p">))</span>
+<span class="n">set_weights</span><span class="p">(</span><span class="n">weights</span><span class="p">)</span>
+<span class="n">pynn</span><span class="o">.</span><span class="n">run</span><span class="p">(</span><span class="n">duration</span> <span class="o">*</span> <span class="mf">1e3</span><span class="p">)</span>
+
+<span class="n">data</span> <span class="o">=</span> <span class="n">pop_output</span><span class="o">.</span><span class="n">get_data</span><span class="p">([</span><span class="s2">&quot;spikes&quot;</span><span class="p">,</span> <span class="s2">&quot;v&quot;</span><span class="p">])</span>
+
+<span class="n">target_spikes</span> <span class="o">=</span> <span class="n">data</span><span class="o">.</span><span class="n">segments</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">spiketrains</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">/</span> <span class="mf">1e3</span>
+
+<span class="n">membrane</span> <span class="o">=</span> <span class="n">data</span><span class="o">.</span><span class="n">segments</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">analogsignals</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">base</span>
+<span class="n">v_mem</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">interp</span><span class="p">(</span><span class="n">time</span><span class="p">,</span> <span class="n">membrane</span><span class="p">[:,</span> <span class="mi">0</span><span class="p">]</span> <span class="o">/</span> <span class="mf">1e3</span><span class="p">,</span> <span class="n">membrane</span><span class="p">[:,</span> <span class="mi">1</span><span class="p">])</span>
+
+<span class="n">fig</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">figure</span><span class="p">(</span><span class="n">figsize</span><span class="o">=</span><span class="p">(</span><span class="mi">7</span><span class="p">,</span> <span class="mi">4</span><span class="p">),</span> <span class="n">dpi</span><span class="o">=</span><span class="mf">120.</span><span class="p">)</span>
+<span class="n">ax</span> <span class="o">=</span> <span class="n">fig</span><span class="o">.</span><span class="n">gca</span><span class="p">()</span>
+<span class="n">ax</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">time</span><span class="o">*</span><span class="mf">1e6</span><span class="p">,</span> <span class="n">v_mem</span><span class="p">)</span>
+
+<span class="n">ax</span><span class="o">.</span><span class="n">set_xlim</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="n">duration</span><span class="o">*</span><span class="mf">1e6</span><span class="p">)</span>
+<span class="n">ax</span><span class="o">.</span><span class="n">set_xlabel</span><span class="p">(</span><span class="s2">&quot;time / μs&quot;</span><span class="p">)</span>
+<span class="n">ax</span><span class="o">.</span><span class="n">set_ylabel</span><span class="p">(</span><span class="s2">&quot;membrane potential / LSB&quot;</span><span class="p">)</span>
+<span class="n">pynn</span><span class="o">.</span><span class="n">reset</span><span class="p">()</span>
+</pre></div>
+</div>
+<p>Extract the dynamic range from the above plot to normalize the membrane
+potential for calculating the surrogate gradient.</p>
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">v_zero</span> <span class="o">=</span> <span class="n">v_mem</span><span class="o">.</span><span class="n">min</span><span class="p">()</span>
+<span class="n">dynamic_range</span> <span class="o">=</span> <span class="n">v_mem</span><span class="o">.</span><span class="n">max</span><span class="p">()</span> <span class="o">-</span> <span class="n">v_zero</span>
+</pre></div>
+</div>
+<p>Define parameters for the learning rule.</p>
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">tau_mem</span> <span class="o">=</span> <span class="mf">10e-6</span>
+<span class="n">tau_syn</span> <span class="o">=</span> <span class="mf">5e-6</span>
+</pre></div>
+</div>
+<p>Construct kernels for the learning rule, including the van Rossum
+distance.</p>
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">n_kernel_steps</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">int</span><span class="p">(</span><span class="mf">100e-6</span> <span class="o">/</span> <span class="n">dt</span><span class="p">)</span>
+<span class="n">n_kernel_steps</span> <span class="o">=</span> <span class="n">n_kernel_steps</span> <span class="o">+</span> <span class="p">(</span><span class="mi">1</span> <span class="o">-</span> <span class="n">n_kernel_steps</span> <span class="o">%</span> <span class="mi">2</span><span class="p">)</span>
+
+<span class="n">kernel_psc</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">(</span><span class="n">n_kernel_steps</span><span class="p">)</span>
+<span class="n">kernel_psc</span><span class="p">[</span><span class="o">-</span><span class="nb">int</span><span class="p">(</span><span class="n">kernel_psc</span><span class="o">.</span><span class="n">size</span> <span class="o">/</span> <span class="mi">2</span><span class="p">):]</span> <span class="o">+=</span> <span class="n">np</span><span class="o">.</span><span class="n">exp</span><span class="p">(</span><span class="o">-</span><span class="n">np</span><span class="o">.</span><span class="n">arange</span><span class="p">(</span><span class="nb">int</span><span class="p">(</span><span class="n">kernel_psc</span><span class="o">.</span><span class="n">size</span> <span class="o">/</span> <span class="mi">2</span><span class="p">))</span> <span class="o">/</span> <span class="p">(</span><span class="n">tau_syn</span> <span class="o">/</span> <span class="n">dt</span><span class="p">))</span>
+
+<span class="n">kernel_psp</span> <span class="o">=</span> <span class="n">kernel_psc</span><span class="o">.</span><span class="n">copy</span><span class="p">()</span>
+<span class="n">kernel_psp</span><span class="p">[</span><span class="o">-</span><span class="nb">int</span><span class="p">(</span><span class="n">kernel_psp</span><span class="o">.</span><span class="n">size</span> <span class="o">/</span> <span class="mi">2</span><span class="p">):]</span> <span class="o">-=</span> <span class="n">np</span><span class="o">.</span><span class="n">exp</span><span class="p">(</span><span class="o">-</span><span class="n">np</span><span class="o">.</span><span class="n">arange</span><span class="p">(</span><span class="nb">int</span><span class="p">(</span><span class="n">kernel_psp</span><span class="o">.</span><span class="n">size</span> <span class="o">/</span> <span class="mi">2</span><span class="p">))</span> <span class="o">/</span> <span class="p">(</span><span class="n">tau_mem</span> <span class="o">/</span> <span class="n">dt</span><span class="p">))</span>
+
+<span class="n">kernel_vrd</span> <span class="o">=</span> <span class="n">kernel_psp</span><span class="o">.</span><span class="n">copy</span><span class="p">()</span>
+</pre></div>
+</div>
+</div>
+<div class="section" id="the-superspike-learning-rule">
+<h2>The SuperSpike learning rule<a class="headerlink" href="#the-superspike-learning-rule" title="Permalink to this headline">¶</a></h2>
+<p>The SuperSpike learning rule was derived to perform gradient descent on
+the van Rossum distance</p>
+<div class="math notranslate nohighlight">
+\[\mathcal{L} = \frac{1}{2} \int_{-\infty}^t \mathrm{d}s \, \left[ \left( \alpha * \hat S_i - \alpha * S_i \right) \right]^2\]</div>
+<p>between two spike trains. Here, <span class="math notranslate nohighlight">\(\alpha\)</span> is the kernel used to
+calculate the van Rossum distance. The weight update rule can in the end
+be written as</p>
+<div class="math notranslate nohighlight">
+\[\Delta w_{ij}^k = \eta \int \mathrm{d}s \, e_i(s) \cdot \alpha * \left[ \sigma^\prime (v_i(s)) \cdot (\epsilon * S_j)(s) \right] \,\]</div>
+<p>where <span class="math notranslate nohighlight">\(e_i\)</span> represents the error signal, <span class="math notranslate nohighlight">\(\sigma^\prime\)</span> the
+surrogate gradient of membrane potential <span class="math notranslate nohighlight">\(v_i\)</span>, and
+<span class="math notranslate nohighlight">\(\epsilon\)</span> the exponentially decaying kernel of the synaptic
+currents.</p>
+<p>The integral consists of a Hebbian contribution which combines the
+surrogate gradient of the membrane potential with the exponentially
+decaying synaptic currents as eligibility traces. This term is augmented
+by the error signal as a third factor, which can be calculated through
+backpropagation for multi-layer networks.</p>
+<p>The learning rule can be forward-integrated alongside the neuronal
+dynamics, which makes it particularly interesting for online learning
+applications.</p>
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="k">def</span> <span class="nf">superspike</span><span class="p">(</span><span class="n">v_m</span><span class="p">,</span> <span class="n">beta</span><span class="o">=</span><span class="mf">5.0</span><span class="p">):</span>
+    <span class="k">return</span> <span class="n">np</span><span class="o">.</span><span class="n">power</span><span class="p">(</span><span class="mi">1</span> <span class="o">+</span> <span class="n">np</span><span class="o">.</span><span class="n">abs</span><span class="p">(</span><span class="n">beta</span> <span class="o">*</span> <span class="p">(</span><span class="n">v_m</span> <span class="o">-</span> <span class="mf">1.0</span><span class="p">)),</span> <span class="o">-</span><span class="mi">2</span><span class="p">)</span>
+
+<span class="n">fig</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">figure</span><span class="p">()</span>
+<span class="n">ax</span> <span class="o">=</span> <span class="n">fig</span><span class="o">.</span><span class="n">gca</span><span class="p">()</span>
+
+<span class="n">v</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">linspace</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">100</span><span class="p">)</span>
+
+<span class="k">for</span> <span class="n">beta</span> <span class="ow">in</span> <span class="n">np</span><span class="o">.</span><span class="n">logspace</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">log10</span><span class="p">(</span><span class="mi">1</span><span class="p">),</span> <span class="n">np</span><span class="o">.</span><span class="n">log10</span><span class="p">(</span><span class="mi">10</span><span class="p">),</span> <span class="mi">4</span><span class="p">):</span>
+    <span class="n">ax</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">v</span><span class="p">,</span> <span class="n">superspike</span><span class="p">(</span><span class="n">v</span><span class="p">,</span> <span class="n">beta</span><span class="o">=</span><span class="n">beta</span><span class="p">),</span> <span class="n">label</span><span class="o">=</span><span class="n">f</span><span class="s2">&quot;beta = {beta:.1f}&quot;</span><span class="p">)</span>
+
+<span class="n">ax</span><span class="o">.</span><span class="n">legend</span><span class="p">(</span><span class="n">loc</span><span class="o">=</span><span class="s2">&quot;upper left&quot;</span><span class="p">)</span>
+<span class="n">ax</span><span class="o">.</span><span class="n">set_xlabel</span><span class="p">(</span><span class="s2">&quot;normalized membrane potential&quot;</span><span class="p">)</span>
+<span class="n">ax</span><span class="o">.</span><span class="n">set_ylabel</span><span class="p">(</span><span class="s2">&quot;surrogate gradient&quot;</span><span class="p">);</span>
+</pre></div>
+</div>
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">fig</span><span class="p">,</span> <span class="n">axes</span> <span class="o">=</span> <span class="n">create_figure</span><span class="p">()</span>
+
+<span class="c1"># plot target spikes</span>
+<span class="k">for</span> <span class="n">t</span> <span class="ow">in</span> <span class="n">target_spikes</span><span class="p">:</span>
+    <span class="n">axes</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">axvline</span><span class="p">(</span><span class="n">t</span> <span class="o">*</span> <span class="mf">1e6</span><span class="p">,</span> <span class="n">c</span><span class="o">=</span><span class="s2">&quot;orange&quot;</span><span class="p">,</span> <span class="n">zorder</span><span class="o">=</span><span class="mi">20</span><span class="p">)</span>
+
+<span class="c1"># define hyperparameters</span>
+<span class="n">n_epochs</span> <span class="o">=</span> <span class="mi">100</span>
+<span class="n">eta</span> <span class="o">=</span> <span class="mf">50.</span>
+
+<span class="c1"># initialize weights</span>
+<span class="n">weights</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">normal</span><span class="p">(</span><span class="mi">10</span><span class="p">,</span> <span class="mi">20</span><span class="p">,</span> <span class="n">size</span><span class="o">=</span><span class="p">(</span><span class="n">n_inputs</span><span class="p">,</span> <span class="mi">1</span><span class="p">))</span>
+
+<span class="c1"># iterate over multiple training &quot;epochs&quot;</span>
+<span class="n">loss</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">(</span><span class="n">n_epochs</span><span class="p">)</span>
+<span class="k">for</span> <span class="n">e</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">n_epochs</span><span class="p">):</span>
+    <span class="c1"># assign weights to PyNN projections</span>
+    <span class="n">set_weights</span><span class="p">(</span><span class="n">weights</span><span class="p">)</span>
+
+    <span class="c1"># run the emulation</span>
+    <span class="n">pynn</span><span class="o">.</span><span class="n">run</span><span class="p">(</span><span class="n">duration</span> <span class="o">*</span> <span class="mf">1e3</span><span class="p">)</span> <span class="c1"># convert to ms for PyNN</span>
+
+    <span class="c1"># retrieve data</span>
+    <span class="n">data</span> <span class="o">=</span> <span class="n">pop_output</span><span class="o">.</span><span class="n">get_data</span><span class="p">([</span><span class="s2">&quot;spikes&quot;</span><span class="p">,</span> <span class="s2">&quot;v&quot;</span><span class="p">])</span>
+    <span class="n">spikes</span> <span class="o">=</span> <span class="n">data</span><span class="o">.</span><span class="n">segments</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">spiketrains</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">/</span> <span class="mf">1e3</span> <span class="c1"># convert to SI units (s)</span>
+    <span class="n">membrane</span> <span class="o">=</span> <span class="n">data</span><span class="o">.</span><span class="n">segments</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">analogsignals</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">base</span>
+
+    <span class="c1"># resample and normalize mebrane trace</span>
+    <span class="n">v_mem</span> <span class="o">=</span> <span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">interp</span><span class="p">(</span><span class="n">time</span><span class="p">,</span> <span class="n">membrane</span><span class="p">[:,</span> <span class="mi">0</span><span class="p">]</span> <span class="o">/</span> <span class="mf">1e3</span><span class="p">,</span> <span class="n">membrane</span><span class="p">[:,</span> <span class="mi">1</span><span class="p">])</span> <span class="o">-</span> <span class="n">v_zero</span><span class="p">)</span> <span class="o">/</span> <span class="n">dynamic_range</span>
+
+    <span class="c1"># reset pyNN state</span>
+    <span class="n">pynn</span><span class="o">.</span><span class="n">reset</span><span class="p">()</span>
+
+    <span class="c1"># compute van-Rossum distance as error signal</span>
+    <span class="n">error</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">convolve</span><span class="p">(</span>
+            <span class="n">np</span><span class="o">.</span><span class="n">histogram</span><span class="p">(</span><span class="n">target_spikes</span><span class="p">,</span> <span class="n">bins</span><span class="p">)[</span><span class="mi">0</span><span class="p">]</span> <span class="o">-</span> <span class="n">np</span><span class="o">.</span><span class="n">histogram</span><span class="p">(</span><span class="n">spikes</span><span class="p">,</span> <span class="n">bins</span><span class="p">)[</span><span class="mi">0</span><span class="p">],</span>
+            <span class="n">kernel_vrd</span><span class="p">,</span> <span class="n">mode</span><span class="o">=</span><span class="s2">&quot;same&quot;</span><span class="p">)</span>
+
+    <span class="n">update_figure</span><span class="p">(</span><span class="n">axes</span><span class="p">,</span> <span class="p">(</span><span class="n">time</span><span class="p">,</span> <span class="n">v_mem</span><span class="p">),</span> <span class="p">(</span><span class="n">time</span><span class="p">,</span> <span class="n">error</span><span class="p">))</span>
+
+    <span class="c1"># calculate weight updates</span>
+    <span class="n">dw</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">((</span><span class="n">n_inputs</span><span class="p">,</span> <span class="mi">1</span><span class="p">))</span>
+    <span class="k">for</span> <span class="n">source</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">n_inputs</span><span class="p">):</span>
+        <span class="n">eligibility</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">convolve</span><span class="p">(</span><span class="n">stimuli_dense</span><span class="p">[</span><span class="n">source</span><span class="p">,</span> <span class="p">:],</span> <span class="n">kernel_psc</span><span class="p">,</span> <span class="n">mode</span><span class="o">=</span><span class="s2">&quot;same&quot;</span><span class="p">)</span>
+        <span class="n">integrand</span> <span class="o">=</span> <span class="n">error</span> <span class="o">*</span> <span class="n">np</span><span class="o">.</span><span class="n">convolve</span><span class="p">(</span>
+            <span class="n">superspike</span><span class="p">(</span><span class="n">v_mem</span><span class="p">)</span> <span class="o">*</span> <span class="n">eligibility</span><span class="p">,</span>
+            <span class="n">kernel_psp</span><span class="p">,</span>
+            <span class="n">mode</span><span class="o">=</span><span class="s2">&quot;same&quot;</span><span class="p">)</span>
+        <span class="n">dw</span><span class="p">[</span><span class="n">source</span><span class="p">,</span> <span class="mi">0</span><span class="p">]</span> <span class="o">=</span> <span class="n">eta</span> <span class="o">*</span> <span class="n">np</span><span class="o">.</span><span class="n">sum</span><span class="p">(</span><span class="n">integrand</span><span class="p">)</span> <span class="o">/</span> <span class="n">n_steps</span>
+
+    <span class="c1"># save the loss for later plotting</span>
+    <span class="n">loss</span><span class="p">[</span><span class="n">e</span><span class="p">]</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">sum</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">abs</span><span class="p">(</span><span class="n">error</span><span class="p">))</span>
+
+    <span class="c1"># apply weight update</span>
+    <span class="n">weights</span> <span class="o">+=</span> <span class="n">dw</span>
+</pre></div>
+</div>
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">fig</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">figure</span><span class="p">(</span><span class="n">figsize</span><span class="o">=</span><span class="p">(</span><span class="mi">7</span><span class="p">,</span> <span class="mi">4</span><span class="p">),</span> <span class="n">dpi</span><span class="o">=</span><span class="mf">120.</span><span class="p">)</span>
+<span class="n">ax</span> <span class="o">=</span> <span class="n">fig</span><span class="o">.</span><span class="n">gca</span><span class="p">()</span>
+
+<span class="n">ax</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">loss</span><span class="p">)</span>
+
+<span class="n">ax</span><span class="o">.</span><span class="n">set_xlim</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="n">n_epochs</span><span class="p">)</span>
+<span class="n">ax</span><span class="o">.</span><span class="n">set_xlabel</span><span class="p">(</span><span class="s2">&quot;epoch&quot;</span><span class="p">)</span>
+<span class="n">ax</span><span class="o">.</span><span class="n">set_ylabel</span><span class="p">(</span><span class="s2">&quot;loss&quot;</span><span class="p">);</span>
+</pre></div>
+</div>
+</div>
+</div>
+
+
+           </div>
+           
+          </div>
+          <footer>
+  
+    <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
+      
+        <a href="yin_yang_itl.html" class="btn btn-neutral float-right" title="Train DNNs on BrainScaleS-2" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right"></span></a>
+      
+      
+        <a href="hagen_basics.html" class="btn btn-neutral float-left" title="The non-spiking mode" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left"></span> Previous</a>
+      
+    </div>
+  
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>
+        &copy; Copyright 2021, Electronic Vision(s), Kirchhoff-Institute for Physics, Heidelberg University
+
+    </p>
+  </div> 
+
+</footer>
+
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+  
+
+
+  <script type="text/javascript">
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script>
+
+  
+  
+    
+   
+
+</body>
+</html>

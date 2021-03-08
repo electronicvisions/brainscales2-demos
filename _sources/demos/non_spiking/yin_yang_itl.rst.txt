@@ -1,0 +1,158 @@
+
+Training example using the Yin-Yang dataset
+===========================================
+
+.. code:: python3
+
+    %matplotlib notebook
+    import ipywidgets as widgets
+
+    import matplotlib as mpl
+    import matplotlib.pyplot as plt
+
+    import torch
+    import hxtorch
+    from datasets import YinYangDataset
+
+
+.. code:: python3
+
+    # initializes the hardware connection
+    # and applies a default calibration
+    hxtorch.init()
+
+
+.. code:: python3
+
+    def test(model: torch.nn.Module):
+        """
+        Test the model.
+        :param model: The model to test
+        """
+        gridsize = 30
+        model.eval()
+        x = y = torch.linspace(0, 1, gridsize)
+        x, y = torch.meshgrid(x, y)
+        x, y = x.flatten(), y.flatten()
+        samples = torch.tensor(list(zip(x, y)))
+        with torch.no_grad():
+            output = model(samples)
+        output = output.argmax(dim=-1).reshape(gridsize, -1).t()
+        return output
+
+    def train_epoch(model: torch.nn.Module,
+                    loader: torch.utils.data.DataLoader,
+                    optimizer: torch.optim.Optimizer):
+        """
+        Train the model for a single epoch.
+        :param model: The model
+        :param loader: Data loader containing the train data set
+        :param optimizer: Optimizer that handles the weight updates
+        """
+        model.train()
+        for data, target in loader:
+            optimizer.zero_grad()
+            output = model(data)
+            loss = torch.nn.functional.cross_entropy(output, target)
+            loss.backward()
+            optimizer.step()
+
+    def train(model: torch.nn.Module,
+              loader: torch.utils.data.DataLoader,
+              scheduler: torch.optim.lr_scheduler._LRScheduler,
+              num_epochs: int = 200):
+        """
+        Train the model while displaying the test results.
+        :param model: The model
+        :param loader: Data loader containing the train data set
+        :param scheduler: Scheduler that handles the weight updates
+        :param num_epochs: Number of epochs to train
+        """
+        fig = plt.figure()
+        ax = plt.gca()
+        ax.set_title("Epoch 0")
+        img = plt.imshow(
+            test(model), vmin=0, vmax=2,
+            extent=(0, 1, 0, 1), origin='lower',
+            cmap=mpl.colors.LinearSegmentedColormap.from_list(
+                "yinyangdot", ['C0', 'C1', 'C2']))
+        plt.xlabel("$x$"); plt.ylabel("$y$")
+
+        for epoch in range(1, num_epochs + 1):
+            train_epoch(model, loader, scheduler.optimizer)
+            scheduler.step()
+            img.set_data(test(model))
+            ax.set_title(f"Epoch {epoch}")
+            fig.canvas.draw()
+
+
+.. code:: python3
+
+    class Model(torch.nn.Module):
+        """
+        Classify the YinYang dataset.
+        """
+        def __init__(self, mock: bool = False):
+            super().__init__()
+            num_hidden = 256
+
+            if num_hidden > 0:
+                self.classifier = torch.nn.Sequential(
+                    hxtorch.nn.Linear(2, num_hidden, mock=mock),
+                    hxtorch.nn.ConvertingReLU(shift=1, mock=mock),
+                    hxtorch.nn.Linear(num_hidden, 3, mock=mock),
+                )
+            else:
+                self.classifier = hxtorch.nn.Linear(2, 3, mock=mock)
+
+        def forward(self, *x):
+            x = x[0] * 31.  # scale to the whole input range
+            x = self.classifier(x)
+            return x
+
+
+.. code:: python3
+
+    model_mock = Model(mock=True)
+    model_mock
+
+
+.. code:: python3
+
+    batch_size = 500
+    lr = 1
+    gamma = 0.99
+
+    loader = torch.utils.data.DataLoader(
+        dataset=YinYangDataset(size=batch_size),
+        batch_size=batch_size)
+    scheduler = torch.optim.lr_scheduler.StepLR(
+        torch.optim.Adam(model_mock.parameters(), lr=lr),
+        step_size=1, gamma=gamma)
+
+
+.. code:: python3
+
+    train(model_mock, loader, optimizer, num_epochs=250)
+
+
+.. code:: python3
+
+    model_hw = Model(mock=False)
+    model_hw.load_state_dict(model_mock.state_dict())
+    model_hw
+
+
+.. code:: python3
+
+    lr = 0.1
+    gamma = 0.9
+
+    scheduler_hw = torch.optim.lr_scheduler.StepLR(
+        torch.optim.Adam(model_hw.parameters(), lr=lr),
+        step_size=1, gamma=gamma)
+
+
+.. code:: python3
+
+    train(model_hw, loader, scheduler_hw, num_epochs=50)

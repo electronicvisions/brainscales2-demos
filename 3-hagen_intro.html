@@ -1,0 +1,387 @@
+
+
+<!DOCTYPE html>
+<!--[if IE 8]><html class="no-js lt-ie9" lang="en" > <![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js" lang="en" > <!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  <title>Introduction to matrix multiplication &mdash; BrainScaleS-2 Demos &amp; Examples 2021-03-18 documentation</title>
+  
+
+  
+  
+  
+  
+
+  
+  <script type="text/javascript" src="_static/js/modernizr.min.js"></script>
+  
+    
+      <script type="text/javascript" id="documentation_options" data-url_root="./" src="_static/documentation_options.js"></script>
+        <script type="text/javascript" src="_static/jquery.js"></script>
+        <script type="text/javascript" src="_static/underscore.js"></script>
+        <script type="text/javascript" src="_static/doctools.js"></script>
+        <script type="text/javascript" src="_static/language_data.js"></script>
+        <script async="async" type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/latest.js?config=TeX-AMS-MML_HTMLorMML"></script>
+    
+    <script type="text/javascript" src="_static/js/theme.js"></script>
+
+    
+
+  
+  <link rel="stylesheet" href="_static/css/theme.css" type="text/css" />
+  <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+    <link rel="index" title="Index" href="genindex.html" />
+    <link rel="search" title="Search" href="search.html" />
+    <link rel="next" title="Exploring the analog MAC operation" href="4-hagen_basics.html" />
+    <link rel="prev" title="Learning with the SuperSpike rule" href="2-superspike.html" /> 
+</head>
+
+<body class="wy-body-for-nav">
+
+   
+  <div class="wy-grid-for-nav">
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+          
+
+          
+            <a href="index.html" class="icon icon-home"> BrainScaleS-2 Demos & Examples
+          
+
+          
+          </a>
+
+          
+            
+            
+              <div class="version">
+                2021-03-18
+              </div>
+            
+          
+
+          
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+
+          
+        </div>
+
+        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+          
+            
+            
+              
+            
+            
+              <p class="caption"><span class="caption-text">Contents:</span></p>
+<ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="0-welcome.html">Welcome to the BrainScaleS-2 Tutorial</a></li>
+<li class="toctree-l1"><a class="reference internal" href="1-single_neuron_demo.html">BrainScaleS-2 single neuron experiments</a></li>
+<li class="toctree-l1"><a class="reference internal" href="2-superspike.html">Learning with the SuperSpike rule</a></li>
+<li class="toctree-l1 current"><a class="current reference internal" href="#">Introduction to matrix multiplication</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="#principles">Principles</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#further-read">Further read</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="#example">Example</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="4-hagen_basics.html">Exploring the analog MAC operation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="5-yin_yang_itl.html">Train DNNs on BrainScaleS-2</a></li>
+</ul>
+
+            
+          
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" aria-label="top navigation">
+        
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="index.html">BrainScaleS-2 Demos & Examples</a>
+        
+      </nav>
+
+
+      <div class="wy-nav-content">
+        
+        <div class="rst-content">
+        
+          
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation">
+
+  <ul class="wy-breadcrumbs">
+    
+      <li><a href="index.html">Docs</a> &raquo;</li>
+        
+          <li><a href="0-welcome.html">Welcome to the BrainScaleS-2 Tutorial</a> &raquo;</li>
+        
+      <li>Introduction to matrix multiplication</li>
+    
+    
+      <li class="wy-breadcrumbs-aside">
+        
+            
+            <a href="_sources/3-hagen_intro.rst.txt" rel="nofollow"> View page source</a>
+          
+        
+      </li>
+    
+  </ul>
+
+  
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+            
+  <div class="section" id="introduction-to-matrix-multiplication">
+<h1>Introduction to matrix multiplication<a class="headerlink" href="#introduction-to-matrix-multiplication" title="Permalink to this headline">¶</a></h1>
+<p>BrainScaleS-2 is capable of performing multiply-accumulate (MAC)
+operations within the analog network core. To multiply a vector with a
+matrix, the matrix is configured as synapse weights. The vector is
+encoded as pulse widths which stimulate synapse rows, therefore each
+synapse multiplies its weight with a vector entry. Neurons accumulate
+synaptic inputs from their column, thus accumulate the multiplication
+results from a matrix column.</p>
+<div class="section" id="principles">
+<h2>Principles<a class="headerlink" href="#principles" title="Permalink to this headline">¶</a></h2>
+<a class="reference internal image-reference" href="_images/chip_layout.png"><img alt="_images/chip_layout.png" class="align-center" src="_images/chip_layout.png" style="width: 40%;" /></a>
+<p>The analog network core consists of a synapse matrix (green dots), a row
+of neurons (circles on bottom), and a column of synapse drivers
+(triangles on the left). The synapse drivers stimulate twin-rows of
+synapses for a variable time. By combining an excitatory and inhibitory
+synapse, we can allow for signed values in the weight matrix. The
+synapses send their charge output to the neurons at the bottom, which
+integrate the currents on the membrane. A columnar analog-to-digital
+converter (CADC) can digitize the membrane potentials of all neurons in
+parallel. The on-chip processor (PPU) will then read the result vector
+obtained by the CADC and could perform further operations with it.</p>
+<a class="reference internal image-reference" href="_images/hagen_example.png"><img alt="_images/hagen_example.png" class="align-center" src="_images/hagen_example.png" style="width: 50%;" /></a>
+<p>In this example MAC operation, a vector (31, 5) is to be multiplied with
+a column of weights (20, -63).</p>
+<p>To process the first vector entry, the top synapse driver activates the
+top twin-row of synapses for a long time as the vector value is 31 (=
+maximum of our 5-bit range). The positively signed synapse creates a low
+current as the weight is 20 (maximum would be 63 in our 6-bit range).
+The neuron receives a long but small current input and the membrane
+voltage rises.</p>
+<p>For the next vector entry, the second synapse driver enables the
+synapses much shorter as the vector value is only 5. The current
+generated by the synapse is higher as its weight is maximum. The neuron
+receives a short but strong current input, but subtracts it from the
+membrane voltage as the synapse attaches to its inhibitory input.</p>
+<div class="section" id="further-read">
+<h3>Further read<a class="headerlink" href="#further-read" title="Permalink to this headline">¶</a></h3>
+<p>The hardware perspective and a benchmark on MNIST handwritten digits is
+published in:</p>
+<p>Weis J. et al. (2020) Inference with Artificial Neural Networks on
+Analog Neuromorphic Hardware. In: Gama J. et al. (eds) IoT Streams for
+Data-Driven Predictive Maintenance and IoT, Edge, and Mobile for
+Embedded Machine Learning. ITEM 2020, IoT Streams 2020. Communications
+in Computer and Information Science, vol 1325. Springer, Cham.
+<a class="reference external" href="https://doi.org/10.1007/978-3-030-66770-2_15">https://doi.org/10.1007/978-3-030-66770-2_15</a></p>
+<p>The integration into the PyTorch software frontend <code class="docutils literal notranslate"><span class="pre">hxtorch</span></code> and a
+benchmark on the human activity recognition dataset is published in:</p>
+<p>Spilger P. et al. (2020) hxtorch: PyTorch for BrainScaleS-2. In: Gama J.
+et al. (eds) IoT Streams for Data-Driven Predictive Maintenance and IoT,
+Edge, and Mobile for Embedded Machine Learning. ITEM 2020, IoT Streams
+2020. Communications in Computer and Information Science, vol 1325.
+Springer, Cham. <a class="reference external" href="https://doi.org/10.1007/978-3-030-66770-2_14">https://doi.org/10.1007/978-3-030-66770-2_14</a></p>
+</div>
+</div>
+<div class="section" id="example">
+<h2>Example<a class="headerlink" href="#example" title="Permalink to this headline">¶</a></h2>
+<p>First, we demonstrate how a neuron responds to synaptic currents in
+integration mode.</p>
+<p>By altering the target parameters for calibration, we set the neurons to
+short synaptic time constants and long membrane time constants. When
+observing the membrane at the typical time ranges of many milliseconds
+biological time, we can observe step-like changes in the membrane
+potential for each synaptic stimulus. Since vector-matrix multiplication
+has no continuous time, we can send the vector entries much faster than
+biological spikes, at up to 125 MHz (hardware time, biological
+equivalent: 125 kHz).</p>
+<p>In this example, we generate a few inputs and observe the neuron
+membrane during integration.</p>
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">numpy</span> <span class="kn">as</span> <span class="nn">np</span>
+<span class="kn">import</span> <span class="nn">ipywidgets</span> <span class="kn">as</span> <span class="nn">widgets</span>
+<span class="kn">import</span> <span class="nn">matplotlib.pyplot</span> <span class="kn">as</span> <span class="nn">plt</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">style</span><span class="o">.</span><span class="n">use</span><span class="p">(</span><span class="s2">&quot;_static/matplotlibrc&quot;</span><span class="p">)</span>
+
+<span class="kn">import</span> <span class="nn">pynn_brainscales.brainscales2</span> <span class="kn">as</span> <span class="nn">pynn</span>
+<span class="kn">from</span> <span class="nn">pynn_brainscales.brainscales2</span> <span class="kn">import</span> <span class="n">Population</span>
+<span class="kn">from</span> <span class="nn">pynn_brainscales.brainscales2.standardmodels.cells</span> <span class="kn">import</span> <span class="n">SpikeSourceArray</span>
+<span class="kn">from</span> <span class="nn">pynn_brainscales.brainscales2.standardmodels.synapses</span> <span class="kn">import</span> <span class="n">StaticSynapse</span>
+
+
+<span class="k">def</span> <span class="nf">plot_membrane_dynamics</span><span class="p">(</span><span class="n">population</span><span class="p">:</span> <span class="n">Population</span><span class="p">,</span> <span class="n">segment_id</span><span class="o">=-</span><span class="mi">1</span><span class="p">,</span> <span class="n">ylim</span><span class="o">=</span><span class="bp">None</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Plot the membrane potential of the neuron in a given population view. Only</span>
+<span class="sd">    population views of size 1 are supported.</span>
+<span class="sd">    :param population: Population, membrane traces and spikes are plotted for.</span>
+<span class="sd">    :param segment_id: Index of the neo segment to be plotted. Defaults to</span>
+<span class="sd">                       -1, encoding the last recorded segment.</span>
+<span class="sd">    :param ylim: y-axis limits for the plot.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">population</span><span class="p">)</span> <span class="o">!=</span> <span class="mi">1</span><span class="p">:</span>
+        <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">&quot;Plotting is supported for populations of size 1.&quot;</span><span class="p">)</span>
+    <span class="c1"># Experimental results are given in the &#39;neo&#39; data format</span>
+    <span class="n">mem_v</span> <span class="o">=</span> <span class="n">population</span><span class="o">.</span><span class="n">get_data</span><span class="p">(</span><span class="s2">&quot;v&quot;</span><span class="p">)</span><span class="o">.</span><span class="n">segments</span><span class="p">[</span><span class="n">segment_id</span><span class="p">]</span><span class="o">.</span><span class="n">analogsignals</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">base</span>
+    <span class="n">times</span> <span class="o">=</span> <span class="n">mem_v</span><span class="p">[:,</span> <span class="mi">0</span><span class="p">]</span>
+    <span class="n">membrane</span> <span class="o">=</span> <span class="n">mem_v</span><span class="p">[:,</span> <span class="mi">1</span><span class="p">]</span>
+
+    <span class="n">plt</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">times</span><span class="p">,</span> <span class="n">membrane</span><span class="p">,</span> <span class="n">alpha</span><span class="o">=</span><span class="mf">0.5</span><span class="p">)</span>
+    <span class="k">print</span><span class="p">(</span><span class="n">f</span><span class="s2">&quot;Mean membrane potential: {np.mean(membrane)}&quot;</span><span class="p">)</span>
+    <span class="n">plt</span><span class="o">.</span><span class="n">xlabel</span><span class="p">(</span><span class="s2">&quot;Wall clock time [ms]&quot;</span><span class="p">)</span>
+    <span class="n">plt</span><span class="o">.</span><span class="n">ylabel</span><span class="p">(</span><span class="s2">&quot;ADC readout [a.u.]&quot;</span><span class="p">)</span>
+    <span class="k">if</span> <span class="n">ylim</span><span class="p">:</span>
+        <span class="n">plt</span><span class="o">.</span><span class="n">ylim</span><span class="p">(</span><span class="n">ylim</span><span class="p">)</span>
+</pre></div>
+</div>
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="k">def</span> <span class="nf">generate_external_inputs</span><span class="p">(</span><span class="n">stimulated_population</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Create off-chip populations serving as excitatory/inhibitory spike sources.</span>
+
+<span class="sd">    Feel free to modify the `{exc,inh}_spiketimes` and the `weight` of the stimulation.</span>
+
+<span class="sd">    :param simulated_population: Population to map inputs to.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">exc_spiketimes</span> <span class="o">=</span> <span class="p">[</span><span class="mi">1</span><span class="p">,</span> <span class="mi">3</span><span class="p">,</span> <span class="mi">4</span><span class="p">,</span> <span class="mi">5</span><span class="p">,</span> <span class="mi">7</span><span class="p">,</span> <span class="mi">8</span><span class="p">,</span> <span class="mi">9</span><span class="p">,</span> <span class="mi">10</span><span class="p">,</span> <span class="mi">15</span><span class="p">,</span> <span class="mi">17</span><span class="p">,</span> <span class="mi">18</span><span class="p">,</span> <span class="mi">19</span><span class="p">]</span>  <span class="c1"># us</span>
+    <span class="n">exc_spiketimes</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">exc_spiketimes</span><span class="p">)</span> <span class="o">/</span> <span class="mf">1e3</span>
+    <span class="n">exc_stim_pop</span> <span class="o">=</span> <span class="n">pynn</span><span class="o">.</span><span class="n">Population</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="n">SpikeSourceArray</span><span class="p">(</span><span class="n">spike_times</span><span class="o">=</span><span class="n">exc_spiketimes</span><span class="p">))</span>
+    <span class="n">pynn</span><span class="o">.</span><span class="n">Projection</span><span class="p">(</span><span class="n">exc_stim_pop</span><span class="p">,</span> <span class="n">stimulated_p</span><span class="p">,</span>
+                    <span class="n">pynn</span><span class="o">.</span><span class="n">AllToAllConnector</span><span class="p">(),</span>
+                    <span class="n">synapse_type</span><span class="o">=</span><span class="n">StaticSynapse</span><span class="p">(</span><span class="n">weight</span><span class="o">=</span><span class="mi">63</span><span class="p">),</span>
+                    <span class="n">receptor_type</span><span class="o">=</span><span class="s2">&quot;excitatory&quot;</span><span class="p">)</span>
+
+    <span class="n">inh_spiketimes</span> <span class="o">=</span> <span class="p">[</span><span class="mi">2</span><span class="p">,</span> <span class="mi">6</span><span class="p">,</span> <span class="mi">16</span><span class="p">]</span>  <span class="c1"># us (bio: ms)</span>
+    <span class="n">inh_spiketimes</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">inh_spiketimes</span><span class="p">)</span> <span class="o">/</span> <span class="mf">1e3</span>
+    <span class="n">inh_stim_pop</span> <span class="o">=</span> <span class="n">pynn</span><span class="o">.</span><span class="n">Population</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="n">SpikeSourceArray</span><span class="p">(</span><span class="n">spike_times</span><span class="o">=</span><span class="n">inh_spiketimes</span><span class="p">))</span>
+    <span class="n">pynn</span><span class="o">.</span><span class="n">Projection</span><span class="p">(</span><span class="n">inh_stim_pop</span><span class="p">,</span> <span class="n">stimulated_p</span><span class="p">,</span>
+                    <span class="n">pynn</span><span class="o">.</span><span class="n">AllToAllConnector</span><span class="p">(),</span>
+                    <span class="n">synapse_type</span><span class="o">=</span><span class="n">StaticSynapse</span><span class="p">(</span><span class="n">weight</span><span class="o">=</span><span class="mi">63</span><span class="p">),</span>
+                    <span class="n">receptor_type</span><span class="o">=</span><span class="s2">&quot;inhibitory&quot;</span><span class="p">)</span>
+
+<span class="n">plt</span><span class="o">.</span><span class="n">figure</span><span class="p">()</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">title</span><span class="p">(</span><span class="s2">&quot;An integrator neuron&quot;</span><span class="p">)</span>
+
+<span class="c1"># setup calibration</span>
+<span class="n">calib_path</span> <span class="o">=</span> <span class="n">pynn</span><span class="o">.</span><span class="n">helper</span><span class="o">.</span><span class="n">nightly_calib_path</span><span class="p">()</span>
+<span class="n">calib</span> <span class="o">=</span> <span class="n">pynn</span><span class="o">.</span><span class="n">helper</span><span class="o">.</span><span class="n">coco_from_file</span><span class="p">(</span><span class="n">calib_path</span><span class="o">.</span><span class="n">parent</span><span class="o">.</span><span class="n">joinpath</span><span class="p">(</span><span class="s2">&quot;hagen_cocolist.bin&quot;</span><span class="p">))</span>
+<span class="n">neuron_calib</span> <span class="o">=</span> <span class="n">pynn</span><span class="o">.</span><span class="n">helper</span><span class="o">.</span><span class="n">filter_atomic_neuron</span><span class="p">(</span><span class="n">calib</span><span class="p">)</span>
+<span class="n">other_calib</span> <span class="o">=</span> <span class="n">pynn</span><span class="o">.</span><span class="n">helper</span><span class="o">.</span><span class="n">filter_non_atomic_neuron</span><span class="p">(</span><span class="n">calib</span><span class="p">)</span>
+
+<span class="c1"># reset membrane potential before beginning of experiment (it floats otherwise)</span>
+<span class="n">config_injection</span> <span class="o">=</span> <span class="n">pynn</span><span class="o">.</span><span class="n">InjectedConfiguration</span><span class="p">(</span>
+    <span class="n">post_non_realtime</span><span class="o">=</span><span class="n">other_calib</span><span class="p">)</span>
+<span class="n">pynn</span><span class="o">.</span><span class="n">setup</span><span class="p">(</span><span class="n">injected_config</span><span class="o">=</span><span class="n">config_injection</span><span class="p">)</span>
+
+<span class="c1"># use calibrated parameters for neuron</span>
+<span class="n">silent_p</span> <span class="o">=</span> <span class="n">pynn</span><span class="o">.</span><span class="n">Population</span><span class="p">(</span><span class="mi">2</span><span class="p">,</span> <span class="n">pynn</span><span class="o">.</span><span class="n">cells</span><span class="o">.</span><span class="n">HXNeuron</span><span class="p">(</span><span class="n">neuron_calib</span><span class="p">))</span>
+<span class="n">stimulated_p</span> <span class="o">=</span> <span class="n">pynn</span><span class="o">.</span><span class="n">Population</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="n">pynn</span><span class="o">.</span><span class="n">cells</span><span class="o">.</span><span class="n">HXNeuron</span><span class="p">(</span><span class="n">neuron_calib</span><span class="p">))</span>
+<span class="n">generate_external_inputs</span><span class="p">(</span><span class="n">stimulated_p</span><span class="p">)</span>
+<span class="n">stimulated_p</span><span class="o">.</span><span class="n">record</span><span class="p">([</span><span class="s2">&quot;v&quot;</span><span class="p">,</span> <span class="s2">&quot;spikes&quot;</span><span class="p">])</span>
+
+<span class="n">pynn</span><span class="o">.</span><span class="n">run</span><span class="p">(</span><span class="mf">50e-3</span><span class="p">)</span>  <span class="c1"># run for 50 us</span>
+<span class="n">plot_membrane_dynamics</span><span class="p">(</span><span class="n">stimulated_p</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">show</span><span class="p">()</span>
+</pre></div>
+</div>
+<a class="reference internal image-reference" href="_images/hagen_intro_integrator_neuron.svg"><div align="center" class="align-center"><img alt="_images/hagen_intro_integrator_neuron.svg" src="_images/hagen_intro_integrator_neuron.svg" width="90%" /></div>
+</a>
+<p>In the plot, you can see the integration phase in the beginning and a
+random drift after all inputs are received. Since the leakage is
+disabled, we do not decay to a controlled leak potential.</p>
+<p>For practial usage, the vector entries will be sent much faster, at a
+rate of up to 125 MHz, so the membrane has much less time to drift than
+here. In the beginning, the membrane potential is reset to a known
+starting voltage and in the end, the potential is digitized immediately
+after all inputs are received.</p>
+<p>We will now use the <code class="docutils literal notranslate"><span class="pre">hxtorch</span></code> software frontend which provides a
+vector-matrix multiplication on chip and supports the standard layers
+used in deep neural networks. First, we investigate the characteristics
+of the analog MAC operation.</p>
+</div>
+</div>
+
+
+           </div>
+           
+          </div>
+          <footer>
+  
+    <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
+      
+        <a href="4-hagen_basics.html" class="btn btn-neutral float-right" title="Exploring the analog MAC operation" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right"></span></a>
+      
+      
+        <a href="2-superspike.html" class="btn btn-neutral float-left" title="Learning with the SuperSpike rule" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left"></span> Previous</a>
+      
+    </div>
+  
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>
+        &copy; Copyright 2021, Electronic Vision(s), Kirchhoff-Institute for Physics, Heidelberg University
+
+    </p>
+  </div> 
+
+</footer>
+
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+  
+
+
+  <script type="text/javascript">
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script>
+
+  
+  
+    
+   
+
+</body>
+</html>
