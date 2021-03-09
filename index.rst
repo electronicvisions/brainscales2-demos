@@ -1,4 +1,4 @@
-Welcome to the BrainScaleS-2 Demos!
+Welcome to the BrainScaleS-2 Demos & Examples!
 =========================================================
 
 .. toctree::
