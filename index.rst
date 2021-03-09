@@ -6,4 +6,5 @@ Welcome to the BrainScaleS-2 Demos & Examples!
    :caption: Contents:
 
    minimal_hardware_execution
+   superspike
    hagen_properties
