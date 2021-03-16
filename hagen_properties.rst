@@ -77,6 +77,22 @@ This already enables us to multiply matrices using the BSS-2 accelerator:
 
     tensor([55., 60., 59., 56., 60., 63., 57., 58., 56., 62.])
 
+``hxtorch`` integrates the MAC operation into PyTorch on a per-operation
+basis (but also supports the combination of multiple operations) and is
+executed just-in-time on the BrainScaleS-2 hardware.
+
+.. image:: /_static/hxtorch_matmul.png
+   :width: 80%
+   :align: center
+
+A decisive advantage of the matrix multiplication mode is the possibility
+to decompose large operations and smaller parts and either multiplex them
+in time or even divide them among several BrainScaleS-2 ASICs:
+
+.. image:: /_static/hxtorch_partitioning.png
+   :width: 80%
+   :align: center
+
 Noise and fixed-pattern deviations
 ----------------------------------
 
