@@ -9,7 +9,6 @@ BrainScaleS-2 single neuron experiments
     import matplotlib.pyplot as plt
     plt.style.use("_static/matplotlibrc")
     
-    from dlens_vx_v2 import hal, halco
     import pynn_brainscales.brainscales2 as pynn
     from pynn_brainscales.brainscales2 import Population
     from pynn_brainscales.brainscales2.standardmodels.cells import SpikeSourceArray
@@ -311,62 +310,3 @@ observed on-chip neuron population.
 You may play around with the parameters in this experiment to achieve
 different traces. Try to stack multiple PSPs, try to make the neuron
 spike more often, be creative!
-
-Outlook: Neuron as integrator
------------------------------
-
-When executing multiply-accumulate operations on the analog substrate,
-the neurons are used as accumulators. A vector is encoded as pulse
-lengths and sent to the synapse matrix, which contains the weights.
-There, the multiplication of vector and matrix happens. Neurons
-accumulate the (signed) inputs from their synapse column, their membrane
-potentials represent the results.
-
-To reach an accumulation mode, the leaky-integrate-and-fire model
-implemented on hardware is set up with minimal leakage and short
-synaptic time constants. We use a different calibration with adjusted
-target parameters in this part. This will make the trace look more
-step-like. (We use the same external inputs from above.)
-
-.. code:: ipython3
-
-    plt.figure(figsize=(12, 6))
-    plt.suptitle("Fifth experiment: Integrator neuron")
-    
-    # setup calibration
-    calib_path = pynn.helper.nightly_calib_path()
-    calib = pynn.helper.coco_from_file(calib_path.parent.joinpath("hagen_cocolist.bin"))
-    neuron_calib = pynn.helper.filter_atomic_neuron(calib)
-    other_calib = pynn.helper.filter_non_atomic_neuron(calib)
-    
-    # reset membrane potential before beginning of experiment (it floats otherwise)
-    pre_realtime = {halco.NeuronResetQuadOnDLS(): hal.NeuronResetQuad()}
-    config_injection = pynn.InjectedConfiguration(
-        post_non_realtime=other_calib, pre_realtime=pre_realtime)
-    pynn.setup(injected_config=config_injection)
-    
-    # use calibrated parameters for neuron
-    silent_p = pynn.Population(2, pynn.cells.HXNeuron(neuron_calib))
-    stimulated_p = pynn.Population(1, pynn.cells.HXNeuron(neuron_calib))
-    generate_external_inputs(stimulated_p)
-    stimulated_p.record(["v", "spikes"])
-    
-    pynn.run(0.2)
-    plot_membrane_dynamics(stimulated_p)
-    plt.show()
-
-
-Due to the much smaller synaptic time constant, the potential change
-after each input is much lower, even though the generated current is
-actually larger. The random drift of the membrane can make the inputs
-vanish within the 200 us of time that is plotted here.
-
-However, the low synaptic time constant allows sending the events much
-faster, we can send a vector of 128 entries within a few us. In this
-setup, with more inputs and a short time, this low gain is sufficient.
-
-You may try out how the events look when sent much faster, e.g., one
-every 100 ns. We will use a setup like this later for the non-spiking
-tutorial, with the pytorch extension ``hxtorch`` instead of PyNN as
-software frontend.
-
