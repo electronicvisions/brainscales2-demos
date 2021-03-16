@@ -6,6 +6,8 @@ This example uses the PyTorch extension ``hxtorch``, already presented in the
 :doc:`introduction to the matrix multiplication <4-hagen_properties>`, to train
 a deep neural network (DNN).
 
+Some imports that are needed later:
+
 .. code:: ipython3
 
     import ipywidgets as w
@@ -27,12 +29,99 @@ a deep neural network (DNN).
     display(HTML("<style>.output_wrapper button.btn-default, "
                  ".output_wrapper .ui-dialog-titlebar {display:none}</style>"))
 
-The Yin-Yang dataset
+Hardware in the loop
 --------------------
+
+When training on the BrainScaleS-2 system using hxtorch, the multiply
+accumulate operation (MAC) in the forward pass is performed on the
+hardware, but the gradient is computed on the host computer:
+
+.. image:: /_static/hxtorch_itl.png
+   :width: 25%
+   :align: center
+
+For the calculation of the gradients, a mathematical model is required
+that approximately reflects the behavior of the hardware operation. In
+hxtorch, the following very simple linear relationship is assumed for
+this purpose:
+
+.. math::
+
+   y_i = \sum_j x_j \cdot w_{ij} \cdot g_\text{BSS-2} + \kappa_i\quad\text{with}\quad \kappa_i \sim N(0,\sigma)
+
+Here, the statistical noise :math:`\kappa_i` of the neurons is assumed
+to be Gaussian distributed with standard deviation :math:`\sigma`. The
+gain factor :math:`g_\text{BSS-2}` represents the conversion factor
+between the units of the input, weights and the analog-to-digital
+converter at the output and is specific to the individual hardware setup
+and its calibration.
+
+For the calculations on the host, these parameters can be measured after 
+initialization of the hardware connection:
+
+.. code:: ipython3
+
+    # initializes the hardware connection
+    # and applies a nightly default calibration
+    hxtorch.init_hardware()
+
+    # measures the hardware gain and the average statistical noise on the outputs
+    hardware_parameter = hxtorch.measure_mock_parameter()
+
+    print(f"gain factor: {hardware_parameter.gain:.5f}")
+    print(f"noise std.:  {hardware_parameter.noise_std:.5f}")
+
+    # use the measured parameters for backward pass and in mock mode
+    hxtorch.set_mock_parameter(hardware_parameter)
+
+Simulating hardware: The mock mode
+----------------------------------
+
+The linear model of the hardware presented above can optionally also be
+used for the forward pass with hxtorch. It also features the additional
+noise, reduced resolution and restricted value ranges of the system.
+
+.. image:: /_static/hxtorch_mock_mode.png
+   :width: 90%
+   :align: center
+
+This so-called mock mode can be switched on and off individually for
+each hxtorch operation and for each layer via the ``mock`` parameter,
+e.g.
+
+``hxtorch.matmul(..., mock=True)``
+
+It is especially convenient when no BrainScaleS-2 system is available
+and allows fast prototyping of DNN models.
+
+.. admonition:: References for further reading
+
+    The integration into the PyTorch software frontend ``hxtorch`` and a
+    benchmark on the human activity recognition dataset is published in:
+
+    - Spilger, Philipp, et al. “hxtorch: PyTorch for BrainScaleS-2.” IoT
+      Streams for Data-Driven Predictive Maintenance and IoT, Edge, and Mobile
+      for Embedded Machine Learning. Springer, Cham, 2020. 189-200.
+      https://doi.org/10.1007/978-3-030-66770-2_14
+
+    More details on the implementation of the backward pass, the mock mode
+    and the layer initilization can be found in (chapter 4.2 ff.):
+
+    - Emmel, Arne “Inference with Convolutional Neural Networks on Analog
+      Neuromorphic Hardware” *Master’s Thesis*. University of Heidelberg.
+      `pdf <http://www.kip.uni-heidelberg.de/Veroeffentlichungen/details.php?id=4122>`__
+
+
+Example application: the Yin-Yang dataset
+-----------------------------------------
 
 .. code:: ipython3
 
     class YinYangDataset(torch.utils.data.dataset.Dataset):
+        """
+        The Yin-Yang dataset. Slightly modified version adapted from:
+        https://github.com/lkriener/yin_yang_data_set
+        """
         def __init__(self, r_small=0.1, r_big=0.5, size=1000, seed=42):
             super(YinYangDataset, self).__init__()
             # numpy RNG to allow compatibility to other learning frameworks
@@ -88,6 +177,8 @@ The Yin-Yang dataset
         def __len__(self):
             return self.size
 
+Let's take a look at this dataset!
+
 .. code:: ipython3
 
     colors = ('black', 'white', 'orange')
@@ -97,6 +188,13 @@ The Yin-Yang dataset
     loader = torch.utils.data.DataLoader(
         dataset=YinYangDataset(size=num_samples),
         batch_size=num_samples)
+
+The samples in the modified version are randomly redrawn each time they are
+accessed, so that each sample will be presented to the network only once.
+Repeated execution of the following code cell therefore shows slightly different
+samples each time. The number of samples is the same for each of the three classes.
+
+.. code:: ipython3
 
     samples, labels = next(iter(loader))
 
@@ -116,19 +214,12 @@ The Yin-Yang dataset
     :align: center
     :class: solution
 
-.. admonition:: References for further reading
+.. admonition:: Further reading
 
-    -  Kriener, L., Göltz, J., & Petrovici, M. A. (2021).
-       The Yin-Yang dataset. arXiv preprint `arXiv:2102.08211 <https://arxiv.org/abs/2102.08211>`__.
+    This dataset as well as some model proposes and benchmarks are presented in:
 
-Training with hardware in the loop
-----------------------------------
-
-.. code:: ipython3
-
-    # initializes the hardware connection
-    # and applies a default calibration
-    hxtorch.init_hardware()
+    - Kriener, L., Göltz, J., & Petrovici, M. A. (2021). The Yin-Yang dataset.
+      arXiv preprint: `arXiv:2102.08211 <https://arxiv.org/abs/2102.08211>`__.
 
 .. code:: ipython3
 
@@ -201,6 +292,11 @@ Training with hardware in the loop
             scheduler.step()
         wout = w.Output(layout=w.Layout(height="450px")); display(wout)
         plt.close(); wout.layout=w.Layout(height="0px")
+
+
+Modeling with hxtorch feels almost like using PyTorch normally, you can
+even use layers of hxtorch and PyTorch together. If you are familiar
+with PyTorch, the code below will also look familiar to you:
 
 .. code:: ipython3
 
