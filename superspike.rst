@@ -245,6 +245,11 @@ Exercises
         pynn.reset()
     experiment(10, 1); plt.close()  # needed for testing
 
+.. image:: /_static/superspike_target.svg
+   :width: 90%
+   :align: center
+   :class: solution
+
 Extract the dynamic range from the above plot to normalize the membrane
 potential for calculating the surrogate gradient.
 
@@ -301,6 +306,11 @@ the steepness paramter :math:`\beta`.
     ax.legend(loc="upper left")
     ax.set_xlabel("normalized membrane potential")
     ax.set_ylabel("surrogate gradient");
+
+.. image:: /_static/superspike_gradient.svg
+   :width: 90%
+   :align: center
+   :class: solution
 
 The SuperSpike learning rules requires estimates of the neuro-synaptic
 time constants. Here, we use the same values as targeted for the deployed
@@ -408,6 +418,11 @@ Exercises
         # apply weight update
         weights += dw
 
+.. image:: /_static/superspike_training.svg
+   :width: 90%
+   :align: center
+   :class: solution
+
 .. code:: ipython3
 
     fig = plt.figure()
@@ -418,3 +433,8 @@ Exercises
     ax.set_xlim(0, n_epochs)
     ax.set_xlabel("epoch")
     ax.set_ylabel("loss");
+
+.. image:: /_static/superspike_loss.svg
+   :width: 90%
+   :align: center
+   :class: solution
