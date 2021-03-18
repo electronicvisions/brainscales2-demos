@@ -5,7 +5,9 @@ BrainScaleS-2 single neuron experiments
 .. code:: ipython3
 
     import numpy as np
-    import ipywidgets as widgets
+    from ipywidgets import interact, IntSlider
+    from functools import partial
+    IntSlider = partial(IntSlider, continuous_update=False)
     import matplotlib.pyplot as plt
     plt.style.use("_static/matplotlibrc")
     
@@ -76,10 +78,10 @@ biological systems.
 
 .. code:: ipython3
 
-    @widgets.interact(v_leak=widgets.IntSlider(min=400, max=1022, step=1, value=700, continuous_update=False))
+    @interact(v_leak=IntSlider(min=400, max=1022, step=1, value=700))
     def experiment(v_leak):
-        plt.figure(figsize=(12, 6))
-        plt.suptitle("First experiment: A silent neuron")
+        plt.figure()
+        plt.title("First experiment: A silent neuron")
     
         pynn.setup()
     
@@ -103,6 +105,10 @@ biological systems.
         # Reset the pyNN internal state and prepare for the following experiment.
         pynn.end()
 
+.. image:: _static/single_neuron_silent.svg
+   :width: 90%
+   :align: center
+   :class: solution
 
 Leak over threshold
 -------------------
@@ -119,10 +125,12 @@ threshold setting of 300 may correspond to a higher leak potential of
 
 .. code:: ipython3
 
-    @widgets.interact(v_leak=widgets.IntSlider(min=400, max=1022, step=1, value=1000, continuous_update=False),
-                      v_threshold=widgets.IntSlider(min=0, max=500, step=1, value=300, continuous_update=False),
-                      v_reset=widgets.IntSlider(min=300, max=1022, step=1, value=400, continuous_update=False),
-                      i_bias_leak=widgets.IntSlider(min=0, max=1022, step=1, value=150, continuous_update=False))
+    @interact(
+        v_leak=IntSlider(min=400, max=1022, step=1, value=1000),
+        v_threshold=IntSlider(min=0, max=500, step=1, value=300),
+        v_reset=IntSlider(min=300, max=1022, step=1, value=400),
+        i_bias_leak=IntSlider(min=0, max=1022, step=1, value=150),
+    )
     def experiment(v_leak, v_threshold, v_reset, i_bias_leak):
         """
         Set up a leak over threshold neuron.
@@ -133,8 +141,8 @@ threshold setting of 300 may correspond to a higher leak potential of
         :param i_bias_leak: Controls the leak conductance (membrane time constant).
         """
     
-        plt.figure(figsize=(12, 6))
-        plt.suptitle("Second experiment: Leak over threshold")
+        plt.figure()
+        plt.title("Second experiment: Leak over threshold")
     
         pynn.setup()
     
@@ -162,6 +170,10 @@ threshold setting of 300 may correspond to a higher leak potential of
         plt.show()
         pynn.end()
 
+.. image:: _static/single_neuron_lot.svg
+   :width: 90%
+   :align: center
+   :class: solution
 
 Fixed-pattern variations
 ------------------------
@@ -177,8 +189,8 @@ membrane time constants.
 
 .. code:: ipython3
 
-    plt.figure(figsize=(12, 6))
-    plt.suptitle("Third experiment: Fixed-pattern variations")
+    plt.figure()
+    plt.title("Third experiment: Fixed-pattern variations")
     
     pynn.setup()
     
@@ -213,6 +225,10 @@ membrane time constants.
     plt.show()
     pynn.end()
 
+.. image:: _static/single_neuron_fixed_pattern.svg
+   :width: 90%
+   :align: center
+   :class: solution
 
 The plot shows the recorded membrane traces of multiple different
 neurons. Due to the time-continuous nature of the system, there is no
@@ -288,8 +304,8 @@ observed on-chip neuron population.
                         synapse_type=StaticSynapse(weight=63),
                         receptor_type="inhibitory")
     
-    plt.figure(figsize=(12, 6))
-    plt.suptitle("Fourth experiment: External stimulation")
+    plt.figure()
+    plt.title("Fourth experiment: External stimulation")
     
     # setup calibration
     neuron_calib, other_calib = pynn.helper.filtered_cocos_from_nightly()
@@ -306,6 +322,10 @@ observed on-chip neuron population.
     plot_membrane_dynamics(stimulated_p)
     plt.show()
 
+.. image:: _static/single_neuron_stimulation.svg
+   :width: 90%
+   :align: center
+   :class: solution
 
 You may play around with the parameters in this experiment to achieve
 different traces. Try to stack multiple PSPs, try to make the neuron
