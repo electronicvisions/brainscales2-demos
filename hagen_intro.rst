@@ -1,6 +1,6 @@
 
-Matrix multiplication mode
-==========================
+Introduction to matrix multiplication
+=====================================
 
 BrainScaleS-2 is capable of performing multiply-accumulate (MAC)
 operations within the analog network core. To multiply a vector with a
@@ -13,7 +13,7 @@ results from a matrix column.
 Principles
 ----------
 
-.. image:: /_static/chip_layout.png
+.. image:: _static/chip_layout.png
    :width: 40 %
    :align: center
 
@@ -28,7 +28,7 @@ converter (CADC) can digitize the membrane potentials of all neurons in
 parallel. The on-chip processor (PPU) will then read the result vector
 obtained by the CADC and could perform further operations with it.
 
-.. image:: /_static/hagen_example.png
+.. image:: _static/hagen_example.png
    :width: 50 %
    :align: center
 
@@ -149,8 +149,8 @@ membrane during integration.
                         synapse_type=StaticSynapse(weight=63),
                         receptor_type="inhibitory")
     
-    plt.figure(figsize=(12, 6))
-    plt.suptitle("Fifth experiment: Integrator neuron")
+    plt.figure()
+    plt.title("An integrator neuron")
     
     # setup calibration
     calib_path = pynn.helper.nightly_calib_path()
@@ -173,6 +173,10 @@ membrane during integration.
     plot_membrane_dynamics(stimulated_p)
     plt.show()
 
+.. image:: _static/hagen_intro_integrator_neuron.svg
+   :width: 90%
+   :align: center
+   :class: solution
 
 In the plot, you can see the integration phase in the beginning and a
 random drift after all inputs are received. Since the leakage is
