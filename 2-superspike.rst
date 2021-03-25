@@ -39,30 +39,29 @@ forward-integrated SuperSpike learning rule on a simple artifical input
 pattern. In case you are interested, though, please refer to the original
 publication.
 
-References for further reading
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+.. admonition:: References for further reading
 
-1. Zenke, Friedemann, and Surya Ganguli. “Superspike: Supervised
-   learning in multilayer spiking neural networks.” *Neural computation*
-   30.6 (2018): 1514-1541.
-2. Neftci, Emre O., Hesham Mostafa, and Friedemann Zenke. “Surrogate
-   gradient learning in spiking neural networks: Bringing the power of
-   gradient-based optimization to spiking neural networks.” IEEE Signal
-   Processing Magazine 36.6 (2019): 51-63.
-3. Bellec, Guillaume, et al. “A solution to the learning dilemma for
-   recurrent networks of spiking neurons.” Nature communications 11.1
-   (2020): 1-15.
-4. Bohte, Sander M. “Error-backpropagation in networks of fractionally
-   predictive spiking neurons.” International Conference on Artificial
-   Neural Networks. Springer, Berlin, Heidelberg, 2011.
-5. Esser, Steven K., et al. “Convolutional networks for fast,
-   energy-efficient neuromorphic computing.” Proceedings of the national
-   academy of sciences 113.41 (2016): 11441-11446.
-6. Cramer, Benjamin, et al. “Surrogate gradients for analog neuromorphic
-   computing” arXiv preprint arXiv:2006.07239 (2021).
-7. Cramer, Benjamin, et al. “The Heidelberg Spiking Data Sets for the
-   Systematic Evaluation of Spiking Neural Networks.” IEEE Transactions
-   on Neural Networks and Learning Systems (2020).
+    1. Zenke, Friedemann, and Surya Ganguli. “Superspike: Supervised
+       learning in multilayer spiking neural networks.” *Neural computation*
+       30.6 (2018): 1514-1541.
+    2. Neftci, Emre O., Hesham Mostafa, and Friedemann Zenke. “Surrogate
+       gradient learning in spiking neural networks: Bringing the power of
+       gradient-based optimization to spiking neural networks.” IEEE Signal
+       Processing Magazine 36.6 (2019): 51-63.
+    3. Bellec, Guillaume, et al. “A solution to the learning dilemma for
+       recurrent networks of spiking neurons.” Nature communications 11.1
+       (2020): 1-15.
+    4. Bohte, Sander M. “Error-backpropagation in networks of fractionally
+       predictive spiking neurons.” International Conference on Artificial
+       Neural Networks. Springer, Berlin, Heidelberg, 2011.
+    5. Esser, Steven K., et al. “Convolutional networks for fast,
+       energy-efficient neuromorphic computing.” Proceedings of the national
+       academy of sciences 113.41 (2016): 11441-11446.
+    6. Cramer, Benjamin, et al. “Surrogate gradients for analog neuromorphic
+       computing” arXiv preprint arXiv:2006.07239 (2021).
+    7. Cramer, Benjamin, et al. “The Heidelberg Spiking Data Sets for the
+       Systematic Evaluation of Spiking Neural Networks.” IEEE Transactions
+       on Neural Networks and Learning Systems (2020).
 
 .. code:: ipython3
 
