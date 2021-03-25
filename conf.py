@@ -191,7 +191,7 @@ jupyter_conversion_mode = "all"
 jupyter_write_metadata = True
 
 # Location for _static folder
-jupyter_static_file_path = ["_static"]
+jupyter_static_file_path = ["_static", "matplotlibrc"]
 
 # Configure Jupyter Kernels
 jupyter_kernels = {
