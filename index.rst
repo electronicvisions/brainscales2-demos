@@ -5,8 +5,8 @@ Welcome to the BrainScaleS-2 Demos & Examples!
    :maxdepth: 2
    :caption: Contents:
 
-   minimal_hardware_execution
-   single_neuron
-   superspike
-   hagen_intro
-   hagen_properties
+   0-minimal_hardware_execution
+   1-single_neuron
+   2-superspike
+   3-hagen_intro
+   4-hagen_properties
