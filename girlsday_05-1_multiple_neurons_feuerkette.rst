@@ -143,6 +143,10 @@ Signal durch eine möglichst lange Kette gereicht werden.
         
         pynn.end()
 
+.. image:: _static/girlsday_feuerkette_output.png
+   :width: 100%
+   :class: solution
+
 Jeder aufgetretene Spike ist durch einen Punkt gekennzeichnet. Unten im
 roten Bereich sind die Spikes der exzitatorischen Populationen
 aufgetragen, oben im blauen Bereich die der inhibitorischen

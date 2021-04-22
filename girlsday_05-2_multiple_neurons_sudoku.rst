@@ -333,6 +333,10 @@ erhalten.
 
     display_sudoku_solver(sudoku)
 
+.. image:: _static/girlsday_sudoku_output1.png
+   :width: 100%
+   :class: solution
+
 Wir haben hier eine sehr vielseitige Sudokumaschine gebaut, die einiges
 kann:
 
@@ -391,6 +395,10 @@ für eine zunehmende Anzahl an Tipps mehrere Male eine Lösung gesucht.
         results += [np.mean(nums_correct), np.std(nums_correct)]
     results = np.array(results).reshape(-1, 2)
 
+.. image:: _static/girlsday_sudoku_output2.png
+   :width: 100%
+   :class: solution
+
 .. code:: ipython3
 
     # Die Erfolgsrate wird visualisiert.
@@ -402,3 +410,6 @@ für eine zunehmende Anzahl an Tipps mehrere Male eine Lösung gesucht.
     plt.ylabel("Anzahl der korrekt gelösten Felder")
     plt.show()
 
+.. image:: _static/girlsday_sudoku_output3.png
+   :width: 100%
+   :class: solution

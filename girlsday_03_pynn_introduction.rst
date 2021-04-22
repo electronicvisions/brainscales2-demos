@@ -135,3 +135,7 @@ werden.
     plt.xlabel("Zeit [ms]")
     plt.ylabel("Membranpotential [LSB]")
     plt.show()
+
+.. image:: _static/girlsday_pynn_output.png
+   :width: 100%
+   :class: solution

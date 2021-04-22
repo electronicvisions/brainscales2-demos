@@ -72,6 +72,9 @@ schauen uns das resultierende Membranpotential an.
     sliders = w.interactive(experiment, **neuron_parameters)
     display(w.VBox([w.HBox([sliders, plot_output]), text_output]))
 
+.. image:: _static/girlsday_single_neuron_output1.png
+   :width: 100%
+   :class: solution
 
 a) Was ist zu sehen? Wieso ist das so? Was erwartet ihr zu sehen?
    Beachtet dabei, dass auf allen Signalen auch ein Rauschen vorliegen
@@ -167,6 +170,10 @@ wird, ob exzitatorisch oder inhibitorisch.
             print(f"Die Zeitpunkte der Spikes waren [µs]:\n{spiketimes}")
 
         pynn.end()
+
+.. image:: _static/girlsday_single_neuron_output2.png
+   :width: 100%
+   :class: solution
 
 a) Ist zu den eingestellten Spikezeiten der Senderpopulation eine
    Reaktion im Membranpotential der beobachteten Nervenzelle zu sehen?
