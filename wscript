@@ -27,6 +27,8 @@ def build(bld):
         tests=bld.path.ant_glob("tests/shell/**/*"),
         features="use shelltest",
         use="doc-much-demos-such-wow-jupyter pynn_brainscales2 hxtorch",
-        test_environ=dict(BLD_DIR=str(blddir)))
+        test_environ=dict(BLD_DIR=str(blddir)),
+        test_timeout=300,
+    )
 
     bld.add_post_fun(summary)
