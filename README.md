@@ -7,10 +7,6 @@ This repository contains usuage examples for the BrainScaleS-2 toplevel APIs.
 Run in container (`singularity shell --app dls /containers/stable/latest`):
 
 ```shell
-set -eou pipefail
-virtualenv --system-site-packages venv
-. venv/bin/activate
-pip install sphinxcontrib-jupyter
 make html
 make jupyter
 ```
