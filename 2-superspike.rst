@@ -244,7 +244,7 @@ Exercises
         pynn.reset()
     experiment(10, 1); plt.close()  # needed for testing
 
-.. image:: /_static/superspike_target.svg
+.. image:: _static/superspike_target.svg
    :width: 90%
    :align: center
    :class: solution
@@ -306,7 +306,7 @@ the steepness paramter :math:`\beta`.
     ax.set_xlabel("normalized membrane potential")
     ax.set_ylabel("surrogate gradient");
 
-.. image:: /_static/superspike_gradient.svg
+.. image:: _static/superspike_gradient.svg
    :width: 90%
    :align: center
    :class: solution
@@ -417,7 +417,7 @@ Exercises
         # apply weight update
         weights += dw
 
-.. image:: /_static/superspike_training.svg
+.. image:: _static/superspike_training.svg
    :width: 90%
    :align: center
    :class: solution
@@ -433,7 +433,7 @@ Exercises
     ax.set_xlabel("epoch")
     ax.set_ylabel("loss");
 
-.. image:: /_static/superspike_loss.svg
+.. image:: _static/superspike_loss.svg
    :width: 90%
    :align: center
    :class: solution

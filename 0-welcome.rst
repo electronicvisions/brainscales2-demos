@@ -1,7 +1,7 @@
 Welcome to the BrainScaleS-2 Tutorial
 =====================================
 
-.. image:: /_static/bss2.jpg
+.. image:: _static/bss2.jpg
 
 Hello and welcome to this tutorial that will interactively guide you through your first experiments on the BrainScaleS-2 system!
 
@@ -55,7 +55,7 @@ We utilize the intrinsic speed of the system to offer you an interactive experie
 This process is hidden by a custom microscheduler (*quiggeldy*), a conceptual view of which you can see in the following figure.
 The actual hardware execution time has been colored in blue.
 
-.. image:: /_static/daas_multi.png
+.. image:: _static/daas_multi.png
     :width: 80%
     :align: center
 
