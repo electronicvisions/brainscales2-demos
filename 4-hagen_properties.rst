@@ -56,13 +56,13 @@ multiplication of two matrices:
     :returns: Resulting tensor
 
 Before the hardware can be used, we have to allocate a connection and to
-load a calibration. This can be achieved using ``hxtorch.init``:
+load a calibration. This can be achieved using ``hxtorch.init_hardware``:
 
 .. code:: ipython3
 
     # initializes the hardware connection
     # and applies a default calibration
-    hxtorch.init()
+    hxtorch.init_hardware()
 
 This already enables us to multiply matrices using the BSS-2 accelerator:
 
