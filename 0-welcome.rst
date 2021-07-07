@@ -28,7 +28,7 @@ In this session, we will cover the following topics:
    2-superspike
    3-hagen_intro
    4-hagen_properties
-   5-yin_yang_itl
+   5-plasticity_rate_coding
 
 In this section of the tutorial, we will go through the technical details and make sure that you are correctly set up for accessing our hardware resources.
 

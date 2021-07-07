@@ -10,3 +10,4 @@ Welcome to the BrainScaleS-2 Demos & Examples!
    2-superspike
    3-hagen_intro
    4-hagen_properties
+   5-plasticity_rate_coding
