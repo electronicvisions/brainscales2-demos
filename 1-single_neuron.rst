@@ -310,7 +310,7 @@ observed on-chip neuron population.
     # setup calibration
     neuron_calib, other_calib = pynn.helper.filtered_cocos_from_nightly()
     config_injection = pynn.InjectedConfiguration(
-        post_non_realtime=other_calib)
+        pre_non_realtime=other_calib)
     pynn.setup(injected_config=config_injection)
     
     # use calibrated parameters for neuron

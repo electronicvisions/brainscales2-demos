@@ -26,7 +26,7 @@ Neuron von einer Gruppe aus fünf Neuronen stimuliert wird.
     # Die Umgebung wird vorbereitet.
     atomic, inject = pynn.helper.filtered_cocos_from_nightly()
     config_injection = pynn.InjectedConfiguration(
-        post_non_realtime=inject)
+        pre_non_realtime=inject)
     pynn.setup(injected_config=config_injection)
 
 Gruppen aus Neuronen werden Populationen genannt. Man erstellt solch

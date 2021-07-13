@@ -53,7 +53,7 @@ Signal durch eine möglichst lange Kette gereicht werden.
         # Die Umgebung wird vorbereitet.
         atomic, inject = pynn.helper.filtered_cocos_from_nightly()
         config_injection = pynn.InjectedConfiguration(
-            post_non_realtime=inject)
+            pre_non_realtime=inject)
         pynn.setup(injected_config=config_injection)
         
         # Die angelegten Populationen werden in einem Verzeichnis gespeichert,

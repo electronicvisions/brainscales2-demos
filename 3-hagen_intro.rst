@@ -159,7 +159,7 @@ membrane during integration.
     
     # reset membrane potential before beginning of experiment (it floats otherwise)
     config_injection = pynn.InjectedConfiguration(
-        post_non_realtime=other_calib)
+        pre_non_realtime=other_calib)
     pynn.setup(injected_config=config_injection)
     
     # use calibrated parameters for neuron

@@ -183,7 +183,7 @@ erhalten.
 
     atomic, inject = pynn.helper.filtered_cocos_from_nightly()
     config_injection = pynn.InjectedConfiguration(
-        post_non_realtime=inject)
+        pre_non_realtime=inject)
     pynn.setup(injected_config=config_injection)
 
     # Alle Neuronen die eine Zahl in einem Feld repräsentieren werden als

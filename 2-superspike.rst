@@ -134,7 +134,7 @@ Next, we will define the network itself using PyNN.
     neuron_coco = pynn.helper.filter_atomic_neuron(full_coco)
 
     # setup PyNN and inect calibration data
-    pynn.setup(injected_config=pynn.InjectedConfiguration(post_non_realtime=general_coco))
+    pynn.setup(injected_config=pynn.InjectedConfiguration(pre_non_realtime=general_coco))
 
     # create output population (one neuron) and record its observables
     pop_output = pynn.Population(1, pynn.cells.HXNeuron(neuron_coco))

@@ -39,7 +39,7 @@ schauen uns das resultierende Membranpotential an.
     def experiment(**neuron_parameters):
         atomic, inject = pynn.helper.filtered_cocos_from_nightly()
         config_injection = pynn.InjectedConfiguration(
-            post_non_realtime=inject)
+            pre_non_realtime=inject)
         pynn.setup(injected_config=config_injection)
 
         pop = pynn.Population(1, pynn.cells.HXNeuron(atomic, **neuron_parameters))
@@ -136,7 +136,7 @@ wird, ob exzitatorisch oder inhibitorisch.
     def experiment(src_size, synapse_weight, spike_times, receptor_type):
         atomic, inject = pynn.helper.filtered_cocos_from_nightly()
         config_injection = pynn.InjectedConfiguration(
-            post_non_realtime=inject)
+            pre_non_realtime=inject)
         pynn.setup(injected_config=config_injection)
         # Das ist das Neuron, das wir beobachten werden.
         pop = pynn.Population(1, pynn.cells.HXNeuron(atomic, **neuron_parameters))
