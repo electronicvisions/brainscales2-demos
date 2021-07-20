@@ -118,7 +118,7 @@ weight updates.
     duration = 200e-6  # μs in wallclock time
     dt = 0.1e-6
 
-    n_steps = np.int(duration / dt)
+    n_steps = int(duration / dt)
 
     time = np.arange(n_steps) * dt
     bins = np.arange(n_steps + 1) * dt
