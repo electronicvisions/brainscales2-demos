@@ -129,9 +129,7 @@ Next, we will define the network itself using PyNN.
 .. code:: ipython3
 
     # load calibration data
-    full_coco = pynn.helper.coco_from_file(pynn.helper.nightly_calib_path())
-    general_coco = pynn.helper.filter_non_atomic_neuron(full_coco)
-    neuron_coco = pynn.helper.filter_atomic_neuron(full_coco)
+    neuron_coco, general_coco = pynn.helper.filtered_cocos_from_nightly()
 
     # setup PyNN and inect calibration data
     pynn.setup(injected_config=pynn.InjectedConfiguration(pre_non_realtime=general_coco))
