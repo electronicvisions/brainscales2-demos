@@ -115,7 +115,7 @@ weight updates.
 
     n_inputs = 60
 
-    duration = 200e-6  # μs in wallclock time
+    duration = 200e-6  # s in wallclock time
     dt = 0.1e-6
 
     n_steps = int(duration / dt)
@@ -181,7 +181,7 @@ according to a Bernoulli process.
 
     np.random.seed(123456)
 
-    freq = 10e3  # 10 kHz (remember the acceleration factor!)
+    freq = 10e3  # Hz (remember the acceleration factor!)
     input_spikes = []
     stimuli_dense = np.random.rand(n_inputs, n_steps) < freq * dt
     stimuli_dense[:, (time > (duration - 20e-6))] = 0
@@ -227,7 +227,7 @@ Exercises
 
         data = pop_output.get_data()
 
-        target_spikes = data.segments[-1].spiketrains[0] / 1e3
+        target_spikes = data.segments[-1].spiketrains[0] / 1e3  # convert ms to s
 
         membrane = data.segments[-1].analogsignals[0].base
         v_mem = np.interp(time, membrane[:, 0] / 1e3, membrane[:, 1])
