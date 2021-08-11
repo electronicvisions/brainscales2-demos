@@ -323,7 +323,7 @@ distance.
 
 .. code:: ipython3
 
-    n_kernel_steps = np.int(100e-6 / dt)
+    n_kernel_steps = int(100e-6 / dt)
     n_kernel_steps = n_kernel_steps + (1 - n_kernel_steps % 2)
 
     kernel_psc = np.zeros(n_kernel_steps)
