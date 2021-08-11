@@ -188,7 +188,7 @@ texinfo_documents = [
 # If "code", convert code-blocks only
 jupyter_conversion_mode = "all"
 
-jupyter_write_metadata = True
+jupyter_write_metadata = False
 
 # Location for _static folder
 jupyter_static_file_path = ["_static", "matplotlibrc"]
@@ -211,9 +211,6 @@ jupyter_headers = {
         # nbformat.v4.new_code_cell("%autosave 0")      #@mmcky please make this an option
     ],
 }
-
-# Prepend a Welcome Message to Each Notebook
-jupyter_welcome_block = "welcome.rst"
 
 # Allow ipython as a language synonym for blocks to be ipython highlighted
 jupyter_lang_synonyms = ["ipython", "ipython3"]
