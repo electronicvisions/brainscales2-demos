@@ -11,7 +11,8 @@ try {
 			testSlurmResource  : [partition: "cube", wafer: 62, "fpga-without-aout": 0],
 			preTestHook        : { configureHxCubeBitfile() },
 			testOptions        : "--test-execall -j1",
-			notificationChannel: "#jenkins-trashbin"  // success is checked globally
+			notificationChannel: "#jenkins-trashbin",  // success is checked globally
+			configureInstallOptions: "--build-profile=ci"
 		)
 	}
 
