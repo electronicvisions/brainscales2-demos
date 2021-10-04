@@ -17,6 +17,7 @@ For inspiration, please refer to the following list for examples of previous sci
 * `Inference with Artificial Neural Networks on Analog Neuromorphic Hardware <https://link.springer.com/chapter/10.1007/978-3-030-66770-2_15>`_
 * `Spiking neuromorphic chip learns entangled quantum states <https://arxiv.org/abs/2008.01039>`_
 * `Structural plasticity on an accelerated analog neuromorphic hardware system <https://www.sciencedirect.com/science/article/pii/S0893608020303555>`_
+* `Emulating dendritic computing paradigms on analog neuromorphic hardware <https://www.sciencedirect.com/science/article/pii/S0306452221004218>`_
 
 
 In this session, we will cover the following topics:
@@ -29,6 +30,7 @@ In this session, we will cover the following topics:
    3-hagen_intro
    4-hagen_properties
    5-plasticity_rate_coding
+   6-multicompartment
 
 In this section of the tutorial, we will go through the technical details and make sure that you are correctly set up for accessing our hardware resources.
 

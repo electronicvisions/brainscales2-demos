@@ -1,3 +1,5 @@
+.. _superspike:
+
 Learning with the SuperSpike rule
 =================================
 
