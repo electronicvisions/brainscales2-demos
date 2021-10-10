@@ -292,14 +292,14 @@ observed on-chip neuron population.
         """
         exc_spiketimes = [0.01, 0.05, 0.07, 0.09, 0.1]
         exc_stim_pop = pynn.Population(1, SpikeSourceArray(spike_times=exc_spiketimes))
-        pynn.Projection(exc_stim_pop, stimulated_p,
+        pynn.Projection(exc_stim_pop, stimulated_population,
                         pynn.AllToAllConnector(),
                         synapse_type=StaticSynapse(weight=63),
                         receptor_type="excitatory")
     
         inh_spiketimes = [0.03]
         inh_stim_pop = pynn.Population(1, SpikeSourceArray(spike_times=inh_spiketimes))
-        pynn.Projection(inh_stim_pop, stimulated_p,
+        pynn.Projection(inh_stim_pop, stimulated_population,
                         pynn.AllToAllConnector(),
                         synapse_type=StaticSynapse(weight=63),
                         receptor_type="inhibitory")
