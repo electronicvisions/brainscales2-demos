@@ -67,6 +67,7 @@ publication.
 
 .. code:: ipython3
 
+    %matplotlib inline
     import numpy as np
     import ipywidgets as w
     import matplotlib.pyplot as plt

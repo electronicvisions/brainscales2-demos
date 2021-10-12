@@ -10,6 +10,7 @@ This example makes use of this feature by show-casing synaptic plasticity.
 
 .. code:: ipython3
 
+    %matplotlib inline
     from shutil import which
     from os.path import join
     import numpy as np

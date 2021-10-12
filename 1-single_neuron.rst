@@ -4,6 +4,7 @@ BrainScaleS-2 single neuron experiments
 
 .. code:: ipython3
 
+    %matplotlib inline
     import numpy as np
     from ipywidgets import interact, IntSlider
     from functools import partial

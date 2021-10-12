@@ -45,6 +45,7 @@ Next, we load the default calibration and setup PyNN (compare :ref:`superspike` 
 
 .. code:: ipython3
 
+    %matplotlib inline
     from functools import partial
     from typing import List
     import numpy as np

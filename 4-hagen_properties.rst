@@ -10,6 +10,7 @@ First, we import some things needed later:
 
 .. code:: ipython3
 
+    %matplotlib inline
     import numpy as np
     import torch
     import hxtorch

@@ -89,6 +89,7 @@ membrane during integration.
 
 .. code:: ipython3
 
+    %matplotlib inline
     import matplotlib.pyplot as plt
     import numpy as np
     import ipywidgets as widgets
