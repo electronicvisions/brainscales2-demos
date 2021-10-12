@@ -282,42 +282,35 @@ observed on-chip neuron population.
 
 .. code:: ipython3
 
-    def generate_external_inputs(stimulated_population):
-        """
-        Create off-chip populations serving as excitatory/inhibitory spike sources.
-    
-        Feel free to modify the `{exc,inh}_spiketimes` and the `weight` of the stimulation.
-    
-        :param simulated_population: Population to map inputs to.
-        """
-        exc_spiketimes = [0.01, 0.05, 0.07, 0.09, 0.1]
-        exc_stim_pop = pynn.Population(1, SpikeSourceArray(spike_times=exc_spiketimes))
-        pynn.Projection(exc_stim_pop, stimulated_population,
-                        pynn.AllToAllConnector(),
-                        synapse_type=StaticSynapse(weight=63),
-                        receptor_type="excitatory")
-    
-        inh_spiketimes = [0.03]
-        inh_stim_pop = pynn.Population(1, SpikeSourceArray(spike_times=inh_spiketimes))
-        pynn.Projection(inh_stim_pop, stimulated_population,
-                        pynn.AllToAllConnector(),
-                        synapse_type=StaticSynapse(weight=63),
-                        receptor_type="inhibitory")
-    
     plt.figure()
     plt.title("Fourth experiment: External stimulation")
-    
+
     # setup calibration
     neuron_calib, other_calib = pynn.helper.filtered_cocos_from_nightly()
     config_injection = pynn.InjectedConfiguration(
         pre_non_realtime=other_calib)
     pynn.setup(injected_config=config_injection)
-    
+
     # use calibrated parameters for neuron
     stimulated_p = pynn.Population(1, pynn.cells.HXNeuron(neuron_calib))
-    generate_external_inputs(stimulated_p)
     stimulated_p.record(["v", "spikes"])
-    
+
+    # external input
+    exc_spiketimes = [0.01, 0.05, 0.07, 0.09, 0.1]
+    exc_stim_pop = pynn.Population(1, SpikeSourceArray(spike_times=exc_spiketimes))
+    pynn.Projection(exc_stim_pop, stimulated_p,
+                    pynn.AllToAllConnector(),
+                    synapse_type=StaticSynapse(weight=63),
+                    receptor_type="excitatory")
+
+    inh_spiketimes = [0.03]
+    inh_stim_pop = pynn.Population(1, SpikeSourceArray(spike_times=inh_spiketimes))
+    pynn.Projection(inh_stim_pop, stimulated_p,
+                    pynn.AllToAllConnector(),
+                    synapse_type=StaticSynapse(weight=63),
+                    receptor_type="inhibitory")
+
+    # run experiment
     pynn.run(0.2)
     plot_membrane_dynamics(stimulated_p)
     plt.show()
