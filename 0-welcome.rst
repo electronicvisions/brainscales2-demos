@@ -35,23 +35,23 @@ In this session, we will cover the following topics:
 In this section of the tutorial, we will go through the technical details and make sure that you are correctly set up for accessing our hardware resources.
 
 
-Jupyter Notebook Setup
-----------------------
-We have set up a Jupyter instance running on a local compute cluster in Heidelberg, which you can access via https://juphub.bioai.eu.
-To login, you will need a valid *EBRAINS* account.
-Once logged in, you can start a personal notebook server, which will contain two folders needed for this tutorial:
+Executing the Notebooks
+-----------------------
+If you want to execute the notebooks yourself, you can clone them form our
+`github repository <https://github.com/electronicvisions/brainscales2-demos/tree/jupyter-notebooks>`_ and
+execute them on the `EBrains Platform <https://wiki.ebrains.eu>`_.
+Simply use an existing collabatory or create a new one in which you can clone the notebooks.
 
-* ``tutorials``:
-  Your personal copy of the prepared tutorial.
-  This is the place to run and edit experiments at during this session.
-* ``tutorials-read-only``:
-  Read-only reference of the original notebooks.
-  You may refer back to these in case anything should stop working for you during the sesssion.
+Currently, you have to install a dedicated kernel in order to have access to the BrainScaleS software.
+For that purpose execute the following commands in the terminal of your JupyterHub session:
 
+.. code:: bash
+
+   module use /srv/main-spack-instance/spack/share/spack/modules/linux-centos7-broadwell/
+   jupyter kernelspec install --user /srv/jupyterlab_kernels/prod/release_v0.1_202109/spack_python_kernel_release_20210930/
 
 Shared Hardware Ressources
 --------------------------
-All notebooks used in this tutorial are running on a total of eight BrainScaleS-2 ASICs.
 We utilize the intrinsic speed of the system to offer you an interactive experience that is as smooth as possible even though multiple participants will access the same chip at any given point in time.
 
 This process is hidden by a custom microscheduler (*quiggeldy*), a conceptual view of which you can see in the following figure.
