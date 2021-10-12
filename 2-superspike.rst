@@ -132,12 +132,13 @@ weight updates.
     bins = np.arange(n_steps + 1) * dt
 
 
-Next, we will define the network itself using PyNN.
+Before we define our network, we load the default calibration.
+
+.. include:: nightly_calibration.rst
+
+Now, we can define the network itself using PyNN.
 
 .. code:: ipython3
-
-    # load calibration data
-    neuron_coco, general_coco = pynn.helper.filtered_cocos_from_nightly()
 
     # setup PyNN and inect calibration data
     pynn.setup(injected_config=pynn.InjectedConfiguration(pre_non_realtime=general_coco))

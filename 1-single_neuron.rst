@@ -285,6 +285,11 @@ sign), the value range for on-chip weights is therefore -63 to 63. With
 this first projection, we connect the external spike source to the
 observed on-chip neuron population.
 
+.. include:: nightly_calibration.rst
+
+
+Now we can continue by defining our experiment:
+
 .. code:: ipython3
 
     @interact(exc_weight=IntSlider(min=0, max=63, step=1, value=31),
@@ -307,9 +312,6 @@ observed on-chip neuron population.
 
         plt.figure()
         plt.title("Fourth experiment: External stimulation")
-
-        # load calibration data
-        neuron_coco, general_coco = pynn.helper.filtered_cocos_from_nightly()
 
         config_injection = pynn.InjectedConfiguration(
             pre_non_realtime=general_coco)
