@@ -65,6 +65,11 @@ publication.
        Systematic Evaluation of Spiking Neural Networks.” IEEE Transactions
        on Neural Networks and Learning Systems (2020).
 
+
+In order to use the microscheduler we have to set some enviroment varibles first:
+
+.. include:: quiggeldy_setup.rst
+
 .. code:: ipython3
 
     %matplotlib inline

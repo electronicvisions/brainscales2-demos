@@ -1,6 +1,7 @@
 #!/bin/bash
 set -euo pipefail
 
+
 exec_test() {
     local testfile
     testfile="$1"

@@ -2,6 +2,10 @@
 BrainScaleS-2 single neuron experiments
 =======================================
 
+In order to use the microscheduler we have to set some enviroment varibles first:
+
+.. include:: quiggeldy_setup.rst
+
 .. code:: ipython3
 
     %matplotlib inline

@@ -40,8 +40,11 @@ You can find more detailed information about the multi-compartmental capabilitie
 Imports and Calibration
 -----------------------
 
-As usual, we start by importing several Python packages, which we need to perform our experiment.
-Next, we load the default calibration and setup PyNN (compare :ref:`superspike` for example) .
+Once again we have to set some environment variables for our microscheduler first:
+
+.. include:: quiggeldy_setup.rst
+
+We continue by importing several Python packages, which we need to perform our experiment.
 
 .. code:: ipython3
 

@@ -63,6 +63,9 @@ The actual hardware execution time has been colored in blue.
 
 Please note that the hardware performance you will experience is affected by other users in this tutorial and can not be percieved as an accurate representation of the expected performance for single-user workloads.
 
+For the microscheduler to work we have to set some enviroment variables:
+
+.. include:: quiggeldy_setup.rst
 
 Final test: Hardware Execution
 ------------------------------
