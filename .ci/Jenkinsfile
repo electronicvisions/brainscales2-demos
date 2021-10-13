@@ -27,11 +27,6 @@ try {
 	}
 
 	if (env.GERRIT_EVENT_TYPE == "change-merged") {
-		stage("Deploy HTML as github pages") {
-			runOnSlave(label: "frontend") {
-				jesh("bash ${PROJECT_NAME}/.ci/deploy_html_gh-pages.sh")
-			}
-		}
 		stage("Deploy jupyter notebooks") {
 			runOnSlave(label: "frontend") {
 				jesh("bash ${PROJECT_NAME}/.ci/deploy_jupyter-notebooks.sh")
