@@ -9,5 +9,5 @@ touch .nojekyll
 git init
 git add .
 git commit -m "build"
-git remote add jupyter_notebooks git@github.com:electronicvisions/brainscales2-demos.git
-git push -f jupyter_notebooks HEAD:jupyter_notebooks
+git remote add origin git@github.com:electronicvisions/brainscales2-demos.git
+git push -f origin HEAD:jupyter-notebooks

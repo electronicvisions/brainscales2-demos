@@ -31,11 +31,11 @@ try {
 			runOnSlave(label: "frontend") {
 				jesh("bash ${PROJECT_NAME}/.ci/deploy_html_gh-pages.sh")
 			}
+		}
 		stage("Deploy jupyter notebooks") {
 			runOnSlave(label: "frontend") {
-				jesh("bash ${PROJECT_NAME}/.ci/deploy_jupyter_notebooks.sh")
+				jesh("bash ${PROJECT_NAME}/.ci/deploy_jupyter-notebooks.sh")
 			}
-		}
 		}
 	}
 } catch (Throwable t) {
