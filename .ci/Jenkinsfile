@@ -2,6 +2,8 @@
 
 final String PROJECT_NAME = "much-demos-such-wow"
 
+boolean deploy = env.GERRIT_EVENT_TYPE == "change-merged"
+
 try {
 	withCcache() {
 		wafDefaultPipeline(
@@ -12,7 +14,8 @@ try {
 			preTestHook        : { configureHxCubeBitfile() },
 			testOptions        : "--test-execall -j1",
 			notificationChannel: "#jenkins-trashbin",  // success is checked globally
-			configureInstallOptions: "--build-profile=ci"
+			configureInstallOptions: "--build-profile=ci",
+			ignoreGerritChanges: deploy
 		)
 	}
 
@@ -26,10 +29,17 @@ try {
 		}
 	}
 
-	if (env.GERRIT_EVENT_TYPE == "change-merged") {
-		stage("Deploy jupyter notebooks") {
-			runOnSlave(label: "frontend") {
-				jesh("bash ${PROJECT_NAME}/.ci/deploy_jupyter-notebooks.sh")
+	conditionalStage(name: "Deployment to GitHub Pages", skip: !deploy) {
+		runOnSlave(label: "frontend") {
+			dir("build/much-demos-such-wow/jupyter") {
+				jesh("touch .nojekyll")
+				jesh("git init")
+				jesh("git add .")
+				jesh("git commit -m \"build ${currentBuild.displayName}\"")
+				jesh("git remote add origin git@github.com:electronicvisions/brainscales2-demos.git")
+				lock("much-demos-such-wow_GITHUB-UPLOAD") {
+					jesh("git push -f origin HEAD:jupyter-notebooks")
+				}
 			}
 		}
 	}
