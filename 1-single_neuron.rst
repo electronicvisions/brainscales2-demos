@@ -283,38 +283,67 @@ observed on-chip neuron population.
 
 .. code:: ipython3
 
-    plt.figure()
-    plt.title("Fourth experiment: External stimulation")
+    @interact(exc_weight=IntSlider(min=0, max=63, step=1, value=31),
+              inh_weight=IntSlider(min=0, max=63, step=1, value=31),
+              isi=IntSlider(min=10, max=100, step=5, value=50))
+    def run_experiment(exc_weight: int, inh_weight: int, isi: float):
+        '''
+        Run external input demonstration on BSS-2.
 
-    # setup calibration
-    neuron_calib, other_calib = pynn.helper.filtered_cocos_from_nightly()
-    config_injection = pynn.InjectedConfiguration(
-        pre_non_realtime=other_calib)
-    pynn.setup(injected_config=config_injection)
+        Adjust weight of projections, set input spikes and execute experiment
+        on BSS-2.
 
-    # use calibrated parameters for neuron
-    stimulated_p = pynn.Population(1, pynn.cells.HXNeuron(neuron_calib))
-    stimulated_p.record(["v", "spikes"])
+        :param exc_weight: Weight of excitatory synaptic inputs, value range
+            [0,63].
+        :param inh_weight: Weight of inhibitory synaptic inputs, value range
+            [0,63].
+        :param isi: Time between synaptic inputs in microsecond (hardware
+            domain)
+        '''
 
-    # external input
-    exc_spiketimes = [0.01, 0.05, 0.07, 0.09, 0.1]
-    exc_stim_pop = pynn.Population(1, SpikeSourceArray(spike_times=exc_spiketimes))
-    pynn.Projection(exc_stim_pop, stimulated_p,
-                    pynn.AllToAllConnector(),
-                    synapse_type=StaticSynapse(weight=63),
-                    receptor_type="excitatory")
+        plt.figure()
+        plt.title("Fourth experiment: External stimulation")
 
-    inh_spiketimes = [0.03]
-    inh_stim_pop = pynn.Population(1, SpikeSourceArray(spike_times=inh_spiketimes))
-    pynn.Projection(inh_stim_pop, stimulated_p,
-                    pynn.AllToAllConnector(),
-                    synapse_type=StaticSynapse(weight=63),
-                    receptor_type="inhibitory")
+        # load calibration data
+        neuron_coco, general_coco = pynn.helper.filtered_cocos_from_nightly()
 
-    # run experiment
-    pynn.run(0.2)
-    plot_membrane_dynamics(stimulated_p)
-    plt.show()
+        config_injection = pynn.InjectedConfiguration(
+            pre_non_realtime=general_coco)
+        pynn.setup(injected_config=config_injection)
+
+        # use calibrated parameters for neuron
+        stimulated_p = pynn.Population(1, pynn.cells.HXNeuron(neuron_coco))
+        stimulated_p.record(["v", "spikes"])
+
+        # calculate spike times
+        wait_before_experiment = 0.01  # ms (hw)
+        isi_ms = isi / 1000  # convert to ms
+        spiketimes = np.arange(6) * isi_ms + wait_before_experiment
+
+        # all but one input are chosen to be exciatory
+        excitatory_spike = np.ones_like(spiketimes, dtype=bool)
+        excitatory_spike[1] = False
+
+        # external input
+        exc_spikes = spiketimes[excitatory_spike]
+        exc_stim_pop = pynn.Population(1, SpikeSourceArray(spike_times=exc_spikes))
+        exc_proj = pynn.Projection(exc_stim_pop, stimulated_p,
+                                   pynn.AllToAllConnector(),
+                                   synapse_type=StaticSynapse(weight=exc_weight),
+                                   receptor_type="excitatory")
+
+        inh_spikes = spiketimes[~excitatory_spike]
+        inh_stim_pop = pynn.Population(1, SpikeSourceArray(spike_times=inh_spikes))
+        inh_proj = pynn.Projection(inh_stim_pop, stimulated_p,
+                                   pynn.AllToAllConnector(),
+                                   synapse_type=StaticSynapse(weight=inh_weight),
+                                   receptor_type="inhibitory")
+
+        # run experiment
+        pynn.run(0.6)
+        plot_membrane_dynamics(stimulated_p, ylim=(100, 600))
+        plt.show()
+        pynn.end()
 
 .. image:: _static/single_neuron_stimulation.svg
    :width: 90%
