@@ -206,7 +206,8 @@ We will change the recording site in the x-axis and the injection site on the y-
         :param membrane_traces: List of recorded membrane traces of the different
             compartments.
         """
-        fig, axs = plt.subplots(length, length, sharex=True, sharey=True)
+        fig, axs = plt.subplots(length, length, sharex=True, sharey=True,
+                                figsize=(10,8))
 
         for injected in range(length):
             for measured in range(length):
@@ -251,7 +252,7 @@ We will change the recording site in the x-axis and the injection site on the y-
                     xycoords='axes fraction', textcoords='offset points',
                     ha='center', va='center', rotation=270)
 
-        display(fig)
+        fig.show()
 
 Performing the Experiment
 -------------------------
