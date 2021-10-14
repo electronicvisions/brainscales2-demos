@@ -32,9 +32,8 @@ try {
 	conditionalStage(name: "Deployment to GitHub Pages", skip: !deploy) {
 		runOnSlave(label: "frontend") {
 			dir("build/much-demos-such-wow/jupyter") {
-				jesh("touch .nojekyll")
 				jesh("git init")
-				jesh("git add .")
+				jesh("git add *.ipynb _static")
 				jesh("git commit -m \"build ${currentBuild.displayName}\"")
 				jesh("git remote add origin git@github-brainscales2-demos_jupyter-notebooks:electronicvisions/brainscales2-demos.git")
 				lock("much-demos-such-wow_GITHUB-UPLOAD") {
