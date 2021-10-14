@@ -36,10 +36,24 @@ def build(bld):
         env = bld.all_envs['nux_vx_v2'],
     )
 
+    bld.install_files(
+        testdir.find_or_declare('jupyter').find_or_declare('_static') ,
+        ['plasticity_kernel.bin'],
+        name='install_plasticity_kernel_test',
+        use="plasticity_kernel.bin"
+    )
+
+    bld.install_files(
+        blddir.find_or_declare('jupyter').find_or_declare('_static') ,
+        ['plasticity_kernel.bin'],
+        name='install_plasticity_kernel_deployment',
+        use="plasticity_kernel.bin"
+    )
+
     bld(name="doc-much-demos-such-wow_shelltests",
         tests=bld.path.ant_glob("tests/shell/**/*"),
         features="use shelltest",
-        use="doc-much-demos-such-wow-jupyter-test pynn_brainscales2 hxtorch plasticity_kernel.bin",
+        use="doc-much-demos-such-wow-jupyter-test pynn_brainscales2 hxtorch install_plasticity_kernel_test",
         test_environ=dict(BLD_DIR=str(testdir)),
         test_timeout=300,
     )

@@ -11,7 +11,6 @@ This example makes use of this feature by show-casing synaptic plasticity.
 .. code:: ipython3
 
     %matplotlib inline
-    from shutil import which
     from os.path import join
     import numpy as np
     import matplotlib.pyplot as plt
@@ -165,13 +164,17 @@ For our experiment, we first load an image to be rate-encoded later.
     # Read image into 2d numpy array
     image = read_image(join("_static", "visions.png"))
 
+Furthermore, we set some environment variables for our microscheduler:
+
+.. include:: quiggeldy_setup.rst
+
 Next, the instructions for loading and starting the PPU program and transferring
 the original image data are generated.
 
 .. code:: ipython3
 
     builder = load_and_start_plasticity_kernel(
-        which("plasticity_kernel.bin"),
+        "_static/plasticity_kernel.bin",
         halco.PPUOnDLS.top,
         image,
         1000 * 250) # 1 ms
