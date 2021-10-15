@@ -154,7 +154,7 @@ membrane during integration.
     
     # setup calibration
     calib_path = pynn.helper.nightly_calib_path()
-    calib = pynn.helper.coco_from_file(calib_path.parent.joinpath("hagen_cocolist.bin"))
+    calib = pynn.helper.coco_from_file(calib_path.parent.joinpath("hagen_cocolist.pbin"))
     neuron_calib = pynn.helper.filter_atomic_neuron(calib)
     other_calib = pynn.helper.filter_non_atomic_neuron(calib)
     
