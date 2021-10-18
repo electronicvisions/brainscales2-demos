@@ -1,5 +1,5 @@
 .. code-block:: ipython3
-    :class: test
+    :class: test, html-display-none
 
     # This env variable is not defined in our environment
     import os
@@ -15,7 +15,7 @@
     os.environ['QUIGGELDY_PORT']='11717'
 
 .. code-block:: ipython3
-    :class: test
+    :class: test, html-display-none
 
     # Do not use quiggeldy for tests
     os.environ['QUIGGELDY_ENABLED']='0'
