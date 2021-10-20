@@ -11,4 +11,4 @@ exec_test() {
 }
 export -f exec_test
 
-find "${BLD_DIR}" -name "*.ipynb" -type f -print0 | xargs -0 -n 1 -I{} bash -c "exec_test '{}'"
+find "${BLD_DIR}" -name "*.ipynb" -type f -print0 | xargs -0 -I{} bash -c "exec_test '{}'"
