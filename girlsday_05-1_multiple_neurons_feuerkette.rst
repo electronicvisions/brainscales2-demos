@@ -93,7 +93,7 @@ Signal durch eine möglichst lange Kette gereicht werden.
             pynn.Projection(pop_collector['inh'][lastiter],
                             pop_collector['exc'][lastiter],
                             pynn.AllToAllConnector(),
-                            synapse_type=pynn.synapses.StaticSynapse(weight=inh_exc),
+                            synapse_type=pynn.synapses.StaticSynapse(weight=-inh_exc),
                             receptor_type='inhibitory')
             
         for pop_index in range(lastiter):
@@ -110,7 +110,7 @@ Signal durch eine möglichst lange Kette gereicht werden.
             pynn.Projection(pop_collector['inh'][pop_index],
                             pop_collector['exc'][pop_index],
                             pynn.AllToAllConnector(),
-                            synapse_type=pynn.synapses.StaticSynapse(weight=inh_exc),
+                            synapse_type=pynn.synapses.StaticSynapse(weight=-inh_exc),
                             receptor_type='inhibitory')
         
         # Jetzt wird das Netzwerk emuliert.

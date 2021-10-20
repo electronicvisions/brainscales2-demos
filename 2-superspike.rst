@@ -151,14 +151,15 @@ Now, we can define the network itself using PyNN.
     pop_input = pynn.Population(n_inputs, pynn.cells.SpikeSourceArray(spike_times=[]))
 
     # define two projections (excitatory + inhibitory) to allow signed weights
-    synapse = pynn.standardmodels.synapses.StaticSynapse(weight=42)
+    synapse_exc = pynn.standardmodels.synapses.StaticSynapse(weight=42)
+    synapse_inh = pynn.standardmodels.synapses.StaticSynapse(weight=-42)
     projection_io_inh = pynn.Projection(pop_input, pop_output,
                                  pynn.AllToAllConnector(),
-                                 synapse_type=synapse,
+                                 synapse_type=synapse_inh,
                                  receptor_type="inhibitory")
     projection_io_exc = pynn.Projection(pop_input, pop_output,
                                  pynn.AllToAllConnector(),
-                                 synapse_type=synapse,
+                                 synapse_type=synapse_exc,
                                  receptor_type="excitatory")
 
 

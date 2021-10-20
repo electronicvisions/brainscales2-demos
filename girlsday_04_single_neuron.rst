@@ -147,7 +147,8 @@ wird, ob exzitatorisch oder inhibitorisch.
         spike_times = [float(x)/1000 for x in spike_times.split(',')]
         src = pynn.Population(src_size, pynn.cells.SpikeSourceArray(spike_times=spike_times))
 
-        synapse = pynn.synapses.StaticSynapse(weight=synapse_weight)
+        weight = synapse_weight if receptor_type == 'excitatory' else -synapse_weight
+        synapse = pynn.synapses.StaticSynapse(weight=weight)
 
         # Die Sender Population 'src' wird mit dem Neuron in 'pop' verbunden.
         pynn.Projection(src, pop, pynn.AllToAllConnector(),
