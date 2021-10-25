@@ -36,7 +36,7 @@ For loading and converting an image, some helpers are required:
         """
         image = np.asarray(plt.imread(path))
         # Scale to weight range [0, 63)
-        image = image / image.max() * 63.
+        image = image / image.max() * hal.SynapseWeightQuad.Value.max
         return image
 
     def image_to_memory_block(image: np.array) -> hal.PPUMemoryBlock:
@@ -68,8 +68,8 @@ For loading and converting an image, some helpers are required:
         for i in range(image_config.size()):
             for j in range(bytes_in_word):
                 index = i * bytes_in_word + j
-                image_value = int(image[image_w - 1 - (index % image_h)][
-                    index // image_h]) << ((bytes_in_word - 1 - j) * bits_in_byte)
+                image_value = int(image[image_h - 1 - (index % image_h)][
+                    index // image_w]) << ((bytes_in_word - 1 - j) * bits_in_byte)
                 words[i] = hal.PPUMemoryWord(
                     hal.PPUMemoryWord.Value(int(words[i].value) | image_value))
         image_config.words = words
