@@ -50,7 +50,7 @@ For that purpose execute the following commands in the terminal of your JupyterH
    module use /srv/main-spack-instance/spack/share/spack/modules/linux-centos7-broadwell/
    jupyter kernelspec install --user /srv/jupyterlab_kernels/prod/release_v0.1_202109/spack_python_kernel_release_20210930/
 
-Shared Hardware Ressources
+Shared Hardware Resources
 --------------------------
 We utilize the intrinsic speed of the system to offer you an interactive experience that is as smooth as possible even though multiple participants will access the same chip at any given point in time.
 
@@ -61,16 +61,16 @@ The actual hardware execution time has been colored in blue.
     :width: 80%
     :align: center
 
-Please note that the hardware performance you will experience is affected by other users in this tutorial and can not be percieved as an accurate representation of the expected performance for single-user workloads.
+Please note that the hardware performance you will experience is affected by other users in this tutorial and can not be perceived as an accurate representation of the expected performance for single-user workloads.
 
-For the microscheduler to work we have to set some enviroment variables:
+For the microscheduler to work we have to set some environment variables:
 
 .. include:: quiggeldy_setup.rst
 
 Final test: Hardware Execution
 ------------------------------
 Before we start with the actual tutorial, we'd like to ensure that you are correctly set up for running experiments on the BrainScaleS-2 platform.
-To do so, simply run the following minimal pyNN-experiment.
+To do so, simply run the following minimal PyNN-experiment.
 It should terminate without errors.
 
 .. code-block:: python3
