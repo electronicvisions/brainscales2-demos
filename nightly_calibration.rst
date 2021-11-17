@@ -26,7 +26,7 @@ Let us define a function which downloads this nightly calibration and returns th
         identifier = get_unique_identifier()
 
         download_url = "https://openproject.bioai.eu/data_calibration/" \
-                       f"hicann-dls-sr-hx/{identifier}/stable/latest/" \
+                       f"hicann-dls-sr-hx/{identifier}/stable/last-binary/" \
                        "spiking_cocolist.bin"
 
         # download and save calibration
