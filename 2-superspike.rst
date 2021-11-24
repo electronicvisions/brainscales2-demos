@@ -175,7 +175,7 @@ matrix to the two projections.
 
         integer_weights = np.round(weights).astype(int)
         w_exc = integer_weights * (integer_weights >= 0).astype(int)
-        w_inh = - integer_weights * (integer_weights < 0).astype(int)
+        w_inh = integer_weights * (integer_weights < 0).astype(int)
 
         projection_io_inh.set(weight=w_inh)
         projection_io_exc.set(weight=w_exc)
