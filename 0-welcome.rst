@@ -50,6 +50,8 @@ For that purpose execute the following commands in the terminal of your JupyterH
    module use /srv/main-spack-instance/spack/share/spack/modules/linux-centos7-broadwell/
    jupyter kernelspec install --user /srv/jupyterlab_kernels/prod/release_v0.1_202109/spack_python_kernel_release_20210930/
 
+After activating the kernel in your notebooks, you can perform experiments on the BrainScaleS-2 system.
+
 Shared Hardware Resources
 --------------------------
 We utilize the intrinsic speed of the system to offer you an interactive experience that is as smooth as possible even though multiple participants will access the same chip at any given point in time.
