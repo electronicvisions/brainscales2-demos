@@ -7,6 +7,7 @@ def depends(dep):
     dep("hxtorch")
     dep("libnux")
 
+
 def options(opt):
     opt.load("test_base")
     opt.load("shelltest")
@@ -24,19 +25,28 @@ def build(bld):
     blddir = bld.path.find_dir('.').get_bld()
     testdir = blddir.find_or_declare('test')
     sphinxbuild = "python -m sphinx"
-    bld(name='doc-much-demos-such-wow-jupyter', rule=f'{sphinxbuild} -M jupyter {srcdir} {blddir}', always=True)
+
+    # Build jupyter
+    bld(name='doc-much-demos-such-wow-jupyter',
+        rule=f'{sphinxbuild} -M jupyter {srcdir} {blddir}',
+        always=True)
+
     bld(name='doc-much-demos-such-wow-jupyter-test',
         rule=f'{sphinxbuild} -M jupyter {srcdir} {testdir} -D jupyter_drop_tests=0',
         always=True)
-    bld(name='doc-much-demos-such-wow-html', rule=f'{sphinxbuild} -M html {srcdir} {blddir}', always=True)
 
+    # Build HTML
+    bld(name='doc-much-demos-such-wow-html',
+        rule=f'{sphinxbuild} -M html {srcdir} {blddir}',
+        always=True)
 
+    # Build and install PPU code
     bld.program(
-        target = 'plasticity_kernel.bin',
-        features = 'cxx',
-        source = 'plasticity_kernel.cpp',
-        use = ['nux_vx_v2', 'nux_runtime_vx_v2'],
-        env = bld.all_envs['nux_vx_v2'],
+        target='plasticity_kernel.bin',
+        features='cxx',
+        source='plasticity_kernel.cpp',
+        use=['nux_vx_v2', 'nux_runtime_vx_v2'],
+        env=bld.all_envs['nux_vx_v2'],
     )
 
     bld.install_files(
@@ -53,6 +63,7 @@ def build(bld):
         use="plasticity_kernel.bin"
     )
 
+    # HW test
     bld(name="doc-much-demos-such-wow_shelltests",
         tests=bld.path.ant_glob("tests/shell/**/*"),
         features="use shelltest",
