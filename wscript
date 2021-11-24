@@ -1,3 +1,4 @@
+import os
 from waflib.extras.test_base import summary
 
 
@@ -17,6 +18,8 @@ def configure(conf):
 
 
 def build(bld):
+    bld.env.DLSvx_HARDWARE_AVAILABLE = "cube" == os.environ.get("SLURM_JOB_PARTITION")
+
     srcdir = bld.path.find_dir('.').get_src()
     blddir = bld.path.find_dir('.').get_bld()
     testdir = blddir.find_or_declare('test')
@@ -56,6 +59,7 @@ def build(bld):
         use="doc-much-demos-such-wow-jupyter-test pynn_brainscales2 hxtorch install_plasticity_kernel_test",
         test_environ=dict(BLD_DIR=str(testdir)),
         test_timeout=300,
+        skip_run=not bld.env.DLSvx_HARDWARE_AVAILABLE
     )
 
     bld.add_post_fun(summary)
