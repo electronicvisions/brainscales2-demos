@@ -39,7 +39,7 @@ Executing the Notebooks
 -----------------------
 If you want to execute the notebooks yourself, you can clone them form our
 `github repository <https://github.com/electronicvisions/brainscales2-demos/tree/jupyter-notebooks>`_ and
-execute them on the `EBrains Platform <https://wiki.ebrains.eu>`_.
+execute them on the `EBRAINS Platform <https://wiki.ebrains.eu>`_.
 Simply use an existing collabatory or create a new one in which you can clone the notebooks.
 
 Currently, you have to install a dedicated kernel in order to have access to the BrainScaleS software.
