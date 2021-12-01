@@ -66,7 +66,7 @@ publication.
        on Neural Networks and Learning Systems (2020).
 
 
-In order to use the microscheduler we have to set some enviroment varibles first:
+In order to use the microscheduler we have to set some environment variables first:
 
 .. include:: quiggeldy_setup.rst
 
