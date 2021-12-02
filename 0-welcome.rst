@@ -37,12 +37,13 @@ In this section of the tutorial, we will go through the technical details and ma
 
 Executing the Notebooks
 -----------------------
-If you want to execute the notebooks yourself, you can clone them form our
+If you want to execute the notebooks yourself, you can clone them from our
 `github repository <https://github.com/electronicvisions/brainscales2-demos/tree/jupyter-notebooks>`_ and
 execute them on the `EBRAINS Platform <https://wiki.ebrains.eu>`_.
 Simply use an existing collabatory or create a new one in which you can clone the notebooks, e.g., via:
 
-.. code:: bash
+.. code-block:: bash
+
    git clone https://github.com/electronicvisions/brainscales2-demos.git --branch jupyter-notebooks
 
 in the terminal of your JupyterLab session.
@@ -50,7 +51,7 @@ in the terminal of your JupyterLab session.
 Currently, you have to install a dedicated kernel in order to have access to the BrainScaleS software.
 For that purpose execute the following commands again in the terminal of your JupyterLab session:
 
-.. code:: bash
+.. code-block:: bash
 
    module use /srv/main-spack-instance/spack/share/spack/modules/linux-centos7-broadwell/
    jupyter kernelspec install --user /srv/jupyterlab_kernels/prod/release_v0.1_202109/spack_python_kernel_release_20210930/
