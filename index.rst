@@ -13,6 +13,7 @@ Welcome to the BrainScaleS-2 Demos & Examples!
    5-plasticity_rate_coding
    6-multicompartment
    7-yin_yang_itl
+   8-dynamic_range
 
 .. toctree::
    :maxdepth: 1
