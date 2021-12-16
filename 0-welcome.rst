@@ -48,7 +48,7 @@ Simply use an existing collabatory or create a new one in which you can clone th
 
 in the terminal of your JupyterLab session.
 
-Make sure to start the kernel named "EBRAINS_release_..." by either selecting the E symbol or by choosing the kernel from the list of available kernels when asked to.
+Make sure to start the kernel named ``EBRAINS_release_...`` by either selecting the E symbol or by choosing the kernel from the list of available kernels when asked to.
 
 Shared Hardware Resources
 --------------------------
