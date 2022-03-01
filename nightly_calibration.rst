@@ -27,12 +27,12 @@ Let us define a function which downloads this nightly calibration and returns th
 
         download_url = "https://openproject.bioai.eu/data_calibration/" \
                        f"hicann-dls-sr-hx/{identifier}/stable/last-binary/" \
-                       "spiking_cocolist.bin"
+                       "spiking_cocolist.pbin"
 
         # download and save calibration
         contents = urllib.request.urlopen(download_url).read()
-        calib_file = "spiking_cocolist.bin"
-        with open('spiking_cocolist.bin', 'wb') as f:
+        calib_file = "spiking_cocolist.pbin"
+        with open('spiking_cocolist.pbin', 'wb') as f:
             f.write(contents)
         coco = pynn.helper.coco_from_file(calib_file)
 
