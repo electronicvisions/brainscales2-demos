@@ -152,7 +152,7 @@ Now, we can define the network itself using PyNN.
 
     # define two projections (excitatory + inhibitory) to allow signed weights
     synapse_exc = pynn.standardmodels.synapses.StaticSynapse(weight=42)
-    synapse_inh = pynn.standardmodels.synapses.StaticSynapse(weight=-42)
+    synapse_inh = pynn.standardmodels.synapses.StaticSynapse(weight=42)
     projection_io_inh = pynn.Projection(pop_input, pop_output,
                                  pynn.AllToAllConnector(),
                                  synapse_type=synapse_inh,
@@ -175,7 +175,7 @@ matrix to the two projections.
 
         integer_weights = np.round(weights).astype(int)
         w_exc = integer_weights * (integer_weights >= 0).astype(int)
-        w_inh = integer_weights * (integer_weights < 0).astype(int)
+        w_inh = - integer_weights * (integer_weights < 0).astype(int)
 
         projection_io_inh.set(weight=w_inh)
         projection_io_exc.set(weight=w_exc)

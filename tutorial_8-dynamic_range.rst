@@ -114,15 +114,13 @@ Next we run the network multiple times with various configurations.
                                            synapse_type=pynn.standardmodels.synapses.StaticSynapse(weight=0))
                     projections.append(proj)
 
-                sign = 1 if receptor_type == "excitatory" else -1
-
                 # projections with maximum weight
                 for proj in projections[:(w // max_weight)]:
-                    proj.set(weight=sign * max_weight)
+                    proj.set(weight=max_weight)
 
                 # projection with the remaining weight
                 if projections:
-                    projections[-1].set(weight=sign * (w % max_weight))
+                    projections[-1].set(weight=w % max_weight)
 
                 pynn.run(1) # ms (hw)
                 membrane = population.get_data().segments[-1].analogsignals[0].base

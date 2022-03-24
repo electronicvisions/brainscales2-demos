@@ -127,7 +127,7 @@ erhalten.
                         pops_collector[row][column][number_pre],
                         pops_collector[row][column][(number_pre+number_post)%4],
                         pynn.AllToAllConnector(),
-                        synapse_type=StaticSynapse(weight=-63),
+                        synapse_type=StaticSynapse(weight=63),
                         receptor_type='inhibitory')
 
     # Die inhibitorischen Verbindungen zu den Neuronen der selben Nummer
@@ -141,7 +141,7 @@ erhalten.
                         pops_collector[row][column][number],
                         pops_collector[row][(column+column_post)%4][number],
                         pynn.AllToAllConnector(),
-                        synapse_type=StaticSynapse(weight=-63),
+                        synapse_type=StaticSynapse(weight=63),
                         receptor_type='inhibitory')
 
     # Die inhibitorischen Verbindungen zu den Neuronen der selben Nummer
@@ -155,7 +155,7 @@ erhalten.
                         pops_collector[row][column][number],
                         pops_collector[(row+row_post)%4][column][number],
                         pynn.AllToAllConnector(),
-                        synapse_type=StaticSynapse(weight=-63),
+                        synapse_type=StaticSynapse(weight=63),
                         receptor_type='inhibitory')
 
     # Die inhibitorischen Verbindungen zu den Neuronen der selben Nummer
@@ -173,7 +173,7 @@ erhalten.
                             pops_collector[
                                 (row+1)%2+row_offset][(column+1)%2+column_offset][number],
                             pynn.AllToAllConnector(),
-                            synapse_type=StaticSynapse(weight=-63),
+                            synapse_type=StaticSynapse(weight=63),
                             receptor_type='inhibitory')
 
     # Der Stimulus für die vorgegebenen Zahlen wird erstellt und
