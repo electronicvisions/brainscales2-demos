@@ -127,6 +127,16 @@ In order to use the microscheduler we have to set some environment variables fir
         if ylim:
             plt.ylim(ylim)
 
+Next we load a nightly calibration which is specifically tuned for the integration of synaptic inputs, for example it targets long membrane time constants.
+We save this calibration in two variables and use it later to define our neural network:
+
+.. code:: ipython3
+
+        from _static.helpers import get_nightly_calibration
+        neuron_coco, general_coco = get_nightly_calibration("hagen_cocolist.pbin")
+
+Now we define our experiment:
+
 .. code:: ipython3
 
     def generate_external_inputs(stimulated_population):
@@ -156,20 +166,14 @@ In order to use the microscheduler we have to set some environment variables fir
     plt.figure()
     plt.title("An integrator neuron")
     
-    # setup calibration
-    calib_path = pynn.helper.nightly_calib_path()
-    calib = pynn.helper.coco_from_file(calib_path.parent.joinpath("hagen_cocolist.pbin"))
-    neuron_calib = pynn.helper.filter_atomic_neuron(calib)
-    other_calib = pynn.helper.filter_non_atomic_neuron(calib)
-    
     # reset membrane potential before beginning of experiment (it floats otherwise)
     config_injection = pynn.InjectedConfiguration(
-        pre_non_realtime=other_calib)
+        pre_non_realtime=general_coco)
     pynn.setup(injected_config=config_injection)
     
     # use calibrated parameters for neuron
-    silent_p = pynn.Population(2, pynn.cells.HXNeuron(neuron_calib))
-    stimulated_p = pynn.Population(1, pynn.cells.HXNeuron(neuron_calib))
+    silent_p = pynn.Population(2, pynn.cells.HXNeuron(neuron_coco))
+    stimulated_p = pynn.Population(1, pynn.cells.HXNeuron(neuron_coco))
     generate_external_inputs(stimulated_p)
     stimulated_p.record(["v", "spikes"])
     
