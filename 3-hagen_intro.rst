@@ -87,6 +87,10 @@ equivalent: 125 kHz).
 In this example, we generate a few inputs and observe the neuron
 membrane during integration.
 
+In order to use the microscheduler we have to set some environment variables first:
+
+.. include:: quiggeldy_setup.rst
+
 .. code:: ipython3
 
     %matplotlib inline
