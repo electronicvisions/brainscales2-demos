@@ -60,7 +60,7 @@ publication.
        energy-efficient neuromorphic computing.” Proceedings of the national
        academy of sciences 113.41 (2016): 11441-11446.
     6. Cramer, Benjamin, et al. “Surrogate gradients for analog neuromorphic
-       computing” arXiv preprint arXiv:2006.07239 (2021).
+       computing” Proceedings of the national academy of sciences 119.4 (2022)
     7. Cramer, Benjamin, et al. “The Heidelberg Spiking Data Sets for the
        Systematic Evaluation of Spiking Neural Networks.” IEEE Transactions
        on Neural Networks and Learning Systems (2020).

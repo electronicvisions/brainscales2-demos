@@ -9,11 +9,11 @@ You will learn the basic tools for running experiments on the BrainScaleS-2 plat
 For inspiration, please refer to the following list for examples of previous scientific work done on the system:
 
 * `Versatile emulation of spiking neural networks on an accelerated neuromorphic substrate <https://ieeexplore.ieee.org/document/9180741>`_
-* `Surrogate gradients for analog neuromorphic computing <https://arxiv.org/abs/2006.07239>`_
+* `Surrogate gradients for analog neuromorphic computing <https://www.pnas.org/doi/full/10.1073/pnas.2109194119>`_
 * `hxtorch: PyTorch for BrainScaleS-2 – Perceptrons on Analog Neuromorphic Hardware <https://link.springer.com/chapter/10.1007/978-3-030-66770-2_14>`_
 * `Control of criticality and computation in spiking neuromorphic networks with plasticity <https://www.nature.com/articles/s41467-020-16548-3>`_
 * `Demonstrating Advantages of Neuromorphic Computation: A Pilot Study <https://www.frontiersin.org/articles/10.3389/fnins.2019.00260>`_
-* `Fast and deep: energy-efficient neuromorphic learning with first-spike times <https://arxiv.org/abs/1912.11443>`_
+* `Fast and energy-efficient neuromorphic deep learning with first-spike times <https://www.nature.com/articles/s42256-021-00388-x>`_
 * `Inference with Artificial Neural Networks on Analog Neuromorphic Hardware <https://link.springer.com/chapter/10.1007/978-3-030-66770-2_15>`_
 * `Spiking neuromorphic chip learns entangled quantum states <https://arxiv.org/abs/2008.01039>`_
 * `Structural plasticity on an accelerated analog neuromorphic hardware system <https://www.sciencedirect.com/science/article/pii/S0893608020303555>`_
