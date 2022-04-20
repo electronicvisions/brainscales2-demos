@@ -149,15 +149,26 @@ Synapsen und ihr Gewicht muss so gewählt werden, dass ein Reiz, der von
 Neuron 1 oder 2 kommt, ausreicht, um das Ausgangsneuron zum Feuern zu
 bringen.
 
+Doch bevor wir mit unseren Experimenten beginnen können, müssen wir unsere Umgebung vorbereiten:
+
+.. code:: ipython3
+
+    from _static.helpers import setup_hardware_client
+    setup_hardware_client()
+
+Jetzt können wir mit dem Experiment beginne:
+
 .. code:: ipython3
 
     # Module zum Modellieren feuernder neuronaler Netzwerke und zur graphischen Darstellung werden geladen.
     import pynn_brainscales.brainscales2 as pynn
     import matplotlib.pyplot as plt
+
+    from _static.helpers import get_nightly_calibration
     
     
     # Die Umgebung wird vorbereitet.
-    atomic, inject = pynn.helper.filtered_cocos_from_nightly()
+    atomic, inject = get_nightly_calibration()
     config_injection = pynn.InjectedConfiguration(
         pre_non_realtime=inject)
     pynn.setup(injected_config=config_injection)
@@ -266,10 +277,12 @@ Hinweis: Hier wird ein Hilfsneuron benötigt.
     # Module zum Modellieren feuernder neuronaler Netzwerke und zur graphischen Darstellung werden geladen.
     import pynn_brainscales.brainscales2 as pynn
     import matplotlib.pyplot as plt
+
+    from _static.helpers import get_nightly_calibration
     
     
     # Die Umgebung wird vorbereitet.
-    atomic, inject = pynn.helper.filtered_cocos_from_nightly()
+    atomic, inject = get_nightly_calibration()
     config_injection = pynn.InjectedConfiguration(
         pre_non_realtime=inject)
     pynn.setup(injected_config=config_injection)
@@ -365,10 +378,12 @@ selbst zu programmieren.
     # Module zum Modellieren feuernder neuronaler Netzwerke und zur graphischen Darstellung werden geladen.
     import pynn_brainscales.brainscales2 as pynn
     import matplotlib.pyplot as plt
+
+    from _static.helpers import get_nightly_calibration
     
 
     # Die Umgebung wird vorbereitet.
-    atomic, inject = pynn.helper.filtered_cocos_from_nightly()
+    atomic, inject = get_nightly_calibration()
     config_injection = pynn.InjectedConfiguration(
         pre_non_realtime=inject)
     pynn.setup(injected_config=config_injection)

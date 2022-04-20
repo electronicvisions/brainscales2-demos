@@ -2,6 +2,21 @@
 Experimente mit mehreren Nervenzellen Teil 2
 ============================================
 
+Umgebung vorbereiten
+--------------------
+
+Bevor wir mit unseren Experimenten beginnen können, müssen wir erneut unsere Umgebung vorbereiten:
+
+.. code:: ipython3
+
+    from _static.helpers import setup_hardware_client
+    setup_hardware_client()
+
+.. code:: ipython3
+
+   !pip install ipycanvas
+
+
 Sudoku
 ------
 
@@ -46,6 +61,8 @@ erhalten.
     from pynn_brainscales.brainscales2.standardmodels.synapses import StaticSynapse
     from pynn_brainscales.brainscales2.standardmodels.cells import \
                 SpikeSourceArray, HXNeuron,SpikeSourcePoisson
+
+    from _static.helpers import get_nightly_calibration
 
     # Funktionen, um das Sudoku zu lösen:
 
@@ -181,7 +198,7 @@ erhalten.
     v_leak_offset = 110
     v_reset_offset = 45 + v_leak_offset
 
-    atomic, inject = pynn.helper.filtered_cocos_from_nightly()
+    atomic, inject = get_nightly_calibration()
     config_injection = pynn.InjectedConfiguration(
         pre_non_realtime=inject)
     pynn.setup(injected_config=config_injection)

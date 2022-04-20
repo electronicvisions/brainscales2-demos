@@ -1,6 +1,16 @@
 Experimente mit mehreren Nervenzellen Teil 1
 ============================================
 
+Umgebung vorbereiten
+--------------------
+
+Bevor wir mit unseren Experimenten beginnen können, müssen wir erneut unsere Umgebung vorbereiten:
+
+.. code:: ipython3
+
+    from _static.helpers import setup_hardware_client
+    setup_hardware_client()
+
 Die Feuerkette
 --------------
 
@@ -22,6 +32,9 @@ Signal durch eine möglichst lange Kette gereicht werden.
     import ipywidgets as w
     from IPython.display import HTML
     from functools import partial
+
+    from _static.helpers import get_nightly_calibration
+
     Slider = partial(w.IntSlider, continuous_update=False)
 
     display(HTML('''
@@ -51,7 +64,7 @@ Signal durch eine möglichst lange Kette gereicht werden.
         neuron_parameters = {"refractory_period_refractory_time": 5}
         
         # Die Umgebung wird vorbereitet.
-        atomic, inject = pynn.helper.filtered_cocos_from_nightly()
+        atomic, inject = get_nightly_calibration()
         config_injection = pynn.InjectedConfiguration(
             pre_non_realtime=inject)
         pynn.setup(injected_config=config_injection)

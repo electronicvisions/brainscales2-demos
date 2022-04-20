@@ -51,6 +51,17 @@ aber die zu Grunde liegenden Zusammenhänge nicht verstehen.
     :align: center
     :width: 800px
 
+Umgebung vorbereiten
+--------------------
+
+Bevor wir mit unseren Experimenten beginnen können, müssen wir erneut unsere Umgebung vorbereiten:
+
+.. code:: ipython3
+
+    from _static.helpers import setup_hardware_client
+    setup_hardware_client()
+
+
 Beispiel: Erkennung von handgeschriebenen Ziffern
 -------------------------------------------------
 

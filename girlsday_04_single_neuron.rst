@@ -1,6 +1,16 @@
 Experimente mit einer einzelnen Nervenzelle
 ===========================================
 
+0. Umgebung vorbereiten
+-----------------------
+
+Bevor wir mit unseren Experimenten beginnen können, müssen wir erneut unsere Umgebung vorbereiten:
+
+.. code:: ipython3
+
+    from _static.helpers import setup_hardware_client
+    setup_hardware_client()
+
 1. Einfluss der Zellparameter
 -----------------------------
 
@@ -15,6 +25,9 @@ schauen uns das resultierende Membranpotential an.
     from IPython.display import HTML
     import ipywidgets as w
     from functools import partial
+
+    from _static.helpers import get_nightly_calibration
+
     Slider = partial(w.IntSlider, continuous_update=False)
 
     display(HTML('''
@@ -37,7 +50,7 @@ schauen uns das resultierende Membranpotential an.
     text_output = w.Output()
 
     def experiment(**neuron_parameters):
-        atomic, inject = pynn.helper.filtered_cocos_from_nightly()
+        atomic, inject = get_nightly_calibration()
         config_injection = pynn.InjectedConfiguration(
             pre_non_realtime=inject)
         pynn.setup(injected_config=config_injection)
@@ -112,6 +125,8 @@ wird, ob exzitatorisch oder inhibitorisch.
     import pynn_brainscales.brainscales2 as pynn
     import matplotlib.pyplot as plt
 
+    from _static.helpers import get_nightly_calibration
+
     # Nun muss das Ruhepotential wieder unter die Schwellenspannung gesetzt werden.
     neuron_parameters = {                          #                         Bereich
         "leak_v_leak": 400,                        # Ruhepotential          (300-1000)
@@ -134,7 +149,7 @@ wird, ob exzitatorisch oder inhibitorisch.
             options=["excitatory", "inhibitory"], description="Synapsentyp")
     )
     def experiment(src_size, synapse_weight, spike_times, receptor_type):
-        atomic, inject = pynn.helper.filtered_cocos_from_nightly()
+        atomic, inject = get_nightly_calibration()
         config_injection = pynn.InjectedConfiguration(
             pre_non_realtime=inject)
         pynn.setup(injected_config=config_injection)
