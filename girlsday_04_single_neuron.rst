@@ -21,6 +21,7 @@ schauen uns das resultierende Membranpotential an.
 .. code:: ipython3
 
     import pynn_brainscales.brainscales2 as pynn
+    %matplotlib inline
     import matplotlib.pyplot as plt
     from IPython.display import HTML
     import ipywidgets as w
@@ -123,6 +124,7 @@ wird, ob exzitatorisch oder inhibitorisch.
 .. code:: ipython3
 
     import pynn_brainscales.brainscales2 as pynn
+    %matplotlib inline
     import matplotlib.pyplot as plt
 
     from _static.helpers import get_nightly_calibration

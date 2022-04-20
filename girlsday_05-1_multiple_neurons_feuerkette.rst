@@ -27,6 +27,7 @@ Signal durch eine möglichst lange Kette gereicht werden.
 .. code:: ipython3
 
     import pynn_brainscales.brainscales2 as pynn
+    %matplotlib inline
     import matplotlib.pyplot as plt
     import numpy as np
     import ipywidgets as w

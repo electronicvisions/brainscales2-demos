@@ -130,6 +130,7 @@ werden.
     times, membrane = zip(*mem_v.filter(name="v")[0])
     
     # Ein Modul zur grafischen Darstellung wird geladen.
+    %matplotlib inline
     import matplotlib.pyplot as plt
     
     # Die Grafik wird erstellt. 

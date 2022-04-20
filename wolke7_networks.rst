@@ -162,6 +162,7 @@ Jetzt können wir mit dem Experiment beginne:
 
     # Module zum Modellieren feuernder neuronaler Netzwerke und zur graphischen Darstellung werden geladen.
     import pynn_brainscales.brainscales2 as pynn
+    %matplotlib inline
     import matplotlib.pyplot as plt
 
     from _static.helpers import get_nightly_calibration
@@ -276,6 +277,7 @@ Hinweis: Hier wird ein Hilfsneuron benötigt.
 
     # Module zum Modellieren feuernder neuronaler Netzwerke und zur graphischen Darstellung werden geladen.
     import pynn_brainscales.brainscales2 as pynn
+    %matplotlib inline
     import matplotlib.pyplot as plt
 
     from _static.helpers import get_nightly_calibration
@@ -377,6 +379,7 @@ selbst zu programmieren.
 
     # Module zum Modellieren feuernder neuronaler Netzwerke und zur graphischen Darstellung werden geladen.
     import pynn_brainscales.brainscales2 as pynn
+    %matplotlib inline
     import matplotlib.pyplot as plt
 
     from _static.helpers import get_nightly_calibration

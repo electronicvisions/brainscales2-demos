@@ -419,6 +419,7 @@ für eine zunehmende Anzahl an Tipps mehrere Male eine Lösung gesucht.
 .. code:: ipython3
 
     # Die Erfolgsrate wird visualisiert.
+    %matplotlib inline
     import matplotlib.pyplot as plt
 
     plt.figure(figsize=(8, 5))
