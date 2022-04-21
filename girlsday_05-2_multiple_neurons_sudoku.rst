@@ -64,129 +64,6 @@ erhalten.
 
     from _static.helpers import get_nightly_calibration
 
-    # Funktionen, um das Sudoku zu lösen:
-
-    def set_clues(clues=None):
-        """ Setzt die gegebenen Tipps in das Netzwerk """
-        if clues is None:
-            clues = np.zeros((4, 4), dtype=int)
-        for row, row_clues in enumerate(clue_projections):
-            for col, field_clues in enumerate(row_clues):
-                for number, clue_projection in enumerate(field_clues, start=1):
-                    for connection in clue_projection:
-                        connection.weight = 63. if clues[row,col] == number else 0.
-
-    def hide_solution(grid, num_clues, seed=None):
-        """ Versteckt die Lösung und lässt nur `num_clues` Tipps übrig """
-        indices = np.argwhere(np.logical_and(grid > 0, grid <= 4))
-        if len(indices) < num_clues:
-            raise RuntimeError(
-                f"Das Sudoku enthält weniger als die {num_clues} erforderlichen Zahlen :(")
-        np.random.seed(seed)
-        indices = indices[np.random.choice(len(indices), num_clues, replace=False)]
-        clues = np.zeros_like(grid)
-        clues[(indices.T[0], indices.T[1])] = grid[(indices.T[0], indices.T[1])]
-        return clues
-
-    def get_solution(clues):
-        """ Führt das Netzwerk aus und gibt die aktuelle Lösung zurück """
-        set_clues(clues)
-        grid = np.zeros((4, 4), dtype=int)
-        # Das Netzwerk wird emuliert
-        pynn.run(runtime)
-        # Die Lösung wird ausgelesen
-        for row, row_populations in enumerate(pops_collector):
-            for col, field_populations in enumerate(row_populations):
-                num_spikes = [
-                    len(num_population.get_data("spikes").segments[0].spiketrains[0])
-                    for num_population in field_populations
-                ]
-                grid[row, col] = np.argmax(num_spikes) + 1
-        return grid
-
-    # Funktionen, um das Sudoku anzuzeigen:
-
-    def canvas_leer(N=4, size=50, canvas=None):
-        """ Erstellt eine leere Zeichenfläche für das Sudoku """
-        if canvas is None:
-            canvas = Canvas(
-                width=size*N, height=size*N,
-                layout=w.Layout(margin='5px'))
-            canvas.scale(size)
-        canvas.clear()
-        canvas.layout.border=f'solid {size/15}px black'
-        canvas.font = '0.7px sans-serif'
-        canvas.text_align = 'center';
-        canvas.text_baseline = 'middle'
-        return canvas
-
-    def canvas_sudoku_leer(N=4, size=50, canvas=None):
-        """ Erstellt ein leeres Sudoku. Nur die Zahlen fehlen """
-        Ns = int(sqrt(N))
-        canvas = canvas_leer(N, size, canvas=canvas)
-        with hold_canvas(canvas):
-            for i in range(0, N+1):
-                canvas.line_width = 1/15 if i % Ns == 0 else 1/30
-                canvas.stroke_line(0, i, N, i)
-                canvas.stroke_line(i, 0, i, N)
-        return canvas
-
-    def display_clues(canvas, grid):
-        with hold_canvas(canvas):
-            for row, row_fields in enumerate(grid):
-                for col, field in enumerate(row_fields):
-                    if field > 0:
-                        canvas.fill_style = 'black'
-                        canvas.fill_text(field, col+.5, row+.5)
-                        canvas.fill_style = '#00000022'
-                        canvas.fill_rect(col, row, 1, 1)
-
-    def check_solution(grid, N=4):
-        """ Überprüft, ob die Sudoku-Regeln erfüllt werden """
-        Ns = int(sqrt(N))
-        for i in range(N):
-            # j, k index top left hand corner of each 3x3 tile
-            j, k = (i // Ns) * Ns, (i % Ns) * Ns
-            if len(set(grid[i,:])) != N or len(set(grid[:,i])) != N\
-                       or len(set(grid[j:j+Ns, k:k+Ns].ravel())) != N:
-                return False
-        return True
-
-    def display_solution(canvas, grid):
-        with hold_canvas(canvas):
-            for row, row_fields in enumerate(grid):
-                for col, field in enumerate(row_fields):
-                    if field > 0:
-                        canvas.fill_style = '#000000dd'
-                        canvas.fill_text(field, col+.5, row+.5)
-            canvas.layout.border = canvas.layout.border.rsplit(' ', 1)[0] \
-                + (' green' if check_solution(grid) else ' darkred')
-
-    def display_sudoku_solver(sudoku):
-        """ Sudoku und Slider anzeigen """
-        canvas = canvas_sudoku_leer()
-        num_clues_slider = IntSlider(
-            7, 0, len(np.argwhere(sudoku)), description="Anzahl Tipps")
-        seed_slider = IntSlider(
-            1234, 0, 3000, description="Zufalls-Seed")
-        run_button = w.Button(description='nochmal',icon='play')
-
-        def solve_sudoku(num_clues, seed):
-            """ Versucht das Sudoku zu lösen und zeigt das Ergebnis an """
-            with hold_canvas(canvas):
-                canvas_sudoku_leer(canvas=canvas)
-            clues = hide_solution(sudoku, num_clues, seed)
-            display_clues(canvas, clues)
-            display_solution(canvas, get_solution(clues))
-
-        interactive = w.interactive(
-            solve_sudoku, num_clues=num_clues_slider, seed=seed_slider)
-        run_button.on_click(interactive.update)
-        display(w.HBox([canvas, w.VBox([num_clues_slider, seed_slider, run_button])]))
-        interactive.update()
-
-.. code:: ipython3
-
     neuron_params = {
         "membrane_capacitance_capacitance": 5,
         "refractory_period_refractory_time": 2
@@ -337,6 +214,127 @@ erhalten.
         clue_projections.append(clues_row)
 
     print("Das Sudoku ist fertig erstellt!")
+
+.. code:: ipython3
+
+    # Funktionen, um das Sudoku zu lösen:
+
+    def set_clues(clues=None):
+        """ Setzt die gegebenen Tipps in das Netzwerk """
+        if clues is None:
+            clues = np.zeros((4, 4), dtype=int)
+        for row, row_clues in enumerate(clue_projections):
+            for col, field_clues in enumerate(row_clues):
+                for number, clue_projection in enumerate(field_clues, start=1):
+                    for connection in clue_projection:
+                        connection.weight = 63. if clues[row,col] == number else 0.
+
+    def hide_solution(grid, num_clues, seed=None):
+        """ Versteckt die Lösung und lässt nur `num_clues` Tipps übrig """
+        indices = np.argwhere(np.logical_and(grid > 0, grid <= 4))
+        if len(indices) < num_clues:
+            raise RuntimeError(
+                f"Das Sudoku enthält weniger als die {num_clues} erforderlichen Zahlen :(")
+        np.random.seed(seed)
+        indices = indices[np.random.choice(len(indices), num_clues, replace=False)]
+        clues = np.zeros_like(grid)
+        clues[(indices.T[0], indices.T[1])] = grid[(indices.T[0], indices.T[1])]
+        return clues
+
+    def get_solution(clues):
+        """ Führt das Netzwerk aus und gibt die aktuelle Lösung zurück """
+        set_clues(clues)
+        grid = np.zeros((4, 4), dtype=int)
+        # Das Netzwerk wird emuliert
+        pynn.run(runtime)
+        # Die Lösung wird ausgelesen
+        for row, row_populations in enumerate(pops_collector):
+            for col, field_populations in enumerate(row_populations):
+                num_spikes = [
+                    len(num_population.get_data("spikes").segments[0].spiketrains[0])
+                    for num_population in field_populations
+                ]
+                grid[row, col] = np.argmax(num_spikes) + 1
+        return grid
+
+    # Funktionen, um das Sudoku anzuzeigen:
+
+    def canvas_leer(N=4, size=50, canvas=None):
+        """ Erstellt eine leere Zeichenfläche für das Sudoku """
+        if canvas is None:
+            canvas = Canvas(
+                width=size*N, height=size*N,
+                layout=w.Layout(margin='5px'))
+            canvas.scale(size)
+        canvas.clear()
+        canvas.layout.border=f'solid {size/15}px black'
+        canvas.font = '0.7px sans-serif'
+        canvas.text_align = 'center';
+        canvas.text_baseline = 'middle'
+        return canvas
+
+    def canvas_sudoku_leer(N=4, size=50, canvas=None):
+        """ Erstellt ein leeres Sudoku. Nur die Zahlen fehlen """
+        Ns = int(sqrt(N))
+        canvas = canvas_leer(N, size, canvas=canvas)
+        with hold_canvas(canvas):
+            for i in range(0, N+1):
+                canvas.line_width = 1/15 if i % Ns == 0 else 1/30
+                canvas.stroke_line(0, i, N, i)
+                canvas.stroke_line(i, 0, i, N)
+        return canvas
+
+    def mark_clues(canvas, grid):
+        with hold_canvas(canvas):
+            for row, row_fields in enumerate(grid):
+                for col, field in enumerate(row_fields):
+                    if field > 0:
+                        canvas.fill_style = '#00000022'
+                        canvas.fill_rect(col, row, 1, 1)
+
+    def check_solution(grid, N=4):
+        """ Überprüft, ob die Sudoku-Regeln erfüllt werden """
+        Ns = int(sqrt(N))
+        for i in range(N):
+            # j, k index top left hand corner of each 3x3 tile
+            j, k = (i // Ns) * Ns, (i % Ns) * Ns
+            if len(set(grid[i,:])) != N or len(set(grid[:,i])) != N\
+                       or len(set(grid[j:j+Ns, k:k+Ns].ravel())) != N:
+                return False
+        return True
+
+    def display_solution(canvas, grid):
+        with hold_canvas(canvas):
+            for row, row_fields in enumerate(grid):
+                for col, field in enumerate(row_fields):
+                    if field > 0:
+                        canvas.fill_style = '#000000dd'
+                        canvas.fill_text(int(field), col+.5, row+.5)
+            canvas.layout.border = canvas.layout.border.rsplit(' ', 1)[0] \
+                + (' green' if check_solution(grid) else ' darkred')
+
+    def display_sudoku_solver(sudoku):
+        """ Sudoku und Slider anzeigen """
+        canvas = canvas_sudoku_leer()
+        num_clues_slider = IntSlider(
+            7, 0, len(np.argwhere(sudoku)), description="Anzahl Tipps")
+        seed_slider = IntSlider(
+            1234, 0, 3000, description="Zufalls-Seed")
+        run_button = w.Button(description='nochmal',icon='play')
+
+        def solve_sudoku(num_clues, seed):
+            """ Versucht das Sudoku zu lösen und zeigt das Ergebnis an """
+            with hold_canvas(canvas):
+                canvas_sudoku_leer(canvas=canvas)
+            clues = hide_solution(sudoku, num_clues, seed)
+            mark_clues(canvas, clues)
+            display_solution(canvas, get_solution(clues))
+
+        interactive = w.interactive(
+            solve_sudoku, num_clues=num_clues_slider, seed=seed_slider)
+        run_button.on_click(interactive.update)
+        display(w.HBox([canvas, w.VBox([num_clues_slider, seed_slider, run_button])]))
+        interactive.update()
 
 .. code:: ipython3
 
