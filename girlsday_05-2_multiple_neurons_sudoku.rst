@@ -64,11 +64,8 @@ erhalten.
 
     from _static.helpers import get_nightly_calibration
 
-    neuron_params = {
-        "membrane_capacitance_capacitance": 5,
-        "refractory_period_refractory_time": 2
-    }
     runtime = 0.5
+    dimension = 4
 
     # Die Ruhe- und Umkehrspannung wird erhöht, um Neuronen zum regelmäßigen
     # Feuern zu bringen.
@@ -80,19 +77,26 @@ erhalten.
         pre_non_realtime=inject)
     pynn.setup(injected_config=config_injection)
 
-    # Alle Neuronen die eine Zahl in einem Feld repräsentieren werden als
-    # Populationen der Größe 1 erstellt.
+    # Wir erstellen ein Neuron für jedes Zahl in jedem Feld. Wir brauchen also
+    # 4 (Reihen) * 4 (Spalten) * 4 (Zahlen) = 4^3 Neuronen
     print("Die Neuronen werden angelegt... (1/4)")
+    pop = pynn.Population(4**3, HXNeuron(atomic))
+    pop.record(["spikes"])
+    pop.leak_v_leak = pop.get('leak_v_leak') + v_leak_offset
+    pop.reset_v_reset = pop.get('reset_v_reset') + v_reset_offset
+
+    # Damit wir die Verbindungen in zwischen den Neuronen leichter definieren
+    # können speichern wir eine "Ansicht" auf einzelne Neuronen in einer Liste
     pops_collector = []
-    for row in range(4):
+    for row in range(dimension):
         pops_row = []
-        for field_in_row in range(4):
+        for field_in_row in range(dimension):
             pops_field = []
-            for number_in_field in range(4):
-                neuron = pynn.Population(1, HXNeuron(atomic, **neuron_params))
-                neuron.leak_v_leak = neuron.get('leak_v_leak') + v_leak_offset
-                neuron.reset_v_reset = neuron.get('reset_v_reset') + v_reset_offset
-                neuron.record(["spikes"])
+            for number_in_field in range(dimension):
+                neuron = pynn.PopulationView(
+                    pop,
+                    [row * dimension**2 + field_in_row * dimension
+                     + number_in_field])
                 pops_field.append(neuron)
             pops_row.append(pops_field)
         pops_collector.append(pops_row)
@@ -101,34 +105,20 @@ erhalten.
     # Dabei bekommt jedes Neuronen individuellen Input, der einer gemeinsamen
     # Zufallsverteilung (genauer gesagt einer Poissonverteilung) folgt.
     print("Das Hintergrundrauschen wird erzeugt... (2/4)")
-    stim_collector = []
-    for row in range(4):
-        stim_row = []
-        for field_in_row in range(4):
-            stim_field = []
-            for number_in_field in range(4):
-                poisson_source = pynn.Population(
-                    1, SpikeSourcePoisson(duration=runtime-0.01,rate=5e5,start=0.01))
-                stim_field.append(poisson_source)
-            stim_row.append(stim_field)
-        stim_collector.append(stim_row)
+    poisson_source = pynn.Population(dimension**3,
+        SpikeSourcePoisson(duration=runtime - 0.01, rate=5e5, start=0.01))
 
     # Diese Zufallsquellen werden nun mit den Neuronen verbunden.
     # Zusätzlich wird jedes Neuron mit sich selbst exzitatorisch verbunden,
     # um seine mögliche Aktivität zu erhalten.
-    for row in range(4):
-        for column in range(4):
-            for number in range(4):
-                pynn.Projection(
-                    pops_collector[row][column][number],
-                    pops_collector[row][column][number],
-                    pynn.AllToAllConnector(),
+    pynn.Projection(pop,
+                    pop,
+                    pynn.OneToOneConnector(),
                     synapse_type=StaticSynapse(weight=60),
                     receptor_type='excitatory')
-                pynn.Projection(
-                    stim_collector[row][column][number],
-                    pops_collector[row][column][number],
-                    pynn.AllToAllConnector(),
+    pynn.Projection(poisson_source,
+                    pop,
+                    pynn.OneToOneConnector(),
                     synapse_type=StaticSynapse(weight=60),
                     receptor_type='excitatory')
 
