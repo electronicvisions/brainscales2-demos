@@ -67,11 +67,6 @@ erhalten.
     runtime = 0.5
     dimension = 4
 
-    # Die Ruhe- und Umkehrspannung wird erhöht, um Neuronen zum regelmäßigen
-    # Feuern zu bringen.
-    v_leak_offset = 110
-    v_reset_offset = 45 + v_leak_offset
-
     atomic, inject = get_nightly_calibration()
     config_injection = pynn.InjectedConfiguration(
         pre_non_realtime=inject)
@@ -82,8 +77,6 @@ erhalten.
     print("Die Neuronen werden angelegt... (1/4)")
     pop = pynn.Population(4**3, HXNeuron(atomic))
     pop.record(["spikes"])
-    pop.leak_v_leak = pop.get('leak_v_leak') + v_leak_offset
-    pop.reset_v_reset = pop.get('reset_v_reset') + v_reset_offset
 
     # Damit wir die Verbindungen in zwischen den Neuronen leichter definieren
     # können speichern wir eine "Ansicht" auf einzelne Neuronen in einer Liste
@@ -114,12 +107,12 @@ erhalten.
     pynn.Projection(pop,
                     pop,
                     pynn.OneToOneConnector(),
-                    synapse_type=StaticSynapse(weight=60),
+                    synapse_type=StaticSynapse(weight=20),
                     receptor_type='excitatory')
     pynn.Projection(poisson_source,
                     pop,
                     pynn.OneToOneConnector(),
-                    synapse_type=StaticSynapse(weight=60),
+                    synapse_type=StaticSynapse(weight=30),
                     receptor_type='excitatory')
 
     print("Die Regeln werden implementiert... (3/4)")
