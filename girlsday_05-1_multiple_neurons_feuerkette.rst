@@ -8,7 +8,7 @@ Bevor wir mit unseren Experimenten beginnen können, müssen wir erneut unsere U
 
 .. code:: ipython3
 
-    from _static.helpers import setup_hardware_client
+    from _static.common.helpers import setup_hardware_client
     setup_hardware_client()
 
 Die Feuerkette
@@ -20,9 +20,8 @@ zu einer Kette. Jede exzitatorische Population (rot) besitzt dabei eine
 inhibitorische Partner Population (blau). Auf diese Weise soll ein
 Signal durch eine möglichst lange Kette gereicht werden.
 
-.. raw:: html
-
-    <img src="_static/girlsday_synfire_chain.png" width="400"/>
+.. image:: _static/girlsday/girlsday_synfire_chain.png
+    :width: 400
 
 .. code:: ipython3
 
@@ -34,7 +33,7 @@ Signal durch eine möglichst lange Kette gereicht werden.
     from IPython.display import HTML
     from functools import partial
 
-    from _static.helpers import get_nightly_calibration
+    from _static.common.helpers import get_nightly_calibration
 
     Slider = partial(w.IntSlider, continuous_update=False)
 
@@ -157,7 +156,7 @@ Signal durch eine möglichst lange Kette gereicht werden.
         
         pynn.end()
 
-.. image:: _static/girlsday_feuerkette_output.png
+.. image:: _static/girlsday/girlsday_feuerkette_output.png
    :width: 100%
    :class: solution
 

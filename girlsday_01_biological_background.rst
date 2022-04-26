@@ -3,9 +3,8 @@ Wie verarbeitet unser Gehirn Informationen?
 
 Was seht ihr auf diesem Bild?
 
-.. raw:: html
-
-    <img src="_static/girlsday_stadtmusikanten_gastfreund.jpg" width="600"/>
+.. image:: _static/girlsday/girlsday_stadtmusikanten_gastfreund.jpg
+    :width: 600
 
 (https://portal.gastfreund.net/bremen/262230)
 
@@ -23,12 +22,12 @@ darstellen.
 .. raw:: html
 
     <table><tr>
-    <td> <img src="_static/girlsday_stadtmusikanten_wikipedia.jpg" width="253"/> </td>
-    <td> <img src="_static/girlsday_stadtmusikanten_tourismus.jpg" width="600"/> </td>
+    <td> <img src="_static/girlsday/girlsday_stadtmusikanten_wikipedia.jpg" width="253"/> </td>
+    <td> <img src="_static/girlsday/girlsday_stadtmusikanten_tourismus.jpg" width="600"/> </td>
     </tr><table>
     <table><tr>
-        <td> <img src="_static/girlsday_stadtmusikanten_geo.jpg" width="503"/> </td>
-        <td> <img src="_static/girlsday_stadtmusikanten_holz.jpg" width="350"/> </td>
+        <td> <img src="_static/girlsday/girlsday_stadtmusikanten_geo.jpg" width="503"/> </td>
+        <td> <img src="_static/girlsday/girlsday_stadtmusikanten_holz.jpg" width="350"/> </td>
     </tr><table>
 
 (https://de.wikipedia.org/wiki/Datei:Die_Bremer_Stadtmusikanten.jpg)
@@ -61,9 +60,8 @@ Aktionspotential. Dieses läuft entlang des Axons zu den Axonterminalen,
 von wo aus es dann wiederum an viele andere Neuronen weitergegeben
 werden kann.
 
-.. raw:: html
-
-    <img src="_static/girlsday_neuron.png" width="700"/>
+.. image:: _static/girlsday/girlsday_neuron.png
+    :width: 700
 
 (https://de.wikipedia.org/wiki/Datei:Neuron_(deutsch)-1.svg)
 
@@ -83,10 +81,8 @@ dynamische Netzwerk aus Billiarden von Verbindungen können wir unter
 anderem den Informationsgehalt aus Fotos extrahieren und diesen dann auf
 ähnliche Bilder anwenden.
 
-.. raw:: html
-
-    <br>
-    <img src="_static/girlsday_neural_network.gif" width="400"/>
+.. image:: _static/girlsday/girlsday_neural_network.png
+    :width: 400
 
 (https://arbeitsblaetter.stangl-taller.at/GEHIRN/Gehirn-Neuronen.shtml)
 
@@ -109,9 +105,8 @@ Membranpotential sogar nach unten gezogen wird. Der entstehende Verlauf
 in der Membranspannung wird exzitatorisches bzw. inhibitorisches
 postsynaptisches Potential (EPSP/IPSP) genannt.
 
-.. raw:: html
-
-    <img src="_static/girlsday_psps.png" width="350"/>
+.. image:: _static/girlsday/girlsday_psps.png
+    :width: 350
 
 (http://www.chemgapedia.de/vsengine/vlu/vsc/de/ch/8/bc/vlu/neurotransmission/neuro_modul.vlu.html)
 
@@ -130,8 +125,7 @@ Prozess dauert nur wenige Millisekunden und da der Spannungsverlauf wie
 eine dünne Spitze aussieht, wird das Aktionspotential auch als Spike
 (englisch für Spitze) bezeichnet.
 
-.. raw:: html
-
-    <img src="_static/girlsday_actionpotential.svg" width="500"/>
+.. image:: _static/girlsday/girlsday_actionpotential.svg
+    :width: 500
 
 (https://de.wikipedia.org/wiki/Nervenzelle#/media/Datei:Aktionspotential.svg)

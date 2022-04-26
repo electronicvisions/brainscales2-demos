@@ -8,7 +8,7 @@ Bevor wir mit unseren Experimenten beginnen können, müssen wir erneut unsere U
 
 .. code:: ipython3
 
-    from _static.helpers import setup_hardware_client
+    from _static.common.helpers import setup_hardware_client
     setup_hardware_client()
 
 1. Einfluss der Zellparameter
@@ -27,7 +27,7 @@ schauen uns das resultierende Membranpotential an.
     import ipywidgets as w
     from functools import partial
 
-    from _static.helpers import get_nightly_calibration
+    from _static.common.helpers import get_nightly_calibration
 
     Slider = partial(w.IntSlider, continuous_update=False)
 
@@ -86,7 +86,7 @@ schauen uns das resultierende Membranpotential an.
     sliders = w.interactive(experiment, **neuron_parameters)
     display(w.VBox([w.HBox([sliders, plot_output]), text_output]))
 
-.. image:: _static/girlsday_single_neuron_output1.png
+.. image:: _static/girlsday/girlsday_single_neuron_output1.png
    :width: 100%
    :class: solution
 
@@ -99,9 +99,8 @@ b) Welche Spannung ist dargestellt? Überlegt euch, welche Werte das
    Dazu ist es hilfreich, sich das Aktionspotential nochmal
    anzuschauen.
 
-.. raw:: html
-
-    <img src="_static/girlsday_actionpotential.svg" width="500"/>
+.. image:: _static/girlsday/girlsday_actionpotential.svg
+    :width: 500
 
 c) Nun soll das Ruhepotential auf seinen Maximalwert gesetzt werden, der
    über der Schwellenspannung liegt. Überlegt euch vorher, was für einen
@@ -127,7 +126,7 @@ wird, ob exzitatorisch oder inhibitorisch.
     %matplotlib inline
     import matplotlib.pyplot as plt
 
-    from _static.helpers import get_nightly_calibration
+    from _static.common.helpers import get_nightly_calibration
 
     # Nun muss das Ruhepotential wieder unter die Schwellenspannung gesetzt werden.
     neuron_parameters = {                          #                         Bereich
@@ -189,7 +188,7 @@ wird, ob exzitatorisch oder inhibitorisch.
 
         pynn.end()
 
-.. image:: _static/girlsday_single_neuron_output2.png
+.. image:: _static/girlsday/girlsday_single_neuron_output2.png
    :width: 100%
    :class: solution
 

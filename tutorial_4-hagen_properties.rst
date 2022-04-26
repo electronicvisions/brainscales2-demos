@@ -85,7 +85,7 @@ This already enables us to multiply matrices using the BSS-2 accelerator:
 basis (but also supports the combination of multiple operations) and is
 executed just-in-time on the BrainScaleS-2 hardware.
 
-.. image:: _static/hxtorch_matmul.png
+.. image:: _static/tutorial/hxtorch_matmul.png
    :width: 80%
    :align: center
 
@@ -93,7 +93,7 @@ A decisive advantage of the matrix multiplication mode is the possibility
 to decompose large operations and smaller parts and either multiplex them
 in time or even divide them among several BrainScaleS-2 ASICs:
 
-.. image:: _static/hxtorch_partitioning.png
+.. image:: _static/tutorial/hxtorch_partitioning.png
    :width: 80%
    :align: center
 
@@ -143,12 +143,12 @@ to the synapse drivers.
     experiment(100, 12, 21, 0)  # needed for testing
     display(output)
 
-.. image:: _static/hagen_properties_fig1.png
+.. image:: _static/tutorial/hagen_properties_fig1.png
    :width: 90%
    :align: center
    :class: solution
 
-.. image:: _static/hagen_properties_sliders1.png
+.. image:: _static/tutorial/hagen_properties_sliders1.png
    :width: 300px
    :class: solution
 
@@ -190,12 +190,12 @@ increasing weight vector.
     experiment(100, 12, 0)  # needed for testing
     display(output)
 
-.. image:: _static/hagen_properties_fig2.png
+.. image:: _static/tutorial/hagen_properties_fig2.png
    :width: 90%
    :align: center
    :class: solution
 
-.. image:: _static/hagen_properties_sliders2.png
+.. image:: _static/tutorial/hagen_properties_sliders2.png
    :width: 300px
    :class: solution
 

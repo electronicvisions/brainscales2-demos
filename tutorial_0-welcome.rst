@@ -1,7 +1,7 @@
 Welcome to the BrainScaleS-2 Tutorial
 =====================================
 
-.. image:: _static/bss2.jpg
+.. image:: _static/tutorial/bss2.jpg
 
 Hello and welcome to this tutorial that will interactively guide you through your first experiments on the BrainScaleS-2 system!
 
@@ -25,12 +25,12 @@ In this session, we will cover the following topics:
 .. toctree::
    :maxdepth: 1
 
-   1-single_neuron
-   2-superspike
-   3-hagen_intro
-   4-hagen_properties
-   5-plasticity_rate_coding
-   6-multicompartment
+   tutorial_1-single_neuron
+   tutorial_2-superspike
+   tutorial_3-hagen_intro
+   tutorial_4-hagen_properties
+   tutorial_5-plasticity_rate_coding
+   tutorial_6-multicompartment
 
 In this section of the tutorial, we will go through the technical details and make sure that you are correctly set up for accessing our hardware resources.
 
@@ -57,7 +57,7 @@ We utilize the intrinsic speed of the system to offer you an interactive experie
 This process is hidden by a custom microscheduler (*quiggeldy*), a conceptual view of which you can see in the following figure.
 The actual hardware execution time has been colored in blue.
 
-.. image:: _static/daas_multi.png
+.. image:: _static/tutorial/daas_multi.png
     :width: 80%
     :align: center
 
@@ -65,7 +65,7 @@ Please note that the hardware performance you will experience is affected by oth
 
 For the microscheduler to work we have to set some environment variables:
 
-.. include:: quiggeldy_setup.rst
+.. include:: common_quiggeldy_setup.rst
 
 Final test: Hardware Execution
 ------------------------------

@@ -13,7 +13,7 @@ results from a matrix column.
 Principles
 ----------
 
-.. image:: _static/chip_layout.png
+.. image:: _static/tutorial/chip_layout.png
    :width: 40 %
    :align: center
 
@@ -28,7 +28,7 @@ converter (CADC) can digitize the membrane potentials of all neurons in
 parallel. The on-chip processor (PPU) will then read the result vector
 obtained by the CADC and could perform further operations with it.
 
-.. image:: _static/hagen_example.png
+.. image:: _static/tutorial/hagen_example.png
    :width: 50 %
    :align: center
 
@@ -89,7 +89,7 @@ membrane during integration.
 
 In order to use the microscheduler we have to set some environment variables first:
 
-.. include:: quiggeldy_setup.rst
+.. include:: common_quiggeldy_setup.rst
 
 .. code:: ipython3
 
@@ -97,13 +97,13 @@ In order to use the microscheduler we have to set some environment variables fir
     import matplotlib.pyplot as plt
     import numpy as np
     import ipywidgets as widgets
-    
+
     import pynn_brainscales.brainscales2 as pynn
     from pynn_brainscales.brainscales2 import Population
     from pynn_brainscales.brainscales2.standardmodels.cells import SpikeSourceArray
     from pynn_brainscales.brainscales2.standardmodels.synapses import StaticSynapse
-    
-    
+
+
     def plot_membrane_dynamics(population: Population, segment_id=-1, ylim=None):
         """
         Plot the membrane potential of the neuron in a given population view. Only
@@ -119,7 +119,7 @@ In order to use the microscheduler we have to set some environment variables fir
         mem_v = population.get_data("v").segments[segment_id].analogsignals[0].base
         times = mem_v[:, 0]
         membrane = mem_v[:, 1]
-    
+
         plt.plot(times, membrane, alpha=0.5)
         print(f"Mean membrane potential: {np.mean(membrane)}")
         plt.xlabel("Wall clock time [ms]")
@@ -132,8 +132,8 @@ We save this calibration in two variables and use it later to define our neural 
 
 .. code:: ipython3
 
-        from _static.helpers import get_nightly_calibration
-        neuron_coco, general_coco = get_nightly_calibration("hagen_cocolist.pbin")
+        from _static.common.helpers import get_nightly_calibration
+        neuron_coco, general_coco = get_nightly_calibration("hagen_cocolist.bin")
 
 Now we define our experiment:
 
@@ -142,9 +142,9 @@ Now we define our experiment:
     def generate_external_inputs(stimulated_population):
         """
         Create off-chip populations serving as excitatory/inhibitory spike sources.
-    
+
         Feel free to modify the `{exc,inh}_spiketimes` and the `weight` of the stimulation.
-    
+
         :param simulated_population: Population to map inputs to.
         """
         exc_spiketimes = [1, 3, 4, 5, 7, 8, 9, 10, 15, 17, 18, 19]  # us
@@ -154,7 +154,7 @@ Now we define our experiment:
                         pynn.AllToAllConnector(),
                         synapse_type=StaticSynapse(weight=63),
                         receptor_type="excitatory")
-    
+
         inh_spiketimes = [2, 6, 16]  # us (bio: ms)
         inh_spiketimes = np.array(inh_spiketimes) / 1e3
         inh_stim_pop = pynn.Population(1, SpikeSourceArray(spike_times=inh_spiketimes))
@@ -162,26 +162,26 @@ Now we define our experiment:
                         pynn.AllToAllConnector(),
                         synapse_type=StaticSynapse(weight=-63),
                         receptor_type="inhibitory")
-    
+
     plt.figure()
     plt.title("An integrator neuron")
-    
+
     # reset membrane potential before beginning of experiment (it floats otherwise)
     config_injection = pynn.InjectedConfiguration(
         pre_non_realtime=general_coco)
     pynn.setup(injected_config=config_injection)
-    
+
     # use calibrated parameters for neuron
     silent_p = pynn.Population(2, pynn.cells.HXNeuron(neuron_coco))
     stimulated_p = pynn.Population(1, pynn.cells.HXNeuron(neuron_coco))
     generate_external_inputs(stimulated_p)
     stimulated_p.record(["v", "spikes"])
-    
+
     pynn.run(50e-3)  # run for 50 us
     plot_membrane_dynamics(stimulated_p)
     plt.show()
 
-.. image:: _static/hagen_intro_integrator_neuron.svg
+.. image:: _static/tutorial/hagen_intro_integrator_neuron.svg
    :width: 90%
    :align: center
    :class: solution
