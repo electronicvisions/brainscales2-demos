@@ -30,7 +30,7 @@ unterschiedlich stark verbunden sein können. Diese Stärke dieser
 Verbindungen, die Gewichte, enthalten das "Wissen" und werden beim
 Trainieren automatisch angepasst.
 
-.. image:: _static/girlsday_perceptron.png
+.. image:: _static/girlsday/girlsday_perceptron.png
     :align: center
     :width: 450px
 
@@ -47,7 +47,7 @@ scheitert das Modell aber. Man sagt, dass solch ein Modell nicht genug
 verallgemeinern kann. Es hat zwar alle Beispiele auswendig gelernt, kann
 aber die zu Grunde liegenden Zusammenhänge nicht verstehen.
 
-.. image:: _static/girlsday_overfitting.png
+.. image:: _static/girlsday/girlsday_overfitting.png
     :align: center
     :width: 800px
 
@@ -58,7 +58,7 @@ Bevor wir mit unseren Experimenten beginnen können, müssen wir erneut unsere U
 
 .. code:: ipython3
 
-    from _static.helpers import setup_hardware_client
+    from _static.common.helpers import setup_hardware_client
     setup_hardware_client()
 
 
@@ -125,7 +125,7 @@ zugeordnet.
             img[:, :, -1] = test_data[np.random.randint(0, N-1)][0][0] * 255
             canvas.put_image_data(img, x=28*i, y=28*j)
 
-.. image:: _static/girlsday_mnist_output1.png
+.. image:: _static/girlsday/girlsday_mnist_output1.png
    :width: 100%
    :class: solution
 
@@ -341,7 +341,7 @@ richtig erkennen. Das können wir direkt mal ausprobieren:
     zm1 = ZahlenMalen(model, numbers, line_width=2)
     zm1.display()
 
-.. image:: _static/girlsday_mnist_output2.png
+.. image:: _static/girlsday/girlsday_mnist_output2.png
    :width: 100%
    :class: solution
 
@@ -444,7 +444,7 @@ immer besser werden.
         accuracy = test(model, test_loader)
         print(f"Genauigkeit: {accuracy*100:.2f}%")
 
-.. image:: _static/girlsday_mnist_output3.png
+.. image:: _static/girlsday/girlsday_mnist_output3.png
    :width: 100%
    :class: solution
 
@@ -455,7 +455,7 @@ Jetzt sollte das Netzwerk die gemalten Ziffern auch erkennen können:
     zm2 = ZahlenMalen(model, numbers, line_width=2)
     zm2.display()
 
-.. image:: _static/girlsday_mnist_output4.png
+.. image:: _static/girlsday/girlsday_mnist_output4.png
    :width: 100%
    :class: solution
 

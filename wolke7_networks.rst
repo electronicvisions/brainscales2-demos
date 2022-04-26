@@ -28,8 +28,8 @@ verschwinden.
 .. raw:: html
 
    <table><tr>
-   <td> <img src="_static/simple_connection_top1.jpg" width="600"/> </td>
-   <td> <img src="_static/no_synapse_connection.jpg" width="600"/> </td>
+   <td> <img src="_static/girlsday/simple_connection_top1.jpg" width="600"/> </td>
+   <td> <img src="_static/girlsday/no_synapse_connection.jpg" width="600"/> </td>
    </tr><table>
 
 2. Synaptisches Gewicht
@@ -55,11 +55,11 @@ Synapsen erlaubt das Lösen von komplexeren Problemen.
 .. raw:: html
 
    <table><tr>
-   <td> <img src="_static/simple_connection.jpg" width="600"/> </td>
-   <td rowspan="2"> <img src="_static/weight_double_connection.jpg" width="600"/> </td>
+   <td> <img src="_static/girlsday/simple_connection.jpg" width="600"/> </td>
+   <td rowspan="2"> <img src="_static/girlsday/weight_double_connection.jpg" width="600"/> </td>
    </tr>
    <tr>
-   <td> <img src="_static/weight_single_connection1.jpg" width="600"/> </td>
+   <td> <img src="_static/girlsday/weight_single_connection1.jpg" width="600"/> </td>
    </tr> <table>
 
 3. Synapsen Art
@@ -85,8 +85,8 @@ führt, dass mit dieser weiteren Verbindung das Neuron nicht mehr feuert.
 .. raw:: html
 
     <table><tr>
-    <td> <img src="_static/simple_connection_top1.jpg" width="600"/> </td>
-    <td> <img src="_static/inh_connection.jpg" width="600"/> </td>
+    <td> <img src="_static/girlsday/simple_connection_top1.jpg" width="600"/> </td>
+    <td> <img src="_static/girlsday/inh_connection.jpg" width="600"/> </td>
     </tr><table>
 
 Synapsennetzwerke
@@ -112,7 +112,7 @@ Wahrheitstabelle dargestellt.
 .. raw:: html
 
     <table><tr>
-    <td style="padding:0 100px 0 100px;"> <img src="_static/network2in.svg" width="300"/> </td>
+    <td style="padding:0 100px 0 100px;"> <img src="_static/girlsday/network2in.svg" width="300"/> </td>
     
     <td style="padding:0 100px 0 100px;"> <table>
       <tr>
@@ -153,7 +153,7 @@ Doch bevor wir mit unseren Experimenten beginnen können, müssen wir unsere Umg
 
 .. code:: ipython3
 
-    from _static.helpers import setup_hardware_client
+    from _static.common.helpers import setup_hardware_client
     setup_hardware_client()
 
 Jetzt können wir mit dem Experiment beginne:
@@ -165,7 +165,7 @@ Jetzt können wir mit dem Experiment beginne:
     %matplotlib inline
     import matplotlib.pyplot as plt
 
-    from _static.helpers import get_nightly_calibration
+    from _static.common.helpers import get_nightly_calibration
     
     
     # Die Umgebung wird vorbereitet.
@@ -244,7 +244,7 @@ Ausgangsneuron feuern.
 .. raw:: html
 
     <table><tr>
-    <td style="padding:0 100px 0 100px;"> <img src="_static/network1in.svg" width="300"/> </td>
+    <td style="padding:0 100px 0 100px;"> <img src="_static/girlsday/network1in.svg" width="300"/> </td>
 
      
     <td style="padding:0 100px 0 100px;"> <table>
@@ -278,7 +278,7 @@ Hinweis: Hier wird ein Hilfsneuron benötigt.
     %matplotlib inline
     import matplotlib.pyplot as plt
 
-    from _static.helpers import get_nightly_calibration
+    from _static.common.helpers import get_nightly_calibration
     
     
     # Die Umgebung wird vorbereitet.
@@ -333,7 +333,7 @@ Neuron 1 und Neuron 2 feuern.
 .. raw:: html
 
     <table><tr>
-    <td style="padding:0 100px 0 100px;"> <img src="_static/network2in.svg" width="300"/> </td>
+    <td style="padding:0 100px 0 100px;"> <img src="_static/girlsday/network2in.svg" width="300"/> </td>
 
      
     <td style="padding:0 100px 0 100px;"> <table>
@@ -378,7 +378,7 @@ selbst zu programmieren.
     %matplotlib inline
     import matplotlib.pyplot as plt
 
-    from _static.helpers import get_nightly_calibration
+    from _static.common.helpers import get_nightly_calibration
     
 
     # Die Umgebung wird vorbereitet.

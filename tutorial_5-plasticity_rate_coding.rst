@@ -23,7 +23,7 @@ This is done by switching synapses on and off using a predefined data sequence.
 Each PPU has 16kiB on-chip memory. For a quadratic image to fit, it is therefore
 limited to 64x64 pixels. For simplicity, only one of the two PPUs is used.
 
-For loading and converting an image, some helpers are required:
+For loading and converting an image, some _static.common.helpers are required:
 
 .. code:: ipython3
 
@@ -155,18 +155,18 @@ as a black-box sequence of instructions:
 
 For our experiment, we first load an image to be rate-encoded later.
 
-.. image:: _static/visions.png
+.. image:: _static/tutorial/visions.png
    :width: 10%
    :align: center
 
 .. code:: ipython3
 
     # Read image into 2d numpy array
-    image = read_image(join("_static", "visions.png"))
+    image = read_image(join("_static", "tutorial", "visions.png"))
 
 Furthermore, we set some environment variables for our microscheduler:
 
-.. include:: quiggeldy_setup.rst
+.. include:: common_quiggeldy_setup.rst
 
 Next, the instructions for loading and starting the PPU program and transferring
 the original image data are generated.
@@ -174,7 +174,7 @@ the original image data are generated.
 .. code:: ipython3
 
     builder = load_and_start_plasticity_kernel(
-        "_static/plasticity_kernel.bin",
+        join("_static", "tutorial", "plasticity_kernel.bin"),
         halco.PPUOnDLS.top,
         image,
         1000 * 250) # 1 ms
@@ -191,7 +191,7 @@ the next row of the image is written.
 Over time, this leads to each row of the image being present and imprinting itself
 onto the neurons' firing rate.
 
-.. literalinclude:: plasticity_kernel.cpp
+.. literalinclude:: _static/tutorial/plasticity_kernel.cpp
 	:language: cpp
 
 We inject the PPU start directly before the real-time execution in order to
@@ -276,7 +276,7 @@ Last, the recorded spike-trains are visualized.
 We see a replicated version of the original image encoded in the time evolution of
 the neurons' firing rates.
 
-.. image:: _static/plasticity_rate_coding.png
+.. image:: _static/tutorial/plasticity_rate_coding.png
    :width: 50%
    :align: center
    :class: solution

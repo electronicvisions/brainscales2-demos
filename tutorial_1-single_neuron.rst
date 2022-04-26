@@ -4,7 +4,7 @@ BrainScaleS-2 single neuron experiments
 
 In order to use the microscheduler we have to set some environment variables first:
 
-.. include:: quiggeldy_setup.rst
+.. include:: common_quiggeldy_setup.rst
 
 .. code:: ipython3
 
@@ -110,7 +110,7 @@ biological systems.
         # Reset the pyNN internal state and prepare for the following experiment.
         pynn.end()
 
-.. image:: _static/single_neuron_silent.svg
+.. image:: _static/tutorial/single_neuron_silent.svg
    :width: 90%
    :align: center
    :class: solution
@@ -175,7 +175,7 @@ threshold setting of 300 may correspond to a higher leak potential of
         plt.show()
         pynn.end()
 
-.. image:: _static/single_neuron_lot.svg
+.. image:: _static/tutorial/single_neuron_lot.svg
    :width: 90%
    :align: center
    :class: solution
@@ -230,7 +230,7 @@ membrane time constants.
     plt.show()
     pynn.end()
 
-.. image:: _static/single_neuron_fixed_pattern.svg
+.. image:: _static/tutorial/single_neuron_fixed_pattern.svg
    :width: 90%
    :align: center
    :class: solution
@@ -285,7 +285,7 @@ sign), the value range for on-chip weights is therefore -63 to 63. With
 this first projection, we connect the external spike source to the
 observed on-chip neuron population.
 
-.. include:: nightly_calibration.rst
+.. include:: common_nightly_calibration.rst
 
 
 Now we can continue by defining our experiment:
@@ -349,7 +349,7 @@ Now we can continue by defining our experiment:
         plt.show()
         pynn.end()
 
-.. image:: _static/single_neuron_stimulation.svg
+.. image:: _static/tutorial/single_neuron_stimulation.svg
    :width: 90%
    :align: center
    :class: solution

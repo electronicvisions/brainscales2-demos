@@ -13,7 +13,7 @@ We will
 
 In order to use the microscheduler we have to set some environment variables first:
 
-.. include:: quiggeldy_setup.rst
+.. include:: common_quiggeldy_setup.rst
 
 We'll also configure matplotlib and import some tools.
 
@@ -32,7 +32,7 @@ We'll also configure matplotlib and import some tools.
 
 Before we define our network, we load the default calibration.
 
-.. include:: nightly_calibration.rst
+.. include:: common_nightly_calibration.rst
 
 Define network in PyNN
 ----------------------
@@ -205,7 +205,7 @@ Now we can do the final plot:
     ax.set_ylabel("membrane min/max [MADC]")
     ax.legend()
 
-.. image:: _static/dynamic_range_solution.svg
+.. image:: _static/tutorial/dynamic_range_solution.svg
     :width: 800px
     :align: center
     :class: solution

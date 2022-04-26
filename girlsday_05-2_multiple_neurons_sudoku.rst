@@ -9,7 +9,7 @@ Bevor wir mit unseren Experimenten beginnen können, müssen wir erneut unsere U
 
 .. code:: ipython3
 
-    from _static.helpers import setup_hardware_client
+    from _static.common.helpers import setup_hardware_client
     setup_hardware_client()
 
 .. code:: ipython3
@@ -24,7 +24,7 @@ Eine weitere Aufgabe, die man den künstlichen Nervenzellen beibringen
 kann, ist das Lösen eines Sudokus. Da die Anzahl der Neuronen auf dem
 Chip begrenzt ist, betrachten wir hier nur ein 4x4 Sudoku.
 
-.. image:: _static/girlsday_sudoku.png
+.. image:: _static/girlsday/girlsday_sudoku.png
     :align: center
     :width: 500px
 
@@ -62,7 +62,7 @@ erhalten.
     from pynn_brainscales.brainscales2.standardmodels.cells import \
                 SpikeSourceArray, HXNeuron,SpikeSourcePoisson
 
-    from _static.helpers import get_nightly_calibration
+    from _static.common.helpers import get_nightly_calibration
 
     runtime = 0.5
     dimension = 4
@@ -329,7 +329,7 @@ erhalten.
 
     display_sudoku_solver(sudoku)
 
-.. image:: _static/girlsday_sudoku_output1.png
+.. image:: _static/girlsday/girlsday_sudoku_output1.png
    :width: 100%
    :class: solution
 
@@ -391,7 +391,7 @@ für eine zunehmende Anzahl an Tipps mehrere Male eine Lösung gesucht.
         results += [np.mean(nums_correct), np.std(nums_correct)]
     results = np.array(results).reshape(-1, 2)
 
-.. image:: _static/girlsday_sudoku_output2.png
+.. image:: _static/girlsday/girlsday_sudoku_output2.png
    :width: 100%
    :class: solution
 
@@ -407,6 +407,6 @@ für eine zunehmende Anzahl an Tipps mehrere Male eine Lösung gesucht.
     plt.ylabel("Anzahl der korrekt gelösten Felder")
     plt.show()
 
-.. image:: _static/girlsday_sudoku_output3.png
+.. image:: _static/girlsday/girlsday_sudoku_output3.png
    :width: 100%
    :class: solution

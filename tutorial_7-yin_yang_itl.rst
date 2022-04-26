@@ -36,7 +36,7 @@ When training on the BrainScaleS-2 system using hxtorch, the multiply
 accumulate operation (MAC) in the forward pass is performed on the
 hardware, but the gradient is computed on the host computer:
 
-.. image:: /_static/hxtorch_itl.png
+.. image:: _static/tutorial/hxtorch_itl.png
    :width: 25%
    :align: center
 
@@ -81,7 +81,7 @@ The linear model of the hardware presented above can optionally also be
 used for the forward pass with hxtorch. It also features the additional
 noise, reduced resolution and restricted value ranges of the system.
 
-.. image:: /_static/hxtorch_mock_mode.png
+.. image:: _static/tutorial/hxtorch_mock_mode.png
    :width: 90%
    :align: center
 
@@ -209,7 +209,7 @@ samples each time. The number of samples is the same for each of the three class
     ax.set_xlabel("x"); ax.set_ylabel("y")
     _=ax.legend()
 
-.. image:: _static/yin_yang_itl_dataset.png
+.. image:: _static/tutorial/yin_yang_itl_dataset.png
     :width: 90%
     :align: center
     :class: solution
@@ -350,7 +350,7 @@ with PyTorch, the code below will also look familiar to you:
 
     train(model_mock, loader, scheduler, num_epochs=200)
 
-.. image:: _static/yin_yang_itl_out1.png
+.. image:: _static/tutorial/yin_yang_itl_out1.png
     :width: 90%
     :align: center
     :class: solution
@@ -386,7 +386,7 @@ with PyTorch, the code below will also look familiar to you:
 
     train(model_hw, loader, scheduler_hw, num_epochs=15)
 
-.. image:: _static/yin_yang_itl_out2.png
+.. image:: _static/tutorial/yin_yang_itl_out2.png
     :width: 90%
     :align: center
     :class: solution

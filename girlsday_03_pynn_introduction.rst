@@ -14,9 +14,8 @@ verändern und die sich daraus ergebende Dynamik beobachten.
 Im Folgenden wollen wir ein simples Netzwerk bauen, in dem ein künstliches 
 Neuron von einer Gruppe aus fünf Neuronen stimuliert wird.
 
-.. raw:: html
-
-    <img src="_static/girlsday_simple_network.svg" width="400"/>
+.. image:: _static/girlsday/girlsday_simple_network.svg
+    :width: 400
 
 .. code:: ipython3
 
@@ -24,7 +23,7 @@ Neuron von einer Gruppe aus fünf Neuronen stimuliert wird.
     import pynn_brainscales.brainscales2 as pynn
     
     # Die Umgebung wird vorbereitet.
-    from _static.helpers import setup_hardware_client, get_nightly_calibration
+    from _static.common.helpers import setup_hardware_client, get_nightly_calibration
 
     setup_hardware_client()
     calib = get_nightly_calibration()
@@ -138,6 +137,6 @@ werden.
     plt.ylabel("Membranpotential [LSB]")
     plt.show()
 
-.. image:: _static/girlsday_pynn_output.png
+.. image:: _static/girlsday/girlsday_pynn_output.png
    :width: 100%
    :class: solution

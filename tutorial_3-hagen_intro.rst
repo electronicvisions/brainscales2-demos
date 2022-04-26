@@ -13,7 +13,7 @@ results from a matrix column.
 Principles
 ----------
 
-.. image:: _static/chip_layout.png
+.. image:: _static/tutorial/chip_layout.png
    :width: 40 %
    :align: center
 
@@ -28,7 +28,7 @@ converter (CADC) can digitize the membrane potentials of all neurons in
 parallel. The on-chip processor (PPU) will then read the result vector
 obtained by the CADC and could perform further operations with it.
 
-.. image:: _static/hagen_example.png
+.. image:: _static/tutorial/hagen_example.png
    :width: 50 %
    :align: center
 
@@ -89,7 +89,7 @@ membrane during integration.
 
 In order to use the microscheduler we have to set some environment variables first:
 
-.. include:: quiggeldy_setup.rst
+.. include:: common_quiggeldy_setup.rst
 
 .. code:: ipython3
 
@@ -132,7 +132,7 @@ We save this calibration in two variables and use it later to define our neural 
 
 .. code:: ipython3
 
-        from _static.helpers import get_nightly_calibration
+        from _static.common.helpers import get_nightly_calibration
         calib = get_nightly_calibration("hagen_cocolist.pbin")
 
 Now we define our experiment:
@@ -179,7 +179,7 @@ Now we define our experiment:
     plot_membrane_dynamics(stimulated_p)
     plt.show()
 
-.. image:: _static/hagen_intro_integrator_neuron.svg
+.. image:: _static/tutorial/hagen_intro_integrator_neuron.svg
    :width: 90%
    :align: center
    :class: solution

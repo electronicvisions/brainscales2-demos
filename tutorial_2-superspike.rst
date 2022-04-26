@@ -68,7 +68,7 @@ publication.
 
 In order to use the microscheduler we have to set some environment variables first:
 
-.. include:: quiggeldy_setup.rst
+.. include:: common_quiggeldy_setup.rst
 
 .. code:: ipython3
 
@@ -134,7 +134,7 @@ weight updates.
 
 Before we define our network, we load the default calibration.
 
-.. include:: nightly_calibration.rst
+.. include:: common_nightly_calibration.rst
 
 Now, we can define the network itself using PyNN.
 
@@ -252,7 +252,7 @@ Exercises
         pynn.reset()
     experiment(10, 1); plt.close()  # needed for testing
 
-.. image:: _static/superspike_target.svg
+.. image:: _static/tutorial/superspike_target.svg
    :width: 90%
    :align: center
    :class: solution
@@ -314,7 +314,7 @@ the steepness paramter :math:`\beta`.
     ax.set_xlabel("normalized membrane potential")
     ax.set_ylabel("surrogate gradient");
 
-.. image:: _static/superspike_gradient.svg
+.. image:: _static/tutorial/superspike_gradient.svg
    :width: 90%
    :align: center
    :class: solution
@@ -425,7 +425,7 @@ Exercises
         # apply weight update
         weights += dw
 
-.. image:: _static/superspike_training.svg
+.. image:: _static/tutorial/superspike_training.svg
    :width: 90%
    :align: center
    :class: solution
@@ -441,7 +441,7 @@ Exercises
     ax.set_xlabel("epoch")
     ax.set_ylabel("loss");
 
-.. image:: _static/superspike_loss.svg
+.. image:: _static/tutorial/superspike_loss.svg
    :width: 90%
    :align: center
    :class: solution

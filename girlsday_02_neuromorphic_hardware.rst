@@ -51,9 +51,11 @@ dort für die Refraktärzeit festgehalten und darf dann wieder zurück zur
 Ruhespannung. Dieses Verhalten werdet ihr in den Experimenten beobachten
 können.
 
-.. raw:: html
+.. image:: _static/girlsday/girlsday_hx_photo.JPG
+    :width: 800
 
-    <br>
-    <img src="_static/girlsday_hx_photo.JPG" width="800"/>
-    <img src="_static/girlsday_hdbioai_nc_dl_aif.jpg" width="800"/>
-    <img src="_static/girlsday_cube_with_scope.jpg" width="800"/>
+.. image:: _static/girlsday/girlsday_hdbioai_nc_dl_aif.jpg
+    :width: 800
+
+.. image:: _static/girlsday/girlsday_cube_with_scope.jpg
+    :width: 800

@@ -53,7 +53,7 @@ master_doc = 'index'
 
 # General information about the project.
 project = 'BrainScaleS-2 Demos & Examples'
-copyright = '2021, Electronic Vision(s), Kirchhoff-Institute for Physics, Heidelberg University'
+copyright = '2022, Electronic Vision(s), Kirchhoff-Institute for Physics, Heidelberg University'
 author = 'Electronic Vision(s) Group'
 
 # The version info for the project you're documenting, acts as replacement for
