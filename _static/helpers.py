@@ -32,36 +32,39 @@ def setup_hardware_client():
     os.environ['QUIGGELDY_PORT'] = my_setup['Port']
 
 
-def get_nightly_calibration(filename='spiking_cocolist.pbin'):
-        '''
-        Get the nightly deployed calibration.
+def get_nightly_calibration(filename='spiking_cocolist.bin'
+                            if in_collaboratory()
+                            else 'spiking_cocolist.pbin'):
+    '''
+    Get the nightly deployed calibration.
 
-        If the code is executed in the EBrains in the collabatory the
-        calibration is downloaded otherwise it is expected to be present
-        locally.
+    If the code is executed in the EBrains in the collabatory the
+    calibration is downloaded otherwise it is expected to be present
+    locally.
 
-        '''
-        if in_collaboratory():
-            with hxcomm.ManagedConnection() as connection:
-                identifier = connection.get_unique_identifier()
+    '''
+    if in_collaboratory():
+        with hxcomm.ManagedConnection() as connection:
+            identifier = connection.get_unique_identifier()
 
-            # download calibration file
-            download_url = "https://openproject.bioai.eu/data_calibration/" + \
-                           f"hicann-dls-sr-hx/{identifier}/stable/" \
-                           f"lastest/{filename}"
-            contents = urllib.request.urlopen(download_url).read()
+        # download calibration file
+        folder =  "last-binary" if in_collaboratory() else "latest"
+        download_url = "https://openproject.bioai.eu/data_calibration/" \
+                       f"hicann-dls-sr-hx/{identifier}/stable/{folder}" \
+                       f"/{filename}"
+        contents = urllib.request.urlopen(download_url).read()
 
-            path_to_calib = filename
-            with open(path_to_calib, 'wb') as f:
-                f.write(contents)
-        else:
-            calib_path = pynn.helper.nightly_calib_path().parent
-            path_to_calib =  calib_path.joinpath(filename)
+        path_to_calib = filename
+        with open(path_to_calib, 'wb') as f:
+            f.write(contents)
+    else:
+        calib_path = pynn.helper.nightly_calib_path().parent
+        path_to_calib =  calib_path.joinpath(filename)
 
-        coco = pynn.helper.coco_from_file(path_to_calib)
+    coco = pynn.helper.coco_from_file(path_to_calib)
 
-        # save calibration data in variables:
-        neuron_coco = pynn.helper.filter_atomic_neuron(coco)
-        general_coco = pynn.helper.filter_non_atomic_neuron(coco)
+    # save calibration data in variables:
+    neuron_coco = pynn.helper.filter_atomic_neuron(coco)
+    general_coco = pynn.helper.filter_non_atomic_neuron(coco)
 
-        return neuron_coco, general_coco
+    return neuron_coco, general_coco
