@@ -99,7 +99,7 @@ b) Welche Spannung ist dargestellt? Überlegt euch, welche Werte das
    Dazu ist es hilfreich, sich das Aktionspotential nochmal
    anzuschauen.
 
-.. image:: _static/girlsday/girlsday_actionpotential.svg
+.. image:: _static/girlsday/girlsday_actionpotential.png
     :width: 500
 
 c) Nun soll das Ruhepotential auf seinen Maximalwert gesetzt werden, der

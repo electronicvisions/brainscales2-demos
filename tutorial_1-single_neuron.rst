@@ -110,7 +110,7 @@ biological systems.
         # Reset the pyNN internal state and prepare for the following experiment.
         pynn.end()
 
-.. image:: _static/tutorial/single_neuron_silent.svg
+.. image:: _static/tutorial/single_neuron_silent.png
    :width: 90%
    :align: center
    :class: solution
@@ -175,7 +175,7 @@ threshold setting of 300 may correspond to a higher leak potential of
         plt.show()
         pynn.end()
 
-.. image:: _static/tutorial/single_neuron_lot.svg
+.. image:: _static/tutorial/single_neuron_lot.png
    :width: 90%
    :align: center
    :class: solution
@@ -230,7 +230,7 @@ membrane time constants.
     plt.show()
     pynn.end()
 
-.. image:: _static/tutorial/single_neuron_fixed_pattern.svg
+.. image:: _static/tutorial/single_neuron_fixed_pattern.png
    :width: 90%
    :align: center
    :class: solution
@@ -351,7 +351,7 @@ Now we can continue by defining our experiment:
         plt.show()
         pynn.end()
 
-.. image:: _static/tutorial/single_neuron_stimulation.svg
+.. image:: _static/tutorial/single_neuron_stimulation.png
    :width: 90%
    :align: center
    :class: solution

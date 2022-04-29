@@ -181,7 +181,7 @@ Now we define our experiment:
     plot_membrane_dynamics(stimulated_p)
     plt.show()
 
-.. image:: _static/tutorial/hagen_intro_integrator_neuron.svg
+.. image:: _static/tutorial/hagen_intro_integrator_neuron.png
    :width: 90%
    :align: center
    :class: solution

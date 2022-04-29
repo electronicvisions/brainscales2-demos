@@ -125,7 +125,7 @@ Prozess dauert nur wenige Millisekunden und da der Spannungsverlauf wie
 eine dünne Spitze aussieht, wird das Aktionspotential auch als Spike
 (englisch für Spitze) bezeichnet.
 
-.. image:: _static/girlsday/girlsday_actionpotential.svg
+.. image:: _static/girlsday/girlsday_actionpotential.png
     :width: 500
 
 (https://de.wikipedia.org/wiki/Nervenzelle#/media/Datei:Aktionspotential.svg)

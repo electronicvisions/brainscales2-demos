@@ -8,7 +8,7 @@ Taking dendrites as well as their passive and active properties into account can
 In order to investigate the features of structured neurons, BrainScaleS-2 offers the possibility to connect several neuron circuits to form multi-compartmental neuron models.
 The following figure shows a sketch of two neuron circuits and the electronic (**not** synaptic) connections they can establish.
 
-.. image:: _static/tutorial/multicompartment_connections.svg
+.. image:: _static/tutorial/multicompartment_connections.png
     :width: 500px
     :align: center
 
@@ -21,7 +21,7 @@ multi
 We will demonstrate the implementation of a multi-compartmental model by the example of a compartment chain and will investigate how excitatory postsynaptic potentials propagate along the chain.
 The following figure displays a sketch of a chain with four compartments in the top part; in the bottom the hardware implementation is illustrated.
 
-.. image:: _static/tutorial/multicompartment_chain_model.svg
+.. image:: _static/tutorial/multicompartment_chain_model.png
     :width: 500px
     :align: center
 
@@ -275,7 +275,7 @@ For that purpose we use the functions defined in the previous section.
         membrane_traces = record_membrane_traces(weight, conductance)
         plot_membrane_traces(membrane_traces)
 
-.. image:: _static/tutorial/multicompartment_chain_solution.svg
+.. image:: _static/tutorial/multicompartment_chain_solution.png
    :width: 800px
    :align: center
    :class: solution
