@@ -112,7 +112,7 @@ Wahrheitstabelle dargestellt.
 .. raw:: html
 
     <table><tr>
-    <td style="padding:0 100px 0 100px;"> <img src="_static/girlsday/network2in.svg" width="300"/> </td>
+    <td style="padding:0 100px 0 100px;"> <img src="_static/girlsday/network2in.png" width="300"/> </td>
     
     <td style="padding:0 100px 0 100px;"> <table>
       <tr>
@@ -244,7 +244,7 @@ Ausgangsneuron feuern.
 .. raw:: html
 
     <table><tr>
-    <td style="padding:0 100px 0 100px;"> <img src="_static/girlsday/network1in.svg" width="300"/> </td>
+    <td style="padding:0 100px 0 100px;"> <img src="_static/girlsday/network1in.png" width="300"/> </td>
 
      
     <td style="padding:0 100px 0 100px;"> <table>
@@ -333,7 +333,7 @@ Neuron 1 und Neuron 2 feuern.
 .. raw:: html
 
     <table><tr>
-    <td style="padding:0 100px 0 100px;"> <img src="_static/girlsday/network2in.svg" width="300"/> </td>
+    <td style="padding:0 100px 0 100px;"> <img src="_static/girlsday/network2in.png" width="300"/> </td>
 
      
     <td style="padding:0 100px 0 100px;"> <table>

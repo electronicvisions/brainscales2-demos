@@ -205,7 +205,7 @@ Now we can do the final plot:
     ax.set_ylabel("membrane min/max [MADC]")
     ax.legend()
 
-.. image:: _static/tutorial/dynamic_range_solution.svg
+.. image:: _static/tutorial/dynamic_range_solution.png
     :width: 800px
     :align: center
     :class: solution
