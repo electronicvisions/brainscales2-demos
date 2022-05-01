@@ -9,6 +9,10 @@ This example presents the non-spiking mode of the BrainScaleS-2 ASIC and
 some of its characteristics. The operation of this so-called hagen mode
 is explained in more detail in the matrix multiplication introduction.
 
+In order to use the microscheduler we have to set some environment variables first:
+
+.. include:: quiggeldy_setup.rst
+
 First, we import some things needed later:
 
 .. code:: ipython3
