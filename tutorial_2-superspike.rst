@@ -373,7 +373,7 @@ Exercises
         axes[0].axvline(t * 1e6, c="orange", zorder=20)
 
     # define hyperparameters
-    n_epochs = 30
+    n_epochs = 100
     eta = 20.
     beta = 5.
 
