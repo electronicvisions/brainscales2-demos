@@ -78,13 +78,13 @@ Next we run the network multiple times with various configurations.
             # the neuronPerm
             pynn.setup(connection=connection,
                        neuronPermutation=[neuron],
-                       injected_config=pynn.InjectedConfiguration(pre_non_realtime=general_coco))
+                       initial_config=calib)
 
             # always have only 1 neuron
             number_of_neurons = 1
 
             population = pynn.Population(number_of_neurons,
-                                         pynn.cells.HXNeuron(neuron_coco))
+                                         pynn.cells.HXNeuron())
 
             # disable spiking
             population.set(threshold_enable=False)

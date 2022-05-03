@@ -65,8 +65,7 @@ Now we can start setting up our network:
 .. code:: ipython3
 
     # setup PyNN and inject calibration data
-    pynn.setup(injected_config=pynn.InjectedConfiguration(
-        pre_non_realtime=general_coco))
+    pynn.setup(initial_config=calib)
 
 Furthermore, we define some global parameters which we need for the construction of the chain and the external stimulus.
 
@@ -93,7 +92,7 @@ Consequently, we disable the leak (set the leak conductance to zero) for the sec
 .. code:: ipython3
 
     pop = pynn.Population(length * 2,
-                          pynn.cells.HXNeuron(neuron_coco))
+                          pynn.cells.HXNeuron())
 
     # Combine two neuron circuits to one compartment; "disable" second
     # neuron circuit

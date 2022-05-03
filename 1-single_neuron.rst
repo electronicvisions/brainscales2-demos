@@ -313,12 +313,10 @@ Now we can continue by defining our experiment:
         plt.figure()
         plt.title("Fourth experiment: External stimulation")
 
-        config_injection = pynn.InjectedConfiguration(
-            pre_non_realtime=general_coco)
-        pynn.setup(injected_config=config_injection)
+        pynn.setup(initial_config=calib)
 
         # use calibrated parameters for neuron
-        stimulated_p = pynn.Population(1, pynn.cells.HXNeuron(neuron_coco))
+        stimulated_p = pynn.Population(1, pynn.cells.HXNeuron())
         stimulated_p.record(["v", "spikes"])
 
         # calculate spike times

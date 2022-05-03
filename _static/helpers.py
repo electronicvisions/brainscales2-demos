@@ -61,10 +61,6 @@ def get_nightly_calibration(filename='spiking_cocolist.bin'
         calib_path = pynn.helper.nightly_calib_path().parent
         path_to_calib =  calib_path.joinpath(filename)
 
-    coco = pynn.helper.coco_from_file(path_to_calib)
+    chip = pynn.helper.chip_from_file(path_to_calib)
 
-    # save calibration data in variables:
-    neuron_coco = pynn.helper.filter_atomic_neuron(coco)
-    general_coco = pynn.helper.filter_non_atomic_neuron(coco)
-
-    return neuron_coco, general_coco
+    return chip

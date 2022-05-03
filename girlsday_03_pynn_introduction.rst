@@ -27,11 +27,8 @@ Neuron von einer Gruppe aus fünf Neuronen stimuliert wird.
     from _static.helpers import setup_hardware_client, get_nightly_calibration
 
     setup_hardware_client()
-    atomic, inject = get_nightly_calibration()
-    config_injection = pynn.InjectedConfiguration(
-        pre_non_realtime=inject)
-
-    pynn.setup(injected_config=config_injection)
+    calib = get_nightly_calibration()
+    pynn.setup(initial_config=calib)
 
 Gruppen aus Neuronen werden Populationen genannt. Man erstellt solch
 eine Population, indem man ihr sagt, wie viele Neuronen sie beinhalten
@@ -63,7 +60,7 @@ können die tatsächlichen Messwerte leicht variieren.
         "membrane_capacitance_capacitance": 63     # Membrankapazität       (0-63)
         }
     
-    neuron_type = pynn.cells.HXNeuron(atomic, **neuron_parameters)
+    neuron_type = pynn.cells.HXNeuron(**neuron_parameters)
     
     # Das konfigurierte Neuron wird in der Population 'pop' abgespeichert.
     pop = pynn.Population(numb_neurons, neuron_type)

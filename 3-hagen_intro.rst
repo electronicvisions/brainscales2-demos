@@ -133,7 +133,7 @@ We save this calibration in two variables and use it later to define our neural 
 .. code:: ipython3
 
         from _static.helpers import get_nightly_calibration
-        neuron_coco, general_coco = get_nightly_calibration("hagen_cocolist.pbin")
+        calib = get_nightly_calibration("hagen_cocolist.pbin")
 
 Now we define our experiment:
 
@@ -167,13 +167,11 @@ Now we define our experiment:
     plt.title("An integrator neuron")
     
     # reset membrane potential before beginning of experiment (it floats otherwise)
-    config_injection = pynn.InjectedConfiguration(
-        pre_non_realtime=general_coco)
-    pynn.setup(injected_config=config_injection)
+    pynn.setup(initial_config=calib)
     
     # use calibrated parameters for neuron
-    silent_p = pynn.Population(2, pynn.cells.HXNeuron(neuron_coco))
-    stimulated_p = pynn.Population(1, pynn.cells.HXNeuron(neuron_coco))
+    silent_p = pynn.Population(2, pynn.cells.HXNeuron())
+    stimulated_p = pynn.Population(1, pynn.cells.HXNeuron())
     generate_external_inputs(stimulated_p)
     stimulated_p.record(["v", "spikes"])
     

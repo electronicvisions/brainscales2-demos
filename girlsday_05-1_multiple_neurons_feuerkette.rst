@@ -65,10 +65,8 @@ Signal durch eine möglichst lange Kette gereicht werden.
         neuron_parameters = {"refractory_period_refractory_time": 5}
         
         # Die Umgebung wird vorbereitet.
-        atomic, inject = get_nightly_calibration()
-        config_injection = pynn.InjectedConfiguration(
-            pre_non_realtime=inject)
-        pynn.setup(injected_config=config_injection)
+        calib = get_nightly_calibration()
+        pynn.setup(initial_config=calib)
         
         # Die angelegten Populationen werden in einem Verzeichnis gespeichert,
         # das zu Beginn leere Listen enthält.
@@ -79,7 +77,7 @@ Signal durch eine möglichst lange Kette gereicht werden.
         for synapse_type in ["exc", "inh"]:
             for _ in range(numb_pops):
                 pop = pynn.Population(pop_sizes[synapse_type],
-                                      pynn.cells.HXNeuron(atomic, **neuron_parameters))
+                                      pynn.cells.HXNeuron(**neuron_parameters))
                 pop.record(["spikes"])
                 pop_collector[synapse_type].append(pop)
         

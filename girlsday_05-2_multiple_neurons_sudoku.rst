@@ -67,15 +67,13 @@ erhalten.
     runtime = 0.5
     dimension = 4
 
-    atomic, inject = get_nightly_calibration()
-    config_injection = pynn.InjectedConfiguration(
-        pre_non_realtime=inject)
-    pynn.setup(injected_config=config_injection)
+    calib = get_nightly_calibration()
+    pynn.setup(initial_config=calib)
 
     # Wir erstellen ein Neuron für jedes Zahl in jedem Feld. Wir brauchen also
     # 4 (Reihen) * 4 (Spalten) * 4 (Zahlen) = 4^3 Neuronen
     print("Die Neuronen werden angelegt... (1/4)")
-    pop = pynn.Population(4**3, HXNeuron(atomic))
+    pop = pynn.Population(4**3, HXNeuron())
     pop.record(["spikes"])
 
     # Damit wir die Verbindungen in zwischen den Neuronen leichter definieren

@@ -51,12 +51,10 @@ schauen uns das resultierende Membranpotential an.
     text_output = w.Output()
 
     def experiment(**neuron_parameters):
-        atomic, inject = get_nightly_calibration()
-        config_injection = pynn.InjectedConfiguration(
-            pre_non_realtime=inject)
-        pynn.setup(injected_config=config_injection)
+        calib = get_nightly_calibration()
+        pynn.setup(initial_config=calib)
 
-        pop = pynn.Population(1, pynn.cells.HXNeuron(atomic, **neuron_parameters))
+        pop = pynn.Population(1, pynn.cells.HXNeuron(**neuron_parameters))
         pop.record(["spikes", "v"])
 
         # Die Laufzeit kann auch angepasst werden.
@@ -151,12 +149,10 @@ wird, ob exzitatorisch oder inhibitorisch.
             options=["excitatory", "inhibitory"], description="Synapsentyp")
     )
     def experiment(src_size, synapse_weight, spike_times, receptor_type):
-        atomic, inject = get_nightly_calibration()
-        config_injection = pynn.InjectedConfiguration(
-            pre_non_realtime=inject)
-        pynn.setup(injected_config=config_injection)
+        calib = get_nightly_calibration()
+        pynn.setup(initial_config=calib)
         # Das ist das Neuron, das wir beobachten werden.
-        pop = pynn.Population(1, pynn.cells.HXNeuron(atomic, **neuron_parameters))
+        pop = pynn.Population(1, pynn.cells.HXNeuron(**neuron_parameters))
         pop.record(["spikes", "v"])
 
         # Das ist die Sender Population, die zu vorgegebenen Spikezeiten einen Stimulus generiert.

@@ -169,10 +169,8 @@ Jetzt können wir mit dem Experiment beginne:
     
     
     # Die Umgebung wird vorbereitet.
-    atomic, inject = get_nightly_calibration()
-    config_injection = pynn.InjectedConfiguration(
-        pre_non_realtime=inject)
-    pynn.setup(injected_config=config_injection)
+    calib = get_nightly_calibration()
+    pynn.setup(initial_config=calib)
     
     # Die Eingangsneuronen werden erstellt.
     # Sie erzeugen ein Aktionspotential zu dem Zeitpunkt, der in `spike_time` steht.
@@ -186,7 +184,7 @@ Jetzt können wir mit dem Experiment beginne:
     neuron2 = pynn.Population(1, pynn.cells.SpikeSourceArray(spike_times=spike_time2))
     
     # Das Ausgangsneuron wird erstellt.
-    output_neuron = pynn.Population(1, pynn.cells.HXNeuron(atomic))
+    output_neuron = pynn.Population(1, pynn.cells.HXNeuron())
     
     # Die Aktivität des Ausgangsneurons wird aufgezeichent.
     output_neuron.record(["spikes", "v"])  # TODO: auch v?
@@ -284,10 +282,8 @@ Hinweis: Hier wird ein Hilfsneuron benötigt.
     
     
     # Die Umgebung wird vorbereitet.
-    atomic, inject = get_nightly_calibration()
-    config_injection = pynn.InjectedConfiguration(
-        pre_non_realtime=inject)
-    pynn.setup(injected_config=config_injection)
+    calib = get_nightly_calibration()
+    pynn.setup(initial_config=calib)
     
     ''' Beginn eurer Anpassungen (diese Zeile löschen)
 
@@ -386,10 +382,8 @@ selbst zu programmieren.
     
 
     # Die Umgebung wird vorbereitet.
-    atomic, inject = get_nightly_calibration()
-    config_injection = pynn.InjectedConfiguration(
-        pre_non_realtime=inject)
-    pynn.setup(injected_config=config_injection)
+    calib = get_nightly_calibration()
+    pynn.setup(initial_config=calib)
     
     # Euer Code
 

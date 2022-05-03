@@ -141,10 +141,10 @@ Now, we can define the network itself using PyNN.
 .. code:: ipython3
 
     # setup PyNN and inect calibration data
-    pynn.setup(injected_config=pynn.InjectedConfiguration(pre_non_realtime=general_coco))
+    pynn.setup(initial_config=calib)
 
     # create output population (one neuron) and record its observables
-    pop_output = pynn.Population(1, pynn.cells.HXNeuron(neuron_coco))
+    pop_output = pynn.Population(1, pynn.cells.HXNeuron())
     pop_output.record(["spikes", "v"])
 
     # create spike sources

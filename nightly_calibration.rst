@@ -4,4 +4,4 @@ We save the nightly calibration in two variables such that we can use it later w
 .. code:: ipython3
 
     from _static.helpers import get_nightly_calibration
-    neuron_coco, general_coco = get_nightly_calibration()
+    calib = get_nightly_calibration()
