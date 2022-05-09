@@ -26,3 +26,4 @@ Welcome to the BrainScaleS-2 Demos & Examples!
    girlsday_05-1_multiple_neurons_feuerkette
    girlsday_05-2_multiple_neurons_sudoku
    girlsday_06_machine_learning
+   wolke7_networks
