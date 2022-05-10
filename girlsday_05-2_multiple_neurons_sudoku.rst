@@ -24,7 +24,7 @@ Eine weitere Aufgabe, die man den künstlichen Nervenzellen beibringen
 kann, ist das Lösen eines Sudokus. Da die Anzahl der Neuronen auf dem
 Chip begrenzt ist, betrachten wir hier nur ein 4x4 Sudoku.
 
-.. image:: _static/girlsday/girlsday_sudoku.png
+.. image:: _static/common/sudoku.png
     :align: center
     :width: 500px
 

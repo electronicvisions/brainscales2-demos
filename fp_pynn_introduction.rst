@@ -10,7 +10,7 @@ can be varied and the resulting dynamic can be observed.
 In the following, we want to build a simple network in which a neuron is
 stimulated by a group of five neurons.
 
-.. image:: _static/girlsday/girlsday_simple_network.png
+.. image:: _static/common/pynn_simple_network.png
     :width: 400
 
 .. code:: ipython3

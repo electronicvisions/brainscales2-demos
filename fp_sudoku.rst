@@ -5,7 +5,7 @@ Another task a spiking neural network can learn is solving a sudoku.
 Since the number of available neurons on chip is limited, we’ll consider
 just a 4x4 sudoku.
 
-.. image:: _static/girlsday/girlsday_sudoku.png
+.. image:: _static/common/sudoku.png
     :align: center
     :width: 500px
 
