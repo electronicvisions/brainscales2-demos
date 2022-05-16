@@ -69,7 +69,7 @@ def build(bld):
         features="use shelltest",
         use="doc-much-demos-such-wow-jupyter-test pynn_brainscales2 hxtorch install_plasticity_kernel_test",
         test_environ=dict(BLD_DIR=str(testdir)),
-        test_timeout=600,
+        test_timeout=1200,
         skip_run=not bld.env.DLSvx_HARDWARE_AVAILABLE
     )
 
