@@ -33,3 +33,6 @@ Welcome to the BrainScaleS-2 Demos & Examples!
    :caption: Advanced Physics Lab for Physicists
 
    fp_0-welcome
+   fp_pynn_introduction
+   fp_binary_operations
+   fp_sudoku
