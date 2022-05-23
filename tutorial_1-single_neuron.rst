@@ -167,11 +167,13 @@ threshold setting of 300 may correspond to a higher leak potential of
             # Enable reset on threshold crossing
             threshold_enable=True,
             # Reset conductance, range: 0-1022
-            reset_i_bias=1022))
+            reset_i_bias=1022,
+            # Increase reset conductance
+            reset_enable_multiplication=True))
     
         pop.record(["v", "spikes"])
         pynn.run(0.2)
-        plot_membrane_dynamics(pop)
+        plot_membrane_dynamics(pop, ylim=(100, 800))
         plt.show()
         pynn.end()
 
@@ -179,6 +181,15 @@ threshold setting of 300 may correspond to a higher leak potential of
    :width: 90%
    :align: center
    :class: solution
+
+The neuron has many more parameters you may play around with.
+Some documentation for these parameters is available in our `Lower-level API documentation <https://electronicvisions.github.io/documentation-brainscales2/api_lola.html>`_.
+The kewords you set in PyNN are generated from a hierarchical structure – search for the last part of a parameter (e.g. ``capacitance``).
+
+.. code:: ipython3
+
+   pynn.cells.HXNeuron().get_parameter_names()
+
 
 Fixed-pattern variations
 ------------------------
@@ -215,15 +226,16 @@ membrane time constants.
         # Enable reset on threshold crossing
         threshold_enable=True,
         # Reset conductance, range: 0-1022
-        reset_i_bias=1022))
-    
+        reset_i_bias=1022,
+        # Increase reset conductance
+        reset_enable_multiplication=True))
     
     for neuron_id in range(len(pop)):
         print(f"Recording fixed-pattern variations: Run {neuron_id}")
         p_view = pynn.PopulationView(pop, [neuron_id])
         p_view.record(["v"])
         pynn.run(0.1)
-        plot_membrane_dynamics(p_view)
+        plot_membrane_dynamics(p_view, ylim=(100, 800))
         pynn.reset()
         pop.record(None)
     
