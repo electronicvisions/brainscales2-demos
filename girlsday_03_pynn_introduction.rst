@@ -120,19 +120,18 @@ werden.
     spiketrain = pop.get_data("spikes").segments[0].spiketrains[0]
     print(f"Das Neuron hat {len(spiketrain)} mal gefeuert.")
     print(f"Die Zeitpunkte der Spikes waren: {spiketrain}")
-    
+
     # Auch sein Membranpotential kann geplottet werden.
-    mem_v = pop.get_data("v").segments[0]
-    times, membrane = zip(*mem_v.filter(name="v")[0])
-    
+    mem_v = pop.get_data("v").segments[0].analogsignals[0]
+
     # Ein Modul zur grafischen Darstellung wird geladen.
     %matplotlib inline
     import matplotlib.pyplot as plt
-    
-    # Die Grafik wird erstellt. 
+
+    # Die Grafik wird erstellt.
     # Das Membranpotential ist in Hardware Einheiten gegeben.
     plt.figure()
-    plt.plot(times, membrane)
+    plt.plot(mem_v.times, mem_v)
     plt.xlabel("Zeit [ms]")
     plt.ylabel("Membranpotential [LSB]")
     plt.show()

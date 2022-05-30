@@ -223,13 +223,11 @@ We will change the recording site in the x-axis and the injection site on the y-
                     t_start=(input_time - 0.01) * pq.ms,
                     t_stop=(input_time + 0.06) * pq.ms)
 
-                time = (signal.magnitude[:, 0] - input_time) * 1000  # us
-                voltage = signal.magnitude[:, 1]
+                # Normalize voltage and times
+                signal.times = (signal.times - input_time).rescale(pq.us)
+                signal -= voltage[:100].mean()
 
-                # Normalize voltage
-                voltage = voltage - np.mean(voltage[:100])
-
-                axs[injected, measured].plot(time, voltage)
+                axs[injected, measured].plot(signal.times, signal)
 
         # Hide all but one axis
         for ax in np.delete(axs, -length):

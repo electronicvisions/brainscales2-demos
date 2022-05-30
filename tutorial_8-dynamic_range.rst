@@ -125,10 +125,10 @@ Next we run the network multiple times with various configurations.
                     projections[-1].set(weight=sign * (w % max_weight))
 
                 pynn.run(1) # ms (hw)
-                membrane = population.get_data().segments[-1].analogsignals[0].base
+                membrane = population.get_data().segments[-1].analogsignals[0]
 
-                min_membrane = float(np.min(membrane[:, 1][10:]))
-                max_membrane = float(np.max(membrane[:, 1][10:]))
+                min_membrane = float(membrane[10:].min())
+                max_membrane = float(membrane[10:].max())
 
                 results["weight"].append(w)
                 results["receptor_type"].append(receptor_type)
