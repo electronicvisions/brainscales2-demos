@@ -11,7 +11,7 @@ is explained in more detail in the matrix multiplication introduction.
 
 In order to use the microscheduler we have to set some environment variables first:
 
-.. include:: quiggeldy_setup.rst
+.. include:: common_quiggeldy_setup.rst
 
 First, we import some things needed later:
 
