@@ -37,7 +37,7 @@ def build(bld):
 
     # Build HTML
     bld(name='doc-much-demos-such-wow-html',
-        rule=f'{sphinxbuild} -M html {srcdir} {blddir}',
+        rule=f'{sphinxbuild} -M html {srcdir} {blddir} -W',
         always=True)
 
     # Build and install PPU code
