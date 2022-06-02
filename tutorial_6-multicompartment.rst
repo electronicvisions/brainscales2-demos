@@ -187,7 +187,7 @@ Since we use a single ADC (analog-to-digital converter) to record the membrane p
             pynn.run(length * isi)
             pynn.reset()
 
-            membrane_traces.append(comp.get_data().segments[-1].analogsignals[0])
+            membrane_traces.append(comp.get_data().segments[-1].irregularlysampledsignals[0])
 
             comp.record(None)
 

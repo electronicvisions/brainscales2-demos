@@ -122,7 +122,7 @@ werden.
     print(f"Die Zeitpunkte der Spikes waren: {spiketrain}")
 
     # Auch sein Membranpotential kann geplottet werden.
-    mem_v = pop.get_data("v").segments[0].analogsignals[0]
+    mem_v = pop.get_data("v").segments[0].irregularlysampledsignals[0]
 
     # Ein Modul zur grafischen Darstellung wird geladen.
     %matplotlib inline

@@ -63,7 +63,7 @@ schauen uns das resultierende Membranpotential an.
 
         spiketrain = pop.get_data("spikes").segments[0].spiketrains[0]
 
-        mem_v = pop.get_data("v").segments[0].analogsignals[0]
+        mem_v = pop.get_data("v").segments[0].irregularlysampledsignals[0]
         text_output.clear_output()
         plot_output.clear_output()
         with plot_output:
@@ -169,7 +169,7 @@ wird, ob exzitatorisch oder inhibitorisch.
         pynn.run(0.1)
 
         # Das Ergebnis wird ausgegeben.
-        mem_v = pop.get_data("v").segments[0].analogsignals[0]
+        mem_v = pop.get_data("v").segments[0].irregularlysampledsignals[0]
         plt.figure(figsize=(10, 5))
         plt.plot(mem_v.times.rescale(pq.us), mem_v)
         plt.xlabel("Zeit [µs]")

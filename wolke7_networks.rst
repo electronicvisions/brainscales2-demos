@@ -216,7 +216,7 @@ Jetzt können wir mit dem Experiment beginne:
     print(f"Die Zeitpunkte der Spikes waren: {spiketrain}")
     
     # Auch das Membranpotential des Ausgangsneurons kann visualisiert werden.
-    mem_v = output_neuron.get_data("v").segments[0].analogsignals[0]
+    mem_v = output_neuron.get_data("v").segments[0].irregularlysampledsignals[0]
 
     plt.figure()
     plt.plot(mem_v.times, mem_v)

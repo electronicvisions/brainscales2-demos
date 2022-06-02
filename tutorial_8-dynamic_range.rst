@@ -125,7 +125,7 @@ Next we run the network multiple times with various configurations.
                     projections[-1].set(weight=sign * (w % max_weight))
 
                 pynn.run(1) # ms (hw)
-                membrane = population.get_data().segments[-1].analogsignals[0]
+                membrane = population.get_data().segments[-1].irregularlysampledsignals[0]
 
                 min_membrane = float(membrane[10:].min())
                 max_membrane = float(membrane[10:].max())

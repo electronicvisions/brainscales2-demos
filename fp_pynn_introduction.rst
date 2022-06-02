@@ -132,7 +132,7 @@ Thereafter, the recorded behavior of the neurons can be read out.
     print(f"The spike times were: {spiketrain}")
 
     # plot its membrane potential
-    mem_v = pop.get_data("v").segments[0].analogsignals[0]
+    mem_v = pop.get_data("v").segments[0].irregularlysampledsignals[0]
 
     import matplotlib.pyplot as plt
     %matplotlib inline

@@ -239,7 +239,7 @@ Exercises
 
         target_spikes = data.segments[-1].spiketrains[0] / 1e3  # convert ms to s
 
-        membrane = data.segments[-1].analogsignals[0]
+        membrane = data.segments[-1].irregularlysampledsignals[0]
         v_mem = np.interp(time, membrane.times / 1e3, membrane.magnitude[:, 0])
 
         fig = plt.figure()
@@ -392,7 +392,7 @@ Exercises
         # retrieve data
         data = pop_output.get_data()
         spikes = data.segments[-1].spiketrains[0] / 1e3 # convert to SI units (s)
-        membrane = data.segments[-1].analogsignals[0]
+        membrane = data.segments[-1].irregularlysampledsignals[0]
 
         # resample and normalize mebrane trace
         v_mem = (np.interp(time, membrane.times / 1e3, membrane.magnitude[:, 0]) - v_zero) / dynamic_range

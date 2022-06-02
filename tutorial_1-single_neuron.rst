@@ -34,7 +34,7 @@ In order to use the microscheduler we have to set some environment variables fir
         if len(population) != 1:
             raise ValueError("Plotting is supported for populations of size 1.")
         # Experimental results are given in the 'neo' data format
-        mem_v = population.get_data("v").segments[segment_id].analogsignals[0]
+        mem_v = population.get_data("v").segments[segment_id].irregularlysampledsignals[0]
 
         plt.plot(mem_v.times, mem_v, alpha=0.5)
         print(f"Mean membrane potential: {mem_v.mean()}")

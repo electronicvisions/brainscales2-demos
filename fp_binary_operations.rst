@@ -110,7 +110,7 @@ or 2 is strong enough to elicit a spike in the output neuron.
     print(f"The spiketimes were: {spiketrain}")
 
     # the membrane potential of the output neuron can be visualized, too
-    mem_v = output_neuron.get_data("v").segments[0].analogsignals[0]
+    mem_v = output_neuron.get_data("v").segments[0].irregularlysampledsignals[0]
 
     plt.figure()
     plt.plot(mem_v.times, mem_v)
