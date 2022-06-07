@@ -68,7 +68,7 @@ Next we run the network multiple times with various configurations.
 
 .. code:: ipython3
 
-    from dlens_vx_v2 import hxcomm
+    from dlens_vx_v3 import hxcomm
 
     # to speed things up, we keep the connection alive between experiments
     with hxcomm.ManagedConnection() as connection:

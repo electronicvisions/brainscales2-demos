@@ -4,7 +4,7 @@ import urllib.request
 import hashlib
 import pandas as pd
 
-from dlens_vx_v2 import hxcomm
+from dlens_vx_v3 import hxcomm
 import pynn_brainscales.brainscales2 as pynn
 
 def in_collaboratory():

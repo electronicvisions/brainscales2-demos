@@ -45,8 +45,8 @@ def build(bld):
         target='_static/tutorial/plasticity_kernel.bin',
         features='cxx',
         source='_static/tutorial/plasticity_kernel.cpp',
-        use=['nux_vx_v2', 'nux_runtime_vx_v2'],
-        env=bld.all_envs['nux_vx_v2'],
+        use=['nux_vx_v3', 'nux_runtime_vx_v3'],
+        env=bld.all_envs['nux_vx_v3'],
     )
 
     bld.install_files(

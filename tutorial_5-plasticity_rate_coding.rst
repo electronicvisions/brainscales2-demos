@@ -15,7 +15,7 @@ This example makes use of this feature by show-casing synaptic plasticity.
     import numpy as np
     import matplotlib.pyplot as plt
     import pynn_brainscales.brainscales2 as pynn
-    from dlens_vx_v2 import hal, lola, halco, sta
+    from dlens_vx_v3 import hal, lola, halco, sta
 
 We want to show how the PPUs can be used to rate-code an image in the activity of
 neurons (our canvas will be the activity of the neurons over time).
