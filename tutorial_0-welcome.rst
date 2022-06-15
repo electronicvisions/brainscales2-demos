@@ -44,9 +44,9 @@ Simply use an existing collabatory or create a new one in which you can clone th
 
 .. code-block:: bash
 
-   git clone https://github.com/electronicvisions/brainscales2-demos.git --branch jupyter-notebooks
+   !git clone https://github.com/electronicvisions/brainscales2-demos.git --branch jupyter-notebooks
 
-in the terminal of your JupyterLab session.
+in a notebook of your JupyterLab session.
 
 Make sure to start the kernel named ``EBRAINS_release_...`` by either selecting the E symbol or by choosing the kernel from the list of available kernels when asked to.
 
