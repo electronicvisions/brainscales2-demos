@@ -140,7 +140,7 @@ We create stimulus neurons which inject synaptic inputs in one compartment after
 .. code:: ipython3
 
     isi = 0.2  # ms (hw): time between inputs
-    spike_times = np.arange(length) * isi + 0.5 * isi
+    spike_times = np.arange(length) * isi + 0.5 * isi  # ms (hw)
     # Inject stimulus in one compartment after another
     projections = []
     for spike_time, compartment in zip(spike_times, compartments):
@@ -217,15 +217,15 @@ We will change the recording site in the x-axis and the injection site on the y-
         for injected in range(length):
             for measured in range(length):
                 membrane_trace = membrane_traces[measured]
-                input_time = spike_times[injected]
+                input_time = spike_times[injected] * pq.ms
 
                 signal = membrane_trace.time_slice(
-                    t_start=(input_time - 0.01) * pq.ms,
-                    t_stop=(input_time + 0.06) * pq.ms)
+                    t_start=input_time - 0.01 * pq.ms,
+                    t_stop=input_time + 0.06 * pq.ms)
 
                 # Normalize voltage and times
                 signal.times = (signal.times - input_time).rescale(pq.us)
-                signal -= voltage[:100].mean()
+                signal = signal - signal[:100].mean()
 
                 axs[injected, measured].plot(signal.times, signal)
 
