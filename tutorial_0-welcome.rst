@@ -28,8 +28,6 @@ In this session, we will cover the following topics:
    tutorial_1-single_neuron
    tutorial_2-superspike
    tutorial_3-hagen_intro
-   tutorial_4-hagen_properties
-   tutorial_5-plasticity_rate_coding
    tutorial_6-multicompartment
 
 In this section of the tutorial, we will go through the technical details and make sure that you are correctly set up for accessing our hardware resources.

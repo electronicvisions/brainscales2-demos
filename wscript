@@ -4,8 +4,9 @@ from waflib.extras.test_base import summary
 
 def depends(dep):
     dep("pynn-brainscales")
-    dep("hxtorch")
-    dep("libnux")
+    # These packages are not supported in EBRAINS release 1.0:
+    #dep("hxtorch")
+    #dep("libnux")
 
 
 def options(opt):
@@ -40,34 +41,37 @@ def build(bld):
         rule=f'{sphinxbuild} -M html {srcdir} {blddir} -W',
         always=True)
 
-    # Build and install PPU code
-    bld.program(
-        target='_static/tutorial/plasticity_kernel.bin',
-        features='cxx',
-        source='_static/tutorial/plasticity_kernel.cpp',
-        use=['nux_vx_v2', 'nux_runtime_vx_v2'],
-        env=bld.all_envs['nux_vx_v2'],
-    )
+    # Build target not supported in EBRAINS release 1.0:
 
-    bld.install_files(
-        testdir.find_or_declare('jupyter').find_or_declare('_static').find_or_declare('tutorial'),
-        ['_static/tutorial/plasticity_kernel.bin'],
-        name='install_plasticity_kernel_test',
-        use="plasticity_kernel.bin"
-    )
+    ## Build and install PPU code
+    #bld.program(
+    #    target='_static/tutorial/plasticity_kernel.bin',
+    #    features='cxx',
+    #    source='_static/tutorial/plasticity_kernel.cpp',
+    #    use=['nux_vx_v2', 'nux_runtime_vx_v2'],
+    #    env=bld.all_envs['nux_vx_v2'],
+    #)
 
-    bld.install_files(
-        blddir.find_or_declare('jupyter').find_or_declare('_static').find_or_declare('tutorial'),
-        ['_static/tutorial/plasticity_kernel.bin'],
-        name='install_plasticity_kernel_deployment',
-        use="plasticity_kernel.bin"
-    )
+    #bld.install_files(
+    #    testdir.find_or_declare('jupyter').find_or_declare('_static').find_or_declare('tutorial'),
+    #    ['_static/tutorial/plasticity_kernel.bin'],
+    #    name='install_plasticity_kernel_test',
+    #    use="plasticity_kernel.bin"
+    #)
+
+    #bld.install_files(
+    #    blddir.find_or_declare('jupyter').find_or_declare('_static').find_or_declare('tutorial'),
+    #    ['_static/tutorial/plasticity_kernel.bin'],
+    #    name='install_plasticity_kernel_deployment',
+    #    use="plasticity_kernel.bin"
+    #)
 
     # HW test
     bld(name="doc-much-demos-such-wow_shelltests",
         tests=bld.path.ant_glob("tests/shell/**/*"),
         features="use shelltest",
-        use="doc-much-demos-such-wow-jupyter-test pynn_brainscales2 hxtorch install_plasticity_kernel_test",
+        #use="doc-much-demos-such-wow-jupyter-test pynn_brainscales2 hxtorch install_plasticity_kernel_test",
+        use="doc-much-demos-such-wow-jupyter-test pynn_brainscales2",
         test_environ=dict(BLD_DIR=str(testdir)),
         test_timeout=600,
         skip_run=not bld.env.DLSvx_HARDWARE_AVAILABLE
