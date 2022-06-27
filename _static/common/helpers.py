@@ -32,9 +32,7 @@ def setup_hardware_client():
     os.environ['QUIGGELDY_PORT'] = my_setup['Port']
 
 
-def get_nightly_calibration(filename='spiking_cocolist.bin'
-                            if in_collaboratory()
-                            else 'spiking_cocolist.pbin'):
+def get_nightly_calibration(filename='spiking_cocolist.bin'):
     '''
     Get the nightly deployed calibration.
 
@@ -48,7 +46,7 @@ def get_nightly_calibration(filename='spiking_cocolist.bin'
             identifier = connection.get_unique_identifier()
 
         # download calibration file
-        folder =  "last-binary" if in_collaboratory() else "latest"
+        folder =  "last-binary"
         download_url = "https://openproject.bioai.eu/data_calibration/" \
                        f"hicann-dls-sr-hx/{identifier}/stable/{folder}" \
                        f"/{filename}"
