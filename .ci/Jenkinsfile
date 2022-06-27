@@ -1,4 +1,4 @@
-@Library("jenlib") _
+@Library("jenlib@ebrains-1.0") _
 
 final String PROJECT_NAME = "much-demos-such-wow"
 
