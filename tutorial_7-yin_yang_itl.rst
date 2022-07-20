@@ -33,6 +33,8 @@ Some imports that are needed later:
     display(HTML("<style>.output_wrapper button.btn-default, "
                  ".output_wrapper .ui-dialog-titlebar {display:none}</style>"))
 
+    from _static.common.helpers import save_nightly_calibration
+
 Hardware in the loop
 --------------------
 
@@ -65,9 +67,9 @@ initialization of the hardware connection:
 
 .. code:: ipython3
 
-    # initializes the hardware connection
-    # and applies a nightly default calibration
-    hxtorch.init_hardware()
+    # download claibration and initialize hardware configuration
+    save_nightly_calibration('hagen_cocolist.pbin')
+    hxtorch.init_hardware(hxtorch.CalibrationPath('hagen_cocolist.pbin'))
 
     # measures the hardware gain and the average statistical noise on the outputs
     hardware_parameter = hxtorch.measure_mock_parameter()

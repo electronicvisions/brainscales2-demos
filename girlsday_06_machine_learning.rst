@@ -88,7 +88,10 @@ zugeordnet.
     from IPython import get_ipython
     from tqdm.auto import tqdm
 
-    hxtorch.init_hardware()
+    from _static.common.helpers import save_nightly_calibration
+
+    save_nightly_calibration('hagen_cocolist.pbin')
+    hxtorch.init_hardware(hxtorch.CalibrationPath('hagen_cocolist.pbin'))
     hxtorch.set_mock_parameter(hxtorch.measure_mock_parameter())
 
     transform = transforms.Compose([

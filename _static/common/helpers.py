@@ -1,5 +1,8 @@
 import os
 import urllib.request
+from typing import Optional
+from pathlib import Path
+import shutil
 
 import hashlib
 import pandas as pd
@@ -62,3 +65,31 @@ def get_nightly_calibration(filename='spiking_cocolist.pbin'):
     chip = pynn.helper.chip_from_file(path_to_calib)
 
     return chip
+
+
+def save_nightly_calibration(filename: str = 'spiking_cocolist.pbin',
+                             folder: Optional[str] = None):
+    '''
+    Save the nightly calibration to the given location.
+
+    If the calibration is not available locally, it will be downloaded.
+
+    :param filename: Name of the calibration to download. Typical names are
+        'spiking_cocolist.pbin' and 'hagen_cocolist.pbin'.
+    :param folder: Folder to save the calibration in. If not supplied the
+        calibration is saved in the current folder.
+    '''
+    folder = Path() if folder is None else Path(folder)
+    output_file = folder.joinpath(filename)
+    if in_collaboratory():
+        with hxcomm.ManagedConnection() as connection:
+                identifier = connection.get_unique_identifier()
+
+        download_url = "https://openproject.bioai.eu/data_calibration/" \
+                       f"hicann-dls-sr-hx/{identifier}/stable/latest/" \
+                       f"{filename}"
+        urllib.request.urlretrieve(download_url, output_file)
+    else:
+        calib_path = pynn.helper.nightly_calib_path().parent
+        path_to_calib =  calib_path.joinpath(filename)
+        shutil.copy(path_to_calib, output_file)

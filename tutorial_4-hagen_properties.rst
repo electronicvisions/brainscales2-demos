@@ -28,6 +28,8 @@ First, we import some things needed later:
     with suppress(IOError):
         plt.style.use("_static/matplotlibrc")
 
+    from _static.common.helpers import save_nightly_calibration
+
     import ipywidgets as w
     from functools import partial
     IntSlider = partial(w.IntSlider, continuous_update=False)
@@ -68,9 +70,9 @@ load a calibration. This can be achieved using ``hxtorch.init_hardware``:
 
 .. code:: ipython3
 
-    # initializes the hardware connection
-    # and applies a default calibration
-    hxtorch.init_hardware()
+    # download claibration and initialize hardware configuration
+    save_nightly_calibration('hagen_cocolist.pbin')
+    hxtorch.init_hardware(hxtorch.CalibrationPath('hagen_cocolist.pbin'))
 
 This already enables us to multiply matrices using the BSS-2 accelerator:
 
