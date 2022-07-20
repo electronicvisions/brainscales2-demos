@@ -121,7 +121,7 @@ weight updates.
 
 .. code:: ipython3
 
-    n_inputs = 60
+    n_inputs = 25
 
     duration = 200e-6  # s in wallclock time
     dt = 0.1e-6
