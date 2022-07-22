@@ -25,10 +25,7 @@ Some imports that are needed later:
     from contextlib import suppress
     with suppress(IOError):
         plt.style.use("_static/matplotlibrc")
-    try:
-        %matplotlib notebook
-    except:
-        %matplotlib inline
+    %matplotlib inline
     from IPython.display import HTML
     display(HTML("<style>.output_wrapper button.btn-default, "
                  ".output_wrapper .ui-dialog-titlebar {display:none}</style>"))
