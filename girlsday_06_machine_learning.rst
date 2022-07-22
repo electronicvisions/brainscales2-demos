@@ -58,7 +58,7 @@ Bevor wir mit unseren Experimenten beginnen können, müssen wir erneut unsere U
 
 .. code:: ipython3
 
-    from _static.common.helpers import setup_hardware_client
+    from _static.common.helpers import setup_hardware_client, save_nightly_calibration
     setup_hardware_client()
 
 
@@ -88,11 +88,30 @@ zugeordnet.
     from IPython import get_ipython
     from tqdm.auto import tqdm
 
-    from _static.common.helpers import save_nightly_calibration
+    %matplotlib inline
+    import matplotlib.pyplot as plt
 
     save_nightly_calibration('hagen_cocolist.pbin')
     hxtorch.init_hardware(hxtorch.CalibrationPath('hagen_cocolist.pbin'))
     hxtorch.set_mock_parameter(hxtorch.measure_mock_parameter())
+
+Im maschinellen Lernen ist das klassifizieren von Bildern ein beliebtes Beispiel, sodass eine große Sammlung von Bildern, welche Zahlen darstellen, frei verfügbar ist.
+Diese Sammlung laden wir im folgenden runter:
+
+.. code:: ipython3
+
+   # Ort, an dem das Set von Bildern gespeichert werden soll:
+   data_path = 'mnist'
+   
+
+.. code-block:: ipython3
+    :class: test, html-display-none
+
+    # use stored MNIST data for tests
+    data_path = '/loh/data/mnist'
+
+
+.. code:: ipython3
 
     transform = transforms.Compose([
         transforms.ToTensor(),
@@ -106,8 +125,10 @@ zugeordnet.
     # Die Bilder der Ziffern werden geladen.
     # Mit `train_data` wird trainiert, mit `test_data` kann nachher überprüft
     # werden, wie gut das Netzwerk verallgemeinern kann.
-    train_data = datasets.MNIST("/loh/data/mnist", train=True, transform=train_transform)
-    test_data = datasets.MNIST("/loh/data/mnist", train=False, transform=transform)
+    train_data = datasets.MNIST(data_path, train=True, transform=train_transform,
+                                download=True)
+    test_data = datasets.MNIST(data_path, train=False, transform=transform,
+                               download=True)
     
     numbers = {n: [] for n in range(10)}
     for img, n in test_data:
@@ -118,15 +139,18 @@ zugeordnet.
     test_loader = torch.utils.data.DataLoader(
         dataset=test_data, batch_size=200)
     
-    # Hier werden ein paar der Testbilder angezeigt.
-    canvas = Canvas(width=800, height=600)
-    display(canvas)
+
+Nun stellen wir einige, zufällige Bilder aus dem Set dar:
+
+.. code:: ipython3
+
+    fig, axs = plt.subplots(2, 2, constrained_layout=True)
     N = len(test_data)
-    img = np.zeros((28, 28, 4), dtype=int)
-    for j in range(canvas.height // 28):
-        for i in range(canvas.width // 28):
-            img[:, :, -1] = test_data[np.random.randint(0, N-1)][0][0] * 255
-            canvas.put_image_data(img, x=28*i, y=28*j)
+    for ax in axs.flatten():
+        image = test_data[np.random.randint(0, N-1)][0][0]
+        ax.imshow(image, cmap='Greys')
+        ax.set_axis_off()
+
 
 .. image:: _static/girlsday/girlsday_mnist_output1.png
    :width: 100%
