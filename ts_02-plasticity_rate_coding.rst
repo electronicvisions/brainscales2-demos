@@ -231,6 +231,13 @@ Last, the recorded spike-trains are visualized.
     plt.ylabel("neuron index")
     fig.show()
 
+.. code-block:: ipython3
+    :class: test, html-display-none
+
+    # assert spikes are recorded
+    total_spikes = np.sum([len(spikes) for spikes in spiketrains])
+    assert total_spikes > 0, "No spikes recorded"
+
 We see a replicated version of the original image encoded in the time evolution of
 the neurons' firing rates.
 
