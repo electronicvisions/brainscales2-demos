@@ -16,7 +16,7 @@ def setup_hardware_client():
 
     # setup quiggeldy enviroment
     setup_url = 'https://brainscales-r.kip.uni-heidelberg.de:7443/nmpi/' \
-                'quiggeldy_setups_experimental.csv'
+                'quiggeldy_setups.csv'
     quiggeldy_setups = pd.read_csv(setup_url, dtype=str)
 
     os.environ['QUIGGELDY_ENABLED']='1'

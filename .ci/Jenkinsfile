@@ -1,4 +1,4 @@
-@Library("jenlib") _
+@Library("jenlib@ebrains-2.0") _
 
 final String PROJECT_NAME = "much-demos-such-wow"
 
@@ -13,6 +13,7 @@ try {
 			testSlurmResource  : [partition: "cube", wafer: 62, "fpga-without-aout": 3],
 			preTestHook        : { configureHxCubeBitfile() },
 			testOptions        : "--test-execall -j1",
+			setupOptions       : "--release-branch=ebrains-2.0",
 			notificationChannel: "#jenkins-trashbin",  // success is checked globally
 			configureInstallOptions: "--build-profile=ci",
 			ignoreGerritChanges: deploy
@@ -37,7 +38,7 @@ try {
 				jesh("git commit -m \"build ${currentBuild.displayName}\"")
 				jesh("git remote add origin git@github-brainscales2-demos_jupyter-notebooks:electronicvisions/brainscales2-demos.git")
 				lock("much-demos-such-wow_GITHUB-UPLOAD") {
-					jesh("git push -f origin HEAD:jupyter-notebooks-experimental")
+					jesh("git push -f origin HEAD:jupyter-notebooks")
 				}
 			}
 		}
