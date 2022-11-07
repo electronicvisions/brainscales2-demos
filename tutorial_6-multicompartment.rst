@@ -284,7 +284,8 @@ Questions
 - Do you see an effect due to the finite chain length?
 
 Last but not least, we tell PyNN that we finished all our experiments.
+Uncomment and execute the following line once you want to finish the experiment.
 
 .. code:: ipython3
 
-    pynn.end()
+    # pynn.end()
