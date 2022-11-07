@@ -340,14 +340,14 @@ Now we can continue by defining our experiment:
 
         # external input
         exc_spikes = spiketimes[excitatory_spike]
-        exc_stim_pop = pynn.Population(1, SpikeSourceArray(spike_times=exc_spikes))
+        exc_stim_pop = pynn.Population(2, SpikeSourceArray(spike_times=exc_spikes))
         exc_proj = pynn.Projection(exc_stim_pop, stimulated_p,
                                    pynn.AllToAllConnector(),
                                    synapse_type=StaticSynapse(weight=exc_weight),
                                    receptor_type="excitatory")
 
         inh_spikes = spiketimes[~excitatory_spike]
-        inh_stim_pop = pynn.Population(1, SpikeSourceArray(spike_times=inh_spikes))
+        inh_stim_pop = pynn.Population(2, SpikeSourceArray(spike_times=inh_spikes))
         inh_proj = pynn.Projection(inh_stim_pop, stimulated_p,
                                    pynn.AllToAllConnector(),
                                    synapse_type=StaticSynapse(weight=-inh_weight),

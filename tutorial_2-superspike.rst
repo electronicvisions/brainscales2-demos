@@ -224,7 +224,7 @@ Exercises
 
     @w.interact(
         weight_mean=w.FloatSlider(
-            10, min=0, max=20, continuous_update=False),
+            27, min=0, max=40, continuous_update=False),
         weight_std=w.FloatSlider(
             1, min=0, max=10, continuous_update=False)
     )
@@ -250,7 +250,7 @@ Exercises
         ax.set_xlabel("time / μs")
         ax.set_ylabel("membrane potential / LSB")
         pynn.reset()
-    experiment(10, 1); plt.close()  # needed for testing
+    experiment(27, 1); plt.close()  # needed for testing
 
 .. image:: _static/tutorial/superspike_target.png
    :width: 90%
