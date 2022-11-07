@@ -246,11 +246,11 @@ We will change the recording site in the x-axis and the injection site on the y-
 
 
         pad = 8
-        ax.annotate(r'$\triangleleft$ change recording side $\triangleright$',
+        ax.annotate(r'$\triangleleft$ change recording site $\triangleright$',
                     xy=(0.5, 1), xytext=(0, pad),
                     xycoords='axes fraction', textcoords='offset points',
                     ha='center', va='center')
-        ax.annotate(r'$\triangleleft$ change injection side $\triangleright$',
+        ax.annotate(r'$\triangleleft$ change injection site $\triangleright$',
                     xy=(1, 0.5), xytext=(pad, 0),
                     xycoords='axes fraction', textcoords='offset points',
                     ha='center', va='center', rotation=270)
