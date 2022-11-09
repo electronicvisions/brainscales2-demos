@@ -214,7 +214,7 @@ membrane time constants.
         # Leak conductance, range: 0-1022
         leak_i_bias=200,
         # Threshold potential, range: 0-600
-        threshold_v_threshold=300,
+        threshold_v_threshold=500,
         # Reset potential, range: 300-1000
         reset_v_reset=400,
         # Membrane capacitance, range: 0-63
