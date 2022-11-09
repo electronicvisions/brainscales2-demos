@@ -44,8 +44,7 @@ publication.
 .. admonition:: References for further reading
 
     1. Zenke, Friedemann, and Surya Ganguli. “Superspike: Supervised
-       learning in multilayer spiking neural networks.” *Neural computation*
-       30.6 (2018): 1514-1541.
+       learning in multilayer spiking neural networks.” *Neural computation* 30.6 (2018): 1514-1541.
     2. Neftci, Emre O., Hesham Mostafa, and Friedemann Zenke. “Surrogate
        gradient learning in spiking neural networks: Bringing the power of
        gradient-based optimization to spiking neural networks.” IEEE Signal
