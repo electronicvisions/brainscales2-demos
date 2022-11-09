@@ -59,7 +59,7 @@ between the units of the input, weights and the analog-to-digital
 converter at the output and is specific to the individual hardware setup
 and its calibration.
 
-For the calculations on the host, these parameters can be measured after 
+For the calculations on the host, these parameters can be measured after
 initialization of the hardware connection:
 
 .. code:: ipython3

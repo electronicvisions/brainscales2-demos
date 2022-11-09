@@ -97,13 +97,13 @@ In order to use the microscheduler we have to set some environment variables fir
     import matplotlib.pyplot as plt
     import numpy as np
     import ipywidgets as widgets
-    
+
     import pynn_brainscales.brainscales2 as pynn
     from pynn_brainscales.brainscales2 import Population
     from pynn_brainscales.brainscales2.standardmodels.cells import SpikeSourceArray
     from pynn_brainscales.brainscales2.standardmodels.synapses import StaticSynapse
-    
-    
+
+
     def plot_membrane_dynamics(population: Population, segment_id=-1, ylim=None):
         """
         Plot the membrane potential of the neuron in a given population view. Only
@@ -140,9 +140,9 @@ Now we define our experiment:
     def generate_external_inputs(stimulated_population):
         """
         Create off-chip populations serving as excitatory/inhibitory spike sources.
-    
+
         Feel free to modify the `{exc,inh}_spiketimes` and the `weight` of the stimulation.
-    
+
         :param simulated_population: Population to map inputs to.
         """
         exc_spiketimes = [1, 3, 4, 5, 7, 8, 9, 10, 15, 17, 18, 19]  # us
@@ -152,7 +152,7 @@ Now we define our experiment:
                         pynn.AllToAllConnector(),
                         synapse_type=StaticSynapse(weight=63),
                         receptor_type="excitatory")
-    
+
         inh_spiketimes = [2, 6, 16]  # us (bio: ms)
         inh_spiketimes = np.array(inh_spiketimes) / 1e3
         inh_stim_pop = pynn.Population(1, SpikeSourceArray(spike_times=inh_spiketimes))
@@ -160,19 +160,19 @@ Now we define our experiment:
                         pynn.AllToAllConnector(),
                         synapse_type=StaticSynapse(weight=-63),
                         receptor_type="inhibitory")
-    
+
     plt.figure()
     plt.title("An integrator neuron")
-    
+
     # reset membrane potential before beginning of experiment (it floats otherwise)
     pynn.setup(initial_config=calib)
-    
+
     # use calibrated parameters for neuron
     silent_p = pynn.Population(2, pynn.cells.HXNeuron())
     stimulated_p = pynn.Population(1, pynn.cells.HXNeuron())
     generate_external_inputs(stimulated_p)
     stimulated_p.record(["v", "spikes"])
-    
+
     pynn.run(50e-3)  # run for 50 us
     plot_membrane_dynamics(stimulated_p)
     plt.show()

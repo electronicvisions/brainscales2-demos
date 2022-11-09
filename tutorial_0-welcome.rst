@@ -48,7 +48,7 @@ Simply use an existing collabatory or create a new one in which you can clone th
 
 in a notebook of your JupyterLab session.
 
-To be able to use the EBRAINS software environment for your notebook, please select the ``EBRAINS_experimental_release`` kernel. 
+To be able to use the EBRAINS software environment for your notebook, please select the ``EBRAINS_experimental_release`` kernel.
 The currently used kernel is shown in the status line at the bottom of the notebook and in the upper right hand corner of the notebook. The default is ``Python 3 (ipykernel)``, which does not have the EBRAINS software environment installed. To select a different kernel, please klick the kernel name, then select from the appearing list.
 
 Shared Hardware Resources

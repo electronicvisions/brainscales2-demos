@@ -15,13 +15,13 @@ In order to use the microscheduler we have to set some environment variables fir
     IntSlider = partial(IntSlider, continuous_update=False)
     import matplotlib.pyplot as plt
     plt.style.use("_static/matplotlibrc")
-    
+
     import pynn_brainscales.brainscales2 as pynn
     from pynn_brainscales.brainscales2 import Population
     from pynn_brainscales.brainscales2.standardmodels.cells import SpikeSourceArray
     from pynn_brainscales.brainscales2.standardmodels.synapses import StaticSynapse
-    
-    
+
+
     def plot_membrane_dynamics(population: Population, segment_id=-1, ylim=None):
         """
         Plot the membrane potential of the neuron in a given population view. Only
@@ -85,26 +85,26 @@ biological systems.
     def experiment(v_leak):
         plt.figure()
         plt.title("First experiment: A silent neuron")
-    
+
         pynn.setup()
-    
+
         pop = pynn.Population(1, pynn.cells.HXNeuron(
             # Leak potential, range: 400-1000
             leak_v_leak=v_leak,
             # Leak conductance, range: 0-1022
             leak_i_bias=1022))
-    
+
         # The chip contains a fast Analog-to-Digital converter. It can be used to
         # record different observables of a single analog neuron - most importantly
         # the membrane potential.
         pop.record(["v"])
-    
+
         # Execute experiment
         pynn.run(0.2)
-    
+
         plot_membrane_dynamics(pop, ylim=(100, 800))
         plt.show()
-    
+
         # Reset the pyNN internal state and prepare for the following experiment.
         pynn.end()
 
@@ -137,18 +137,18 @@ threshold setting of 300 may correspond to a higher leak potential of
     def experiment(v_leak, v_threshold, v_reset, i_bias_leak):
         """
         Set up a leak over threshold neuron.
-    
+
         :param v_leak: Leak potential.
         :param v_threshold: Spike threshold potential.
         :param v_reset: Reset potential.
         :param i_bias_leak: Controls the leak conductance (membrane time constant).
         """
-    
+
         plt.figure()
         plt.title("Second experiment: Leak over threshold")
-    
+
         pynn.setup()
-    
+
         pop = pynn.Population(1, pynn.cells.HXNeuron(
             # Leak potential, range: 400-1000
             leak_v_leak=v_leak,
@@ -168,7 +168,7 @@ threshold setting of 300 may correspond to a higher leak potential of
             reset_i_bias=1022,
             # Increase reset conductance
             reset_enable_multiplication=True))
-    
+
         pop.record(["v", "spikes"])
         pynn.run(0.2)
         plot_membrane_dynamics(pop, ylim=(100, 800))
@@ -205,9 +205,9 @@ membrane time constants.
 
     plt.figure()
     plt.title("Third experiment: Fixed-pattern variations")
-    
+
     pynn.setup()
-    
+
     pop = pynn.Population(10, pynn.cells.HXNeuron(
         # Leak potential, range: 400-1000
         leak_v_leak=1000,
@@ -227,7 +227,7 @@ membrane time constants.
         reset_i_bias=1022,
         # Increase reset conductance
         reset_enable_multiplication=True))
-    
+
     for neuron_id in range(len(pop)):
         print(f"Recording fixed-pattern variations: Run {neuron_id}")
         p_view = pynn.PopulationView(pop, [neuron_id])
@@ -236,7 +236,7 @@ membrane time constants.
         plot_membrane_dynamics(p_view, ylim=(100, 800))
         pynn.reset()
         pop.record(None)
-    
+
     plt.show()
     pynn.end()
 
