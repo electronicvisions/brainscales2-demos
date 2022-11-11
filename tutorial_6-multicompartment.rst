@@ -34,7 +34,7 @@ You can find more detailed information about the multi-compartmental capabilitie
     1. Poirazi, P., Brannon, T., Mel, B.W., 2003. Pyramidal neuron as two-layer neural network. Neuron 37, 989–999. doi:`10.1016/s0896-6273(03)00149-1 <https://www.doi.org/10.1016/s0896-6273(03)00149-1>`_
     2. London, M., Häusser, M., 2005. Dendritic computation. Annu. Rev. Neurosci.  28, 503–532. doi:`10.1146/annurev.neuro.28.061604.135703  <https://www.doi.org/10.1146/annurev.neuro.28.061604.135703>`_
     3. Major, G., Larkum, M.E., Schiller, J., 2013. Active properties of neocortical pyramidal neuron dendrites. Annual Review of Neuroscience 36, 1–24. doi:`10.1146/annurev-neuro-062111-150343 <https://www.doi.org/10.1146/annurev-neuro-062111-150343>`_
-    4. Kaiser, J., Billaudelle, S., Müller, E., Tetzlaff, C., Schemmel, J., and Schmitt, S., 2021. Emulating dendritic computing paradigms on analog neuromorphic hardware. Neuroscience. doi:`10.1016/j.neuroscience.2021.08.013 <https://www.doi.org/10.1016/j.neuroscience.2021.08.013>`_
+    4. Kaiser, J., Billaudelle, S., Müller, E., Tetzlaff, C., Schemmel, J., and Schmitt, S., 2022. Emulating dendritic computing paradigms on analog neuromorphic hardware. Neuroscience. doi:`10.1016/j.neuroscience.2021.08.013 <https://www.doi.org/10.1016/j.neuroscience.2021.08.013>`_
 
 
 Imports and Calibration
@@ -86,15 +86,16 @@ Therefore, these compartments have to establish two connections via the somatic 
 As a consequence each is made up of two neuron circuits: the first will connect to the somatic line via the conductance and the second via the switch.
 
 In order to form the chain with ``length`` compartments, we create a set (population) of ``2 * length`` neuron circuits (``HXNeurons``); note that we use two neuron circuits for the first and last compartment as well even though it is not strictly needed.
-We will use the first neuron circuit to determine the properties of the compartment such as capacitance and leak potential.
-Consequently, we disable the leak (set the leak conductance to zero) for the second circuit and set its capacitance to zero.
+We will use the second neuron circuit to determine the properties of the compartment such as capacitance and leak potential.
+We choose the second neuron circuit since we will later also use this circuits adjustable resistance to connect it to its neighboring compartment.
+Consequently, we disable the leak (set the leak conductance to zero) for the first circuit and set its capacitance to zero.
 
 .. code:: ipython3
 
     pop = pynn.Population(length * 2,
                           pynn.cells.HXNeuron())
 
-    # Combine two neuron circuits to one compartment; "disable" second
+    # Combine two neuron circuits to one compartment; "disable" first
     # neuron circuit
     pynn.PopulationView(pop, np.arange(0, 2 * length, 2)).set(
         multicompartment_connect_right=True,
@@ -104,7 +105,7 @@ Consequently, we disable the leak (set the leak conductance to zero) for the sec
 
 As mentioned before, one of the circuits connects via a conductance to the somatic line and the other via the switch.
 In order to establish connections between the compartments, we have to close the somatic line for every second neuron circuit.
-This time we have to handle the first and last compartment separately as they only have one connection to the somatic line.
+This time we have to ignore the first and last compartment as they only have one connection to the somatic line.
 
 .. code:: ipython3
 
