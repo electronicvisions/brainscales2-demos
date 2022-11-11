@@ -38,43 +38,6 @@ For loading and converting an image, some helpers are required:
         image = image / image.max() * hal.SynapseWeightQuad.Value.max
         return image
 
-    def image_to_memory_block(image: np.array) -> hal.PPUMemoryBlock:
-        """
-        Convert image to memory region.
-
-        :param image: Image data to convert.
-        :return: Converted image data
-        """
-        image_h = 64
-        image_w = 64
-
-        if (image.shape != (image_h, image_w)):
-            raise RuntimeError("Image shape is required to be {}x{} pixels."
-                               .format(image_h, image_w))
-
-        # A word in memory is four bytes
-        bytes_in_word = 4
-        bits_in_byte = 8
-
-        # create memory block
-        image_config = hal.PPUMemoryBlock(
-            halco.PPUMemoryBlockSize(image_h * image_w // bytes_in_word))
-
-        # construct words by placing bytes
-        # in addition, we flip the order of pixels to get a upwards-facing image
-        # when plotting the time on the x-axis
-        words = image_config.words
-        for i in range(image_config.size()):
-            for j in range(bytes_in_word):
-                index = i * bytes_in_word + j
-                image_value = int(image[image_h - 1 - (index % image_h)][
-                    index // image_w]) << ((bytes_in_word - 1 - j) * bits_in_byte)
-                words[i] = hal.PPUMemoryWord(
-                    hal.PPUMemoryWord.Value(int(words[i].value) | image_value))
-        image_config.words = words
-
-        return image_config
-
 Controlling the on-chip plasticity processor
 --------------------------------------------
 
