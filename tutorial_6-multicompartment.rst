@@ -50,7 +50,7 @@ We continue by importing several Python packages, which we need to perform our e
 
     %matplotlib inline
     from functools import partial
-    from typing import List
+    from typing import List, Optional
     import numpy as np
     import ipywidgets as widget
     import matplotlib.pyplot as plt
@@ -201,7 +201,7 @@ We will change the recording site in the x-axis and the injection site on the y-
 
 .. code:: ipython3
 
-    def plot_membrane_traces(membrane_traces: List):
+    def plot_membrane_traces(membrane_traces: List, old_traces: Optional[List]):
         """
         Display recorded membrane traces.
 
@@ -212,23 +212,32 @@ We will change the recording site in the x-axis and the injection site on the y-
         :param membrane_traces: List of recorded membrane traces of the different
             compartments.
         """
+        length = len(membrane_traces)
         fig, axs = plt.subplots(length, length, sharex=True, sharey=True,
                                 figsize=(10,8))
 
-        for injected in range(length):
-            for measured in range(length):
-                membrane_trace = membrane_traces[measured]
-                input_time = spike_times[injected] * pq.ms
+        def plot_single(traces: List, **kwargs):
+            '''
+            Helper function to plot membrane traces recorded in a single experiment.
+            '''
+            for injected in range(length):
+                for measured in range(length):
+                    membrane_trace = traces[measured]
+                    input_time = spike_times[injected] * pq.ms
 
-                signal = membrane_trace.time_slice(
-                    t_start=input_time - 0.01 * pq.ms,
-                    t_stop=input_time + 0.06 * pq.ms)
+                    signal = membrane_trace.time_slice(
+                        t_start=input_time - 0.01 * pq.ms,
+                        t_stop=input_time + 0.06 * pq.ms)
 
-                # Normalize voltage and times
-                signal.times = (signal.times - input_time).rescale(pq.us)
-                signal = signal - signal[:100].mean()
+                    # Normalize voltage and times
+                    signal.times = (signal.times - input_time).rescale(pq.us)
+                    signal = signal - signal[:100].mean()
 
-                axs[injected, measured].plot(signal.times, signal)
+                    axs[injected, measured].plot(signal.times, signal, **kwargs)
+
+        plot_single(membrane_traces, c='k')
+        if old_traces is not None:
+            plot_single(old_traces, c='k', alpha=0.3)
 
         # Hide all but one axis
         for ax in np.delete(axs, -length):
@@ -266,12 +275,16 @@ For that purpose we use the functions defined in the previous section.
 
 .. code:: ipython3
 
+    old_traces = None
+
     Slider = partial(widget.IntSlider, continuous_update=False)
     @widget.interact(weight=Slider(min=0, max=63, step=1, value=31),
                      conductance=Slider(min=0, max=1022, step=10, value=500))
     def run_experiment(weight, conductance):
+        global old_traces
         membrane_traces = record_membrane_traces(weight, conductance)
-        plot_membrane_traces(membrane_traces)
+        plot_membrane_traces(membrane_traces, old_traces)
+        old_traces = membrane_traces
 
 .. image:: _static/tutorial/multicompartment_chain_solution.png
    :width: 800px
