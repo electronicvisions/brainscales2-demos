@@ -14,6 +14,7 @@ Welcome to the BrainScaleS-2 Demos & Examples!
    tutorial_6-multicompartment
    tutorial_7-yin_yang_itl
    tutorial_8-dynamic_range
+   tutorial_9-non-interactive_queue_runner
 
 .. toctree::
    :maxdepth: 1

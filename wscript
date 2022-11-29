@@ -32,7 +32,7 @@ def build(bld):
         always=True)
 
     bld(name='doc-much-demos-such-wow-jupyter-test',
-        rule=f'{sphinxbuild} -M jupyter {srcdir} {testdir} -D jupyter_drop_tests=0',
+        rule=f'{sphinxbuild} -M jupyter {srcdir} {testdir} -D jupyter_drop_tests=0 -t exclude_nmpi',
         always=True)
 
     # Build HTML

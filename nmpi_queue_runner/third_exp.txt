@@ -1,0 +1,41 @@
+%%file ~/third_experiment.py
+from neo.io import PickleIO
+import pynn_brainscales.brainscales2 as pynn
+
+pynn.logger.default_config(level=pynn.logger.LogLevel.INFO)
+logger = pynn.logger.get("single_neuron_demo")
+
+pynn.setup()
+num_neurons = 10
+p = pynn.Population(num_neurons, pynn.cells.HXNeuron(
+                        # Leak potential, range: 300-1000
+                        leak_v_leak=1000,
+                        # Leak conductance, range: 0-1022
+                        leak_i_bias=200,
+                        # Threshold potential, range: 0-600
+                        threshold_v_threshold=300,
+                        # Reset potential, range: 300-1000
+                        reset_v_reset=400,
+                        # Membrane capacitance, range: 0-63
+                        membrane_capacitance_capacitance=63,
+                        # Refractory time, range: 0-255
+                        refractory_period_refractory_time=120,
+                        # Enable reset on threshold crossing
+                        threshold_enable=True,
+                        # Reset conductance, range: 0-1022
+                        reset_i_bias=1022,
+                        # Enable strengthening of reset conductance
+                        reset_enable_multiplication=True
+                   ))
+for neuron_id in range(num_neurons):
+    logger.INFO(f"Recording analog variations: Run {neuron_id}")
+    # Remove recording of previously selected neuron
+    p.record(None)
+    # Record neuron with current neuron id
+    p_view = pynn.PopulationView(p, [neuron_id])
+    p_view.record(["v"])
+    pynn.run(0.1)
+    pynn.reset()
+
+# Store results to disk
+PickleIO(filename='third_experiment.dat').write_block(p.get_data())

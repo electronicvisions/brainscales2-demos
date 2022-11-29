@@ -1,0 +1,53 @@
+%%file ~/first_experiment.py
+# This first line is used to instruct the notebook not to execute the cell
+# but to write its content into a file.
+from neo.io import PickleIO
+import pynn_brainscales.brainscales2 as pynn
+# To begin with, we configure the logger used during our experiments
+
+pynn.logger.default_config(level=pynn.logger.LogLevel.INFO)
+logger = pynn.logger.get("single_neuron_demo")
+
+# The pyNN-interface can be used similarly to existing simulators and other
+# neuromorphic platforms.
+pynn.setup()
+# In the current state, we only expose the neuron type 'HXNeuron',
+# which allows low-level access to all circuit parameters. It can be
+# configured by passing initial values to the respective Population.
+# Each population may consist of multiple neurons (in this case: one),
+# all sharing the same parameters.
+# Circuit parameters control the dynamic behaviour of the neuron as well as
+# static configuration. Most of them are either boolean or given in units of
+# 'LSB' for chip-internal Digital-to-Analog converters - they have no direct
+# biological translation.
+# For this first example, you may alter the leak potential and observe
+# the response of the analog neuron's resting potential.
+pop = pynn.Population(1, pynn.cells.HXNeuron(
+                      # Leak potential, range: 300-1000
+                      leak_v_leak=700,
+                      # Leak conductance, range: 0-1022
+                      leak_i_bias=1022)
+                 )
+# The chip contains a fast Analog-to-Digital converter. It can be used to
+# record different observables of a single analog neuron - most importantly
+# the membrane potential.
+#
+# The chip additionally includes slower, parallel ADCs which will allow for
+# parallel access to analog signals in multiple neurons. Support for this
+# ADC will be integrated in future versions of our pyNN-Api.
+pop.record(["v"])
+
+# Calling pynn.run(time_in_ms) will as a first step apply the static
+# configuration to the neuromorphic substrate. As a second step, the network
+# is evolved for a given amount of time and neurons are stimulated by any
+# stimuli specified by the user.
+# The time is given in units of milliseconds (wall clock time),
+# representing the hardware's intrinsic 1000-fold speed-up compared to
+# biological systems.
+pynn.run(0.2)
+
+# Store results to disk
+PickleIO(filename='first_experiment.dat').write_block(pop.get_data("v"))
+
+# Reset the pyNN internal state and prepare for the following experiment
+pynn.end()

@@ -1,0 +1,79 @@
+%%file ~/fourth_experiment.py
+from neo.io import PickleIO
+import pynn_brainscales.brainscales2 as pynn
+from pynn_brainscales.brainscales2.standardmodels.synapses import StaticSynapse
+
+pynn.logger.default_config(level=pynn.logger.LogLevel.INFO)
+logger = pynn.logger.get("single_neuron_demo")
+
+pynn.setup()
+
+# Preparing the neuron to receive synaptic inputs requires the configuration
+# of additional circuits. The additional settings include technical parameters
+# for bringing the circuit to its designed operating point as well as
+# configuration with a direct biological equivalent.
+stimulated_p = pynn.Population(1, pynn.cells.HXNeuron(
+                                   # Leak potential, range: 300-1000
+                                   leak_v_leak=400,
+                                   # Leak conductance, range: 0-1022
+                                   leak_i_bias=200,
+                                   # Threshold potential, range: 0-600
+                                   threshold_v_threshold=400,
+                                   # Reset potential, range: 300-1000
+                                   reset_v_reset=300,
+                                   # Membrane capacitance, range: 0-63
+                                   membrane_capacitance_capacitance=63,
+                                   # Refractory time, range: 0-255
+                                   refractory_period_refractory_time=120,
+                                   # Enable reset on threshold crossing
+                                   threshold_enable=True,
+                                   # Reset conductance, range: 0-1022
+                                   reset_i_bias=1022,
+                                   # Enable strengthening of reset conductance
+                                   reset_enable_multiplication=True,
+                                   # -- Parameters for synaptic inputs -- #
+                                   # Enable synaptic stimulation
+                                   excitatory_input_enable=True,
+                                   inhibitory_input_enable=True,
+                                   # Strength of synaptic inputs
+                                   excitatory_input_i_bias_gm=1022,
+                                   inhibitory_input_i_bias_gm=1022,
+                                   # Synaptic time constants
+                                   excitatory_input_i_bias_tau=200,
+                                   inhibitory_input_i_bias_tau=200,
+                                   # Technical parameters
+                                   excitatory_input_i_shift_reference=300,
+                                   inhibitory_input_i_shift_reference=300))
+stimulated_p.record(["v", "spikes"])
+
+# Create off-chip populations serving as excitatory external spike sources
+exc_spiketimes = [0.01, 0.05, 0.080]
+exc_stim_pop = pynn.Population(1, pynn.cells.SpikeSourceArray,
+                               cellparams=dict(spike_times=exc_spiketimes))
+
+# We represent projections as entries in the synapse matrix on the neuromorphic
+# chip. Weights are stored in digital 6bit values (plus sign), the value
+# range for on-chip weights is therefore -63 to 63.
+# With this first projection, we connect the external spike source to the
+# observed on-chip neuron population.
+pynn.Projection(exc_stim_pop, stimulated_p,
+                pynn.AllToAllConnector(),
+                synapse_type=StaticSynapse(weight=63),
+                receptor_type="excitatory")
+
+# Create off-chip populations serving as inhibitory external spike sources
+inh_spiketimes = [0.03]
+inh_stim_pop = pynn.Population(1, pynn.cells.SpikeSourceArray,
+                               cellparams=dict(spike_times=inh_spiketimes))
+pynn.Projection(inh_stim_pop, stimulated_p,
+                pynn.AllToAllConnector(),
+                synapse_type=StaticSynapse(weight=-42),
+                receptor_type="inhibitory")
+
+# You may play around with the parameters in this experiment to achieve
+# different traces. Try to stack multiple PSPs, try to make the neurons spike,
+# try to investigate differences between individual neuron instances,
+# be creative!
+pynn.run(0.1)
+# Store results to disk
+PickleIO(filename='fourth_experiment.dat').write_block(stimulated_p.get_data())

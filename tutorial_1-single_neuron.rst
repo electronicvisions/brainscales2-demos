@@ -1,3 +1,4 @@
+.. _BrainScaleS-2 single neuron experiments:
 
 BrainScaleS-2 single neuron experiments
 =======================================
