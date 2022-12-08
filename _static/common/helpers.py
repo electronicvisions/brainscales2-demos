@@ -12,7 +12,7 @@ def in_collaboratory():
 
 if in_collaboratory():
     # check for EBRAINS kernel version prior to pynn_brainscales import
-    expected_kernel = 'EBRAINS_experimental_release'
+    expected_kernel = 'EBRAINS-experimental'
     actual_kernel = os.environ.get('LAB_KERNEL_NAME', None)
     if actual_kernel is None:
         raise RuntimeError(
