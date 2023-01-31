@@ -129,11 +129,10 @@ onto the neurons' firing rate.
             uint32_t current_row = 0;
 
             void PLASTICITY_RULE_KERNEL(
-                std::array<SynapseArrayViewHandle, 1>& synapses,
-                std::array<PPUOnDLS, 1> synrams)
+                std::array<SynapseArrayViewHandle, 1>& synapses)
             {{
                 // only update weights when code is executed on the correct PPU
-                if (synrams[0] != ppu) {{
+                if (synapses[0].hemisphere != ppu) {{
                     return;
                 }}
                 for (size_t row = 0; row < synapses[0].rows.size; ++row) {{
