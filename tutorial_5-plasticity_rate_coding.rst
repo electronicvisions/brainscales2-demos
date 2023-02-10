@@ -44,10 +44,10 @@ Controlling the on-chip plasticity processor
 Later, we will define the network topology using the pyNN interface.
 During the experiment, the PPUs execute an earliest-deadline-first scheduler for
 tasks to be performed. In PyNN, execution of a plasticity rule is such a task.
-A plasticity rule is injected as synapse type of a projection and upon execution is
-provided with the locations of the synapses in the projection(s) created with this
-plastic synapse type. The plastic synapse features a method yielding C++-code to be
-executed as task on the PPU given the synapse location information.
+A plasticity rule is injected via the synapse type of a projection and upon execution
+is provided with the locations of the synapses in the projection(s) created with this
+plastic synapse type. The plasticity rule features a method yielding C++-code to be
+executed as a task on the PPU given the synapse location information.
 Tasks can be executed periodically, for which a timer object is to be supplied.
 
 For our experiment, we first load an image to be rate-encoded later.
@@ -68,10 +68,10 @@ Furthermore, we set some environment variables for our microscheduler:
 The plasticity kernel
 ---------------------
 
-We now define the plastic synapse type with the C++-code which imprints the image
+We now define the plasticity rule type with the C++-code which imprints the image
 onto the spike-trains by alteration of the synaptic weights.
 The image data is transferred into a global object ``image``.
-The entry point of the plastic synapse task is called ``PLASTICITY_RULE_KERNEL``
+The entry point of the plastic task is called ``PLASTICITY_RULE_KERNEL``
 and is supplied with synapse location information corresponding the the projection
 in PyNN. Within the task function, the program writes synapse weight values
 row-wise via ``set_weights(weight_row, row)``.
@@ -84,17 +84,13 @@ onto the neurons' firing rate.
 
     import textwrap
 
-    class PlasticSynapse(
-            pynn.PlasticityRule,
-            pynn.standardmodels.synapses.StaticSynapse):
-        def __init__(self, timer: pynn.Timer, image: np.array, weight: float):
+    class PlasticityRule(pynn.PlasticityRule):
+        def __init__(self, timer: pynn.Timer, image: np.array):
             """
             Initialize plastic synapse with execution timing information,
             the image pixels and initial weight.
             """
             pynn.PlasticityRule.__init__(self, timer)
-            pynn.standardmodels.synapses.StaticSynapse.__init__(
-                self, weight=weight)
             self.image = image
             assert self.timer.num_periods == len(self.image)
 
@@ -106,6 +102,7 @@ onto the neurons' firing rate.
             """
             return textwrap.dedent("""
             #include "grenade/vx/ppu/synapse_array_view_handle.h"
+            #include "grenade/vx/ppu/neuron_view_handle.h"
             #include "libnux/vx/dls.h"
 
             using namespace grenade::vx::ppu;
@@ -129,7 +126,8 @@ onto the neurons' firing rate.
             uint32_t current_row = 0;
 
             void PLASTICITY_RULE_KERNEL(
-                std::array<SynapseArrayViewHandle, 1>& synapses)
+                std::array<SynapseArrayViewHandle, 1>& synapses,
+                std::array<NeuronViewHandle, 0>&)
             {{
                 // only update weights when code is executed on the correct PPU
                 if (synapses[0].hemisphere != ppu) {{
@@ -202,7 +200,9 @@ Initially the weight is set to zero, the PPU will alter it during the experiment
         start=0., # ms
         period=1., # ms
         num_periods=len(image))
-    synapse = PlasticSynapse(timer=timer, weight=0, image=image)
+    plasticity_rule = PlasticityRule(timer=timer, image=image)
+    synapse = pynn.standardmodels.synapses.PlasticSynapse(
+        plasticity_rule=plasticity_rule, weight=0)
     pynn.Projection(external_input,
                     neurons,
                     pynn.OneToOneConnector(),
