@@ -7,22 +7,11 @@ import shutil
 import hashlib
 import pandas as pd
 
-def in_collaboratory():
-    return os.environ.get('JUPYTERHUB_USER') is not None
+from _static.common.collab_helpers import in_collaboratory, check_kernel
 
 if in_collaboratory():
     # check for EBRAINS kernel version prior to pynn_brainscales import
-    expected_kernel = 'EBRAINS-experimental'
-    actual_kernel = os.environ.get('LAB_KERNEL_NAME', None)
-    if actual_kernel is None:
-        raise RuntimeError(
-            "Could not identify EBRAINS kernel (probably too old version). " +
-            f"Please select the appropriate kernel {expected_kernel}.")
-    elif actual_kernel != expected_kernel:
-        raise RuntimeError(
-            f"EBRAINS kernel mismatch. Expected: {expected_kernel} " +
-            f"Actual: {actual_kernel}. Please select the " +
-            "appropriate kernel.")
+    check_kernel()
 
 from dlens_vx_v3 import hxcomm
 import pynn_brainscales.brainscales2 as pynn
