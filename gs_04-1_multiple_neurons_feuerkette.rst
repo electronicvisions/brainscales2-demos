@@ -44,24 +44,24 @@ Signal durch eine möglichst lange Kette gereicht werden.
     </style>'''))
 
     @w.interact(
-        inh_exc=Slider(40, 0, 63, description='Synaptisches Gewicht "inh_exc"'),
+        inh_exc=Slider(30, 0, 63, description='Synaptisches Gewicht "inh_exc"'),
         exc_exc=Slider(60, 0, 63, description='Synaptisches Gewicht "exc_exc"'),
-        exc_inh=Slider(20, 0, 63, description='Synaptisches Gewicht "exc_inh"'),
+        exc_inh=Slider(40, 0, 63, description='Synaptisches Gewicht "exc_inh"'),
     )
     def experiment(inh_exc, exc_exc, exc_inh):
         # Diese Parameter sind im Prinzip auch verstellbar, haben so aber gute Werte.
         # Alle Gewichte können Werte im Bereich 0-63 annehmen.
-        weights = {"stim_exc": 30,
+        weights = {"stim_exc": 60,
                    "stim_inh": 15}
-        numb_pops = 7
-        pop_sizes = {"exc": 7,
-                     "inh": 7}
-        runtime = 0.1
-        closed = False
-        
+        numb_pops = 25
+        pop_sizes = {"exc": 5,
+                     "inh": 5}
+        runtime = 0.3
+        closed = True
+
         # Die Refraktärzeit muss auf einen kleinen Wert gestellt werden, um regelmäßiges
         # Feuern prinzipiell zu erlauben.
-        neuron_parameters = {"refractory_period_refractory_time": 5}
+        neuron_parameters = {"refractory_period_refractory_time": 50}
         
         # Die Umgebung wird vorbereitet.
         calib = get_nightly_calibration()
