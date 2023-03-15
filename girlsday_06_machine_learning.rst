@@ -465,7 +465,7 @@ immer besser werden.
 
 .. code:: ipython3
 
-    num_epochs = 8  # Die Anzahl der Trainingsepochen
+    num_epochs = 4  # Die Anzahl der Trainingsepochen
     for epoch in range(num_epochs):
         train(model, train_loader, optimizer)
         accuracy = test(model, test_loader)
