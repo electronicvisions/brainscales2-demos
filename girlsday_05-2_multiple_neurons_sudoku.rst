@@ -225,17 +225,20 @@ erhalten.
     def get_solution(clues):
         """ Führt das Netzwerk aus und gibt die aktuelle Lösung zurück """
         set_clues(clues)
-        grid = np.zeros((4, 4), dtype=int)
         # Das Netzwerk wird emuliert
         pynn.run(runtime)
         # Die Lösung wird ausgelesen
-        for row, row_populations in enumerate(pops_collector):
-            for col, field_populations in enumerate(row_populations):
-                num_spikes = [
-                    len(num_population.get_data("spikes").segments[0].spiketrains[0])
-                    for num_population in field_populations
-                ]
-                grid[row, col] = np.argmax(num_spikes) + 1
+        spikes = np.array(pop.get_data().segments[0].spiketrains)
+        spike_counts = np.zeros(len(spikes))
+        for idx, train in enumerate(spikes):
+            spike_counts[idx] = len(train)
+        # Finde die höchste Feuerrate für jede Sudoku Zelle und speichere
+        # den Index, also die erkannte Zahl
+        grid = spike_counts.reshape(-1, 4).argmax(axis=1)
+        # Python zählt ab 0, Sudoku ab 1
+        grid = grid + 1
+        # Formatiere das Ergebnis in das 4x4 Sudoku um
+        grid = grid.reshape((4, 4))
         return grid
 
     # Funktionen, um das Sudoku anzuzeigen:
