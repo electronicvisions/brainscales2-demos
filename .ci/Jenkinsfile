@@ -33,6 +33,7 @@ try {
 		runOnSlave(label: "frontend") {
 			dir("build/much-demos-such-wow/jupyter") {
 				jesh("git init")
+				jesh("for fn in *.ipynb; do patch \"\$fn\" \"${env.WORKSPACE}/much-demos-such-wow/ebrains_kernel.patch\"; done")
 				jesh("git add *.ipynb _static")
 				jesh("git commit -m \"build ${currentBuild.displayName}\"")
 				jesh("git remote add origin git@github-brainscales2-demos_jupyter-notebooks:electronicvisions/brainscales2-demos.git")
