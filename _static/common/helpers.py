@@ -53,7 +53,7 @@ def get_nightly_calibration(filename='spiking_cocolist.pbin'):
             identifier = connection.get_unique_identifier()
 
         # download calibration file
-        folder =  "latest"
+        folder =  "ebrains-experimental"
         download_url = "https://openproject.bioai.eu/data_calibration/" \
                        f"hicann-dls-sr-hx/{identifier}/stable/{folder}" \
                        f"/{filename}"
