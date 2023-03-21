@@ -189,7 +189,7 @@ corresponds to one of the three classes:
             self.dt = dt
 
             # Instance to work on
-            self.instance = hxsnn.Instance(mock=mock, dt=dt)
+            self.experiment = hxsnn.Experiment(mock=mock, dt=dt)
 
             # Repeat input
             self.input_repetitions = input_repetitions
@@ -198,7 +198,7 @@ corresponds to one of the three classes:
             self.linear_h = hxsnn.Synapse(
                 n_in * input_repetitions,
                 n_hidden,
-                instance=self.instance,
+                experiment=self.experiment,
                 transform=partial(
                     weight_transforms.linear_saturating, scale=weight_scale))
 
@@ -211,7 +211,7 @@ corresponds to one of the three classes:
             # Hidden layer
             self.lif_h = hxsnn.Neuron(
                 n_hidden,
-                instance=self.instance,
+                experiment=self.experiment,
                 func=F.cuba_lif_integration,
                 params=lif_params,
                 trace_scale=trace_scale,
@@ -222,14 +222,14 @@ corresponds to one of the three classes:
             self.linear_o = hxsnn.Synapse(
                 n_hidden,
                 n_out,
-                instance=self.instance,
+                experiment=self.experiment,
                 transform=partial(
                     weight_transforms.linear_saturating, scale=weight_scale))
 
             # Readout layer
             self.li_readout = hxsnn.ReadoutNeuron(
                 n_out,
-                instance=self.instance,
+                experiment=self.experiment,
                 func=F.cuba_li_integration,
                 params=li_params,
                 trace_scale=trace_scale,
@@ -271,7 +271,7 @@ corresponds to one of the three classes:
             self.y_o = self.li_readout(c_o)
 
             # Execute on hardware
-            hxtorch.snn.run(self.instance, spikes.shape[0])
+            hxtorch.snn.run(self.experiment, spikes.shape[0])
 
             return self.y_o.v_cadc
 
