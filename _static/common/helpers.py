@@ -89,8 +89,9 @@ def save_nightly_calibration(filename: str = 'spiking_cocolist.pbin',
         with hxcomm.ManagedConnection() as connection:
                 identifier = connection.get_unique_identifier()
 
+        folder =  "ebrains-experimental"
         download_url = "https://openproject.bioai.eu/data_calibration/" \
-                       f"hicann-dls-sr-hx/{identifier}/stable/latest/" \
+                       f"hicann-dls-sr-hx/{identifier}/stable/{folder}/" \
                        f"{filename}"
         urllib.request.urlretrieve(download_url, output_file)
     else:
