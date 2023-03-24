@@ -3,4 +3,4 @@ host=brainscales-r.kip.uni-heidelberg.de
 port=29418
 project=much-demos-such-wow
 defaultremote=review
-defaultbranch=master
+defaultbranch=ebrains-4.0
