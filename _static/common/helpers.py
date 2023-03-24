@@ -48,12 +48,12 @@ def get_nightly_calibration(filename='spiking_cocolist.pbin'):
     locally.
 
     '''
+    folder =  "ebrains-stable"
+    with hxcomm.ManagedConnection() as connection:
+        identifier = connection.get_unique_identifier()
     if in_collaboratory():
-        with hxcomm.ManagedConnection() as connection:
-            identifier = connection.get_unique_identifier()
 
         # download calibration file
-        folder =  "ebrains-stable"
         download_url = "https://openproject.bioai.eu/data_calibration/" \
                        f"hicann-dls-sr-hx/{identifier}/stable/{folder}" \
                        f"/{filename}"
@@ -63,7 +63,8 @@ def get_nightly_calibration(filename='spiking_cocolist.pbin'):
         with open(path_to_calib, 'wb') as f:
             f.write(contents)
     else:
-        calib_path = pynn.helper.nightly_calib_path().parent
+        calib_path = Path("/wang/data/calibration/hicann-dls-sr-hx/"
+                          f"{identifier}/stable/{folder}/")
         path_to_calib =  calib_path.joinpath(filename)
 
     chip = pynn.helper.chip_from_file(path_to_calib)
@@ -83,11 +84,11 @@ def save_nightly_calibration(filename: str = 'spiking_cocolist.pbin',
     :param folder: Folder to save the calibration in. If not supplied the
         calibration is saved in the current folder.
     '''
+    with hxcomm.ManagedConnection() as connection:
+            identifier = connection.get_unique_identifier()
     folder = Path() if folder is None else Path(folder)
     output_file = folder.joinpath(filename)
     if in_collaboratory():
-        with hxcomm.ManagedConnection() as connection:
-                identifier = connection.get_unique_identifier()
 
         folder =  "ebrains-stable"
         download_url = "https://openproject.bioai.eu/data_calibration/" \
@@ -95,6 +96,8 @@ def save_nightly_calibration(filename: str = 'spiking_cocolist.pbin',
                        f"{filename}"
         urllib.request.urlretrieve(download_url, output_file)
     else:
-        calib_path = pynn.helper.nightly_calib_path().parent
+        folder =  "ebrains-stable"
+        calib_path = Path("/wang/data/calibration/hicann-dls-sr-hx/"
+                          f"{identifier}/stable/{folder}/")
         path_to_calib =  calib_path.joinpath(filename)
         shutil.copy(path_to_calib, output_file)
