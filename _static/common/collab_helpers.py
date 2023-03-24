@@ -8,7 +8,7 @@ def in_ebrains_collaboratory():
     return "ebrains" in lab_image_name.lower()
 
 def check_kernel():
-    expected_kernel = 'EBRAINS-experimental'
+    expected_kernel = 'EBRAINS-23.06'
     actual_kernel = os.environ.get('LAB_KERNEL_NAME', None)
     if actual_kernel is None:
         raise RuntimeError(

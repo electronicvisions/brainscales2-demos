@@ -26,7 +26,7 @@ def setup_hardware_client():
 
     # setup quiggeldy enviroment
     setup_url = 'https://brainscales-r.kip.uni-heidelberg.de:7443/nmpi/' \
-                'quiggeldy_setups_experimental.csv'
+                'quiggeldy_setups.csv'
     quiggeldy_setups = pd.read_csv(setup_url, dtype=str)
 
     os.environ['QUIGGELDY_ENABLED']='1'
@@ -57,7 +57,7 @@ def get_nightly_calibration(filename='spiking_cocolist.pbin'):
             identifier = connection.get_unique_identifier()
 
         # download calibration file
-        folder =  "ebrains-experimental"
+        folder =  "ebrains-stable"
         download_url = "https://openproject.bioai.eu/data_calibration/" \
                        f"hicann-dls-sr-hx/{identifier}/stable/{folder}" \
                        f"/{filename}"
@@ -93,7 +93,7 @@ def save_nightly_calibration(filename: str = 'spiking_cocolist.pbin',
         with hxcomm.ManagedConnection() as connection:
                 identifier = connection.get_unique_identifier()
 
-        folder =  "ebrains-experimental"
+        folder =  "ebrains-stable"
         download_url = "https://openproject.bioai.eu/data_calibration/" \
                        f"hicann-dls-sr-hx/{identifier}/stable/{folder}/" \
                        f"{filename}"

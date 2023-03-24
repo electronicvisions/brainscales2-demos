@@ -41,17 +41,17 @@ In this section of the tutorial, we will go through the technical details and ma
 Executing the Notebooks
 -----------------------
 If you want to execute the notebooks yourself, you can clone them from our
-`github repository <https://github.com/electronicvisions/brainscales2-demos/tree/jupyter-notebooks-experimental>`_ and
+`github repository <https://github.com/electronicvisions/brainscales2-demos/tree/jupyter-notebooks>`_ and
 execute them on the `EBRAINS Platform <https://wiki.ebrains.eu>`_.
 Simply use an existing collabatory or create a new one in which you can clone the notebooks, e.g., via:
 
 .. code-block:: bash
 
-   !git clone https://github.com/electronicvisions/brainscales2-demos.git --branch jupyter-notebooks-experimental
+   !git clone https://github.com/electronicvisions/brainscales2-demos.git --branch jupyter-notebooks
 
 in a notebook of your JupyterLab session.
 
-To be able to use the EBRAINS software environment for your notebook, please select the ``EBRAINS-experimental`` kernel.
+To be able to use the EBRAINS software environment for your notebook, please select the ``EBRAINS-23.06`` kernel.
 The currently used kernel is shown in the status line at the bottom of the notebook and in the upper right hand corner of the notebook. The default is ``Python 3 (ipykernel)``, which does not have the EBRAINS software environment installed. To select a different kernel, please klick the kernel name, then select from the appearing list.
 
 Shared Hardware Resources
