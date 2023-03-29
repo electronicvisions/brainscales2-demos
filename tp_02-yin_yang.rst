@@ -3,7 +3,7 @@ Train DNNs on BrainScaleS-2
 ===========================
 
 This example uses the PyTorch extension ``hxtorch``, already presented in the
-:doc:`introduction to the matrix multiplication <tutorial_4-hagen_properties>`, to train
+:doc:`introduction to the matrix multiplication <tp_01-properties>`, to train
 a deep neural network (DNN).
 
 In order to use the microscheduler we have to set some environment variables first:

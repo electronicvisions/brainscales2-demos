@@ -61,9 +61,9 @@ It is saved in a variable such that we can use it later when we define our exper
 Constructing the Compartment Chain in PyNN
 ------------------------------------------
 
-In the tutorial :doc:`tutorial_6-multicompartment`, the concept of multi-compartment neurons was introduced, which are spatially structured neurons.
+In the tutorial :doc:`ts_03-multicompartment`, the concept of multi-compartment neurons was introduced, which are spatially structured neurons.
 Here we will continue with the compartment chain experiments.
-Therefore, we first create a compartment chain class, summarizing the experiments of the :doc:`tutorial_6-multicompartment` tutorial and extending it with further functionality for the experiments of this tutorial.
+Therefore, we first create a compartment chain class, summarizing the experiments of the :doc:`ts_03-multicompartment` tutorial and extending it with further functionality for the experiments of this tutorial.
 Upon initialization the class creates a compartment chain of provided length.
 Additionally, the first compartment is connected to an external population (refer to `figure 1`_) that will spike at a specified point in time.
 This causes an EPSP that travels along the chain.

@@ -25,12 +25,15 @@ In this session, we will cover the following topics:
 .. toctree::
    :maxdepth: 1
 
-   tutorial_1-single_neuron
-   tutorial_2-superspike
-   tutorial_3-hagen_intro
-   tutorial_4-hagen_properties
-   tutorial_5-plasticity_rate_coding
-   tutorial_6-multicompartment
+   ts_00-single_neuron
+   ts_01-superspike
+   tp_00-introduction
+   tp_01-properties
+   tp_02-yin_yang
+   ts_02-plasticity_rate_coding
+   ts_03-multicompartment
+   ts_04-mc_genetic_algorithms
+   ts_05-yin_yang
 
 In this section of the tutorial, we will go through the technical details and make sure that you are correctly set up for accessing our hardware resources.
 

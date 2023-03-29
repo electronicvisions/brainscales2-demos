@@ -5,37 +5,37 @@ Welcome to the BrainScaleS-2 Demos & Examples!
    :maxdepth: 2
    :caption: Demos and Examples
 
-   tutorial_0-welcome
-   tutorial_1-single_neuron
-   tutorial_2-superspike
-   tutorial_3-hagen_intro
-   tutorial_4-hagen_properties
-   tutorial_5-plasticity_rate_coding
-   tutorial_6-multicompartment
-   tutorial_7-yin_yang_itl
-   tutorial_8-dynamic_range
-   tutorial_9-non-interactive_queue_runner
-   tutorial_10-spiking_yiny_yang_itl
-   tutorial_11-genetic_algorithms_mc
+   tutorial
+   ts_00-single_neuron
+   ts_01-superspike
+   ts_02-plasticity_rate_coding
+   ts_03-multicompartment
+   ts_04-mc_genetic_algorithms
+   ts_05-yin_yang
+   ts_06-dynamic_range
+   tp_00-introduction
+   tp_01-properties
+   tp_02-yin_yang
+   nmpi_00-non_interactive_queue_runner
 
 .. toctree::
    :maxdepth: 1
    :caption: Girls' Day
 
-   girlsday_01_biological_background
-   girlsday_02_neuromorphic_hardware
-   girlsday_03_pynn_introduction
-   girlsday_04_single_neuron
-   girlsday_05-1_multiple_neurons_feuerkette
-   girlsday_05-2_multiple_neurons_sudoku
-   girlsday_06_machine_learning
-   wolke7_networks
+   girlsday
+   gs_01_neuromorphic_hardware
+   gs_02_pynn_introduction
+   gs_03_single_neuron
+   gs_04-1_multiple_neurons_feuerkette
+   gs_04-2_multiple_neurons_sudoku
+   gs_05_machine_learning
+   gs_06_logik_operationen
 
 .. toctree::
    :maxdepth: 1
    :caption: Advanced Physics Lab for Physicists
 
-   fp_0-welcome
+   fortgeschrittenen_praktikum
    fp_pynn_introduction
    fp_binary_operations
    fp_sudoku
