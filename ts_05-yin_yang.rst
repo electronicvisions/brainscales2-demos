@@ -45,7 +45,7 @@ https://doi.org/10.1109/MSP.2019.2931595
     import ipywidgets as w
     import numpy as np
     import torch
-    from _static.common.helpers import setup_hardware_client
+    from _static.common.helpers import setup_hardware_client, save_nightly_calibration
     from _static.tutorial.snn_yinyang_helpers import plot_data, plot_input_encoding, plot_training
     setup_hardware_client()
 
@@ -620,7 +620,8 @@ function.
 
     # Initialize the hardware and load a suitable nightly calibration
     if not MOCK:
-        hxtorch.init_hardware(calib_name="spiking2")
+        save_nightly_calibration('spiking2_cocolist.pbin')
+        hxtorch.init_hardware(hxtorch.CalibrationPath('spiking2_cocolist.pbin'))
 
     # Train and test
     for epoch in range(0, EPOCHS + 1):
