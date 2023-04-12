@@ -25,12 +25,10 @@ braucht, um seine Aufgabe zu erfüllen, dann besteht an dieser Stelle
 kein kausaler Zusammenhang zwischen den Neuronen und die Synapse wird
 verschwinden.
 
-.. raw:: html
-
-   <table><tr>
-   <td> <img src="_static/girlsday/simple_connection_top1.jpg" width="600"/> </td>
-   <td> <img src="_static/girlsday/no_synapse_connection.jpg" width="600"/> </td>
-   </tr><table>
+.. image:: _static/girlsday/simple_connection_top1.jpg
+    :width: 49 %
+.. image:: _static/girlsday/no_synapse_connection.jpg
+    :width: 49 %
 
 2. Synaptisches Gewicht
 ~~~~~~~~~~~~~~~~~~~~~~~
@@ -52,15 +50,13 @@ ihr Gewicht, wo andere Verbindungen keine Informationen mehr
 verschwinden vollkommen. Das Zusammenspiel aus mehreren Neuronen und
 Synapsen erlaubt das Lösen von komplexeren Problemen.
 
-.. raw:: html
+.. image:: _static/girlsday/simple_connection.jpg
+    :width: 49 %
+.. image:: _static/girlsday/weight_double_connection.jpg
+    :width: 49 %
 
-   <table><tr>
-   <td> <img src="_static/girlsday/simple_connection.jpg" width="600"/> </td>
-   <td rowspan="2"> <img src="_static/girlsday/weight_double_connection.jpg" width="600"/> </td>
-   </tr>
-   <tr>
-   <td> <img src="_static/girlsday/weight_single_connection1.jpg" width="600"/> </td>
-   </tr> <table>
+.. image:: _static/girlsday/weight_single_connection1.jpg
+    :width: 49 %
 
 3. Synapsen Art
 ~~~~~~~~~~~~~~~
@@ -82,12 +78,10 @@ Verbindung, die das Empfängerneuron alleine zum Feuern bringen würde,
 durch eine inhibitorische Verbindung ausgeglichen werden, was dazu
 führt, dass mit dieser weiteren Verbindung das Neuron nicht mehr feuert.
 
-.. raw:: html
-
-    <table><tr>
-    <td> <img src="_static/girlsday/simple_connection_top1.jpg" width="600"/> </td>
-    <td> <img src="_static/girlsday/inh_connection.jpg" width="600"/> </td>
-    </tr><table>
+.. image:: _static/girlsday/simple_connection_top1.jpg
+    :width: 49 %
+.. image:: _static/girlsday/inh_connection.jpg
+    :width: 49 %
 
 Synapsennetzwerke
 =================
@@ -109,40 +103,29 @@ verstehen. Das Ausgangsneuron feuert also genau dann, wenn Neuron 1,
 Neuron 2 oder beide feuern. Diese Logik ist auch noch einmal in einer
 Wahrheitstabelle dargestellt.
 
-.. raw:: html
+.. image:: _static/common/network2in.png
+    :class: align-left
+    :width: 200
 
-    <table><tr>
-    <td style="padding:0 100px 0 100px;"> <img src="_static/common/network2in.png" width="300"/> </td>
-    
-    <td style="padding:0 100px 0 100px;"> <table>
-      <tr>
-        <th>Neuron 1</th>
-        <th>Neuron 2</th>
-        <th>Ausgangsneuron</th>
-      </tr>
-      <tr>
-        <td style="text-align: center">-</td>
-        <td style="text-align: center">-</td>
-        <td style="text-align: center">-</td>
-      </tr>
-      <tr>
-        <td style="text-align: center">x</td>
-        <td style="text-align: center">-</td>
-        <td style="text-align: center">x</td>
-      </tr>
-      <tr>
-        <td style="text-align: center">-</td>
-        <td style="text-align: center">x</td>
-        <td style="text-align: center">x</td>
-      </tr>
-      <tr>
-        <td style="text-align: center">x</td>
-        <td style="text-align: center">x</td>
-        <td style="text-align: center">x</td>
-      </tr>
-    </table> </td>
-    
-    </tr><table>
+.. list-table::
+    :header-rows: 1
+    :align: right
+
+    * - Neuron 1
+      - Neuron 2
+      - Ausgangsneuron
+    * - \-
+      - \-
+      - \-
+    * - x
+      - \-
+      - x
+    * - \-
+      - x
+      - x
+    * - x
+      - x
+      - x
 
 Die Umsetzung ist nun ziemlich simpel. Wir brauchen zwei exzitatorische
 Synapsen und ihr Gewicht muss so gewählt werden, dass ein Reiz, der von
@@ -240,28 +223,21 @@ bedeutet das, wenn das Eingangsneuron feuert, soll das Ausgangsneuron
 nicht feuern und wenn das Eingangsneuron nicht feuert, dann soll das
 Ausgangsneuron feuern.
 
-.. raw:: html
+.. image:: _static/common/network1in.png
+    :class: align-left
+    :width: 200
 
-    <table><tr>
-    <td style="padding:0 100px 0 100px;"> <img src="_static/common/network1in.png" width="300"/> </td>
+.. list-table::
+    :header-rows: 1
+    :align: right
 
-     
-    <td style="padding:0 100px 0 100px;"> <table>
-      <tr>
-        <th>Eingangsneuron</th>
-        <th>Ausgangsneuron</th>
-      </tr>
-      <tr>
-        <td style="text-align: center">-</td>
-        <td style="text-align: center">x</td>
-      </tr>
-      <tr>
-        <td style="text-align: center">x</td>
-        <td style="text-align: center">-</td>
-      </tr>
-    </table> </td>
-        
-    </tr><table>
+    * - Eingangsneuron
+      - Ausgangsneuron
+    * - \-
+      - x
+    * - x
+      - \-
+
 
 Überlegt euch zuerst, wie das Netzwerk aussehen muss, das diese
 Operation implementiert. Betrachtet dann den obigen Code, erkennt, was
@@ -329,41 +305,29 @@ Oder-Operation haben wir wieder zwei Eingangsneuronen und ein
 Ausgangsneuron. Diesmal soll letzteres aber nur genau dann feuern, wenn
 Neuron 1 und Neuron 2 feuern.
 
-.. raw:: html
+.. image:: _static/common/network2in.png
+    :class: align-left
+    :width: 200
 
-    <table><tr>
-    <td style="padding:0 100px 0 100px;"> <img src="_static/common/network2in.png" width="300"/> </td>
+.. list-table::
+    :header-rows: 1
+    :align: right
 
-     
-    <td style="padding:0 100px 0 100px;"> <table>
-      <tr>
-        <th>Neuron 1</th>
-        <th>Neuron 2</th>
-        <th>Ausgangsneuron</th>
-      </tr>
-      <tr>
-        <td style="text-align: center">-</td>
-        <td style="text-align: center">-</td>
-        <td style="text-align: center">-</td>
-      </tr>
-      <tr>
-        <td style="text-align: center">x</td>
-        <td style="text-align: center">-</td>
-        <td style="text-align: center">-</td>
-      </tr>
-      <tr>
-        <td style="text-align: center">-</td>
-        <td style="text-align: center">x</td>
-        <td style="text-align: center">-</td>
-      </tr>
-      <tr>
-        <td style="text-align: center">x</td>
-        <td style="text-align: center">x</td>
-        <td style="text-align: center">x</td>
-      </tr>
-    </table> </td>
-        
-    </tr><table>
+    * - Neuron 1
+      - Neuron 2
+      - Ausgangsneuron
+    * - \-
+      - \-
+      - \-
+    * - x
+      - \-
+      - \-
+    * - \-
+      - x
+      - \-
+    * - x
+      - x
+      - x
 
 Die einfachste Art diese Operation umzusetzen, ist indem man sich die
 synaptischen Gewichte zu Nutze macht. Überlegt euch, wie das Netzwerk
