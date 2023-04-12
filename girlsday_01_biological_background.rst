@@ -19,16 +19,15 @@ Bremer Stadtmusikanten zu sehen sind. Selbst dann wird er
 Schwierigkeiten haben zu erkennen, dass die folgenden Bilder diese auch
 darstellen.
 
-.. raw:: html
+.. image:: _static/girlsday/girlsday_stadtmusikanten_wikipedia.jpg
+    :width: 30 %
+.. image:: _static/girlsday/girlsday_stadtmusikanten_tourismus.jpg
+    :width: 69 %
 
-    <table><tr>
-    <td> <img src="_static/girlsday/girlsday_stadtmusikanten_wikipedia.jpg" width="253"/> </td>
-    <td> <img src="_static/girlsday/girlsday_stadtmusikanten_tourismus.jpg" width="600"/> </td>
-    </tr><table>
-    <table><tr>
-        <td> <img src="_static/girlsday/girlsday_stadtmusikanten_geo.jpg" width="503"/> </td>
-        <td> <img src="_static/girlsday/girlsday_stadtmusikanten_holz.jpg" width="350"/> </td>
-    </tr><table>
+.. image:: _static/girlsday/girlsday_stadtmusikanten_geo.jpg
+    :width: 58 %
+.. image:: _static/girlsday/girlsday_stadtmusikanten_holz.jpg
+    :width: 41 %
 
 (https://de.wikipedia.org/wiki/Datei:Die_Bremer_Stadtmusikanten.jpg)
 (https://www.bremen-tourismus.de/bremen/package/detail1/DEU99999990021103028?lang=de)
