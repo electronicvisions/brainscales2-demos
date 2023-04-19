@@ -46,7 +46,7 @@ def build(bld):
         features="use shelltest",
         use="doc-much-demos-such-wow-jupyter-test pynn_brainscales2 hxtorch",
         test_environ=dict(BLD_DIR=str(testdir)),
-        test_timeout=1200,
+        test_timeout=360,
         skip_run=not bld.env.DLSvx_HARDWARE_AVAILABLE
     )
 
