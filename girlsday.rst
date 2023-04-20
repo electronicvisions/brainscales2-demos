@@ -4,7 +4,7 @@ Wie verarbeitet unser Gehirn Informationen?
 Was seht ihr auf diesem Bild?
 
 .. image:: _static/girlsday/girlsday_stadtmusikanten_gastfreund.jpg
-    :width: 600
+    :width: 600px
 
 (https://portal.gastfreund.net/bremen/262230)
 
@@ -19,15 +19,8 @@ Bremer Stadtmusikanten zu sehen sind. Selbst dann wird er
 Schwierigkeiten haben zu erkennen, dass die folgenden Bilder diese auch
 darstellen.
 
-.. image:: _static/girlsday/girlsday_stadtmusikanten_wikipedia.jpg
-    :width: 30 %
-.. image:: _static/girlsday/girlsday_stadtmusikanten_tourismus.jpg
-    :width: 69 %
-
-.. image:: _static/girlsday/girlsday_stadtmusikanten_geo.jpg
-    :width: 58 %
-.. image:: _static/girlsday/girlsday_stadtmusikanten_holz.jpg
-    :width: 41 %
+.. image:: _static/girlsday/girlsday_stadtmusikanten_various.jpg
+    :width: 600px
 
 (https://de.wikipedia.org/wiki/Datei:Die_Bremer_Stadtmusikanten.jpg)
 (https://www.bremen-tourismus.de/bremen/package/detail1/DEU99999990021103028?lang=de)
@@ -60,7 +53,7 @@ von wo aus es dann wiederum an viele andere Neuronen weitergegeben
 werden kann.
 
 .. image:: _static/girlsday/girlsday_neuron.png
-    :width: 700
+    :width: 700px
 
 (https://de.wikipedia.org/wiki/Datei:Neuron_(deutsch)-1.svg)
 
@@ -81,7 +74,7 @@ anderem den Informationsgehalt aus Fotos extrahieren und diesen dann auf
 ähnliche Bilder anwenden.
 
 .. image:: _static/girlsday/girlsday_neural_network.png
-    :width: 400
+    :width: 400px
 
 (https://arbeitsblaetter.stangl-taller.at/GEHIRN/Gehirn-Neuronen.shtml)
 
@@ -125,6 +118,6 @@ eine dünne Spitze aussieht, wird das Aktionspotential auch als Spike
 (englisch für Spitze) bezeichnet.
 
 .. image:: _static/girlsday/girlsday_actionpotential.png
-    :width: 500
+    :width: 500px
 
 (https://de.wikipedia.org/wiki/Nervenzelle#/media/Datei:Aktionspotential.svg)

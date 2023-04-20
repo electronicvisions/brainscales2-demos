@@ -21,7 +21,7 @@ inhibitorische Partner Population (blau). Auf diese Weise soll ein
 Signal durch eine möglichst lange Kette gereicht werden.
 
 .. image:: _static/girlsday/girlsday_synfire_chain.png
-    :width: 400
+    :width: 400px
 
 .. code:: ipython3
 

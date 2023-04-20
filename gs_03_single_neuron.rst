@@ -98,7 +98,7 @@ b) Welche Spannung ist dargestellt? Überlegt euch, welche Werte das
    anzuschauen.
 
 .. image:: _static/girlsday/girlsday_actionpotential.png
-    :width: 500
+    :width: 500px
 
 c) Nun soll das Ruhepotential auf seinen Maximalwert gesetzt werden, der
    über der Schwellenspannung liegt. Überlegt euch vorher, was für einen

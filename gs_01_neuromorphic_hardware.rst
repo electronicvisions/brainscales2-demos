@@ -52,10 +52,10 @@ Ruhespannung. Dieses Verhalten werdet ihr in den Experimenten beobachten
 können.
 
 .. image:: _static/girlsday/girlsday_hx_photo.JPG
-    :width: 800
+    :width: 800px
 
 .. image:: _static/girlsday/girlsday_hdbioai_nc_dl_aif.jpg
-    :width: 800
+    :width: 800px
 
 .. image:: _static/girlsday/girlsday_cube_with_scope.jpg
-    :width: 800
+    :width: 800px

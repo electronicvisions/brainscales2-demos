@@ -25,10 +25,8 @@ braucht, um seine Aufgabe zu erfüllen, dann besteht an dieser Stelle
 kein kausaler Zusammenhang zwischen den Neuronen und die Synapse wird
 verschwinden.
 
-.. image:: _static/girlsday/simple_connection_top1.jpg
-    :width: 49 %
-.. image:: _static/girlsday/no_synapse_connection.jpg
-    :width: 49 %
+.. image:: _static/girlsday/synapse_position.jpg
+    :width: 700px
 
 2. Synaptisches Gewicht
 ~~~~~~~~~~~~~~~~~~~~~~~
@@ -50,13 +48,8 @@ ihr Gewicht, wo andere Verbindungen keine Informationen mehr
 verschwinden vollkommen. Das Zusammenspiel aus mehreren Neuronen und
 Synapsen erlaubt das Lösen von komplexeren Problemen.
 
-.. image:: _static/girlsday/simple_connection.jpg
-    :width: 49 %
-.. image:: _static/girlsday/weight_double_connection.jpg
-    :width: 49 %
-
-.. image:: _static/girlsday/weight_single_connection1.jpg
-    :width: 49 %
+.. image:: _static/girlsday/synapse_weight.jpg
+    :width: 700px
 
 3. Synapsen Art
 ~~~~~~~~~~~~~~~
@@ -78,10 +71,8 @@ Verbindung, die das Empfängerneuron alleine zum Feuern bringen würde,
 durch eine inhibitorische Verbindung ausgeglichen werden, was dazu
 führt, dass mit dieser weiteren Verbindung das Neuron nicht mehr feuert.
 
-.. image:: _static/girlsday/simple_connection_top1.jpg
-    :width: 49 %
-.. image:: _static/girlsday/inh_connection.jpg
-    :width: 49 %
+.. image:: _static/girlsday/synapse_types.jpg
+    :width: 700px
 
 Synapsennetzwerke
 =================
@@ -105,7 +96,7 @@ Wahrheitstabelle dargestellt.
 
 .. image:: _static/common/network2in.png
     :class: align-left
-    :width: 200
+    :width: 200px
 
 .. list-table::
     :header-rows: 1
@@ -126,6 +117,9 @@ Wahrheitstabelle dargestellt.
     * - x
       - x
       - x
+
+.. unused internal ref is needed as a workaround for broken tabels in jupyter
+.. _oder:
 
 Die Umsetzung ist nun ziemlich simpel. Wir brauchen zwei exzitatorische
 Synapsen und ihr Gewicht muss so gewählt werden, dass ein Reiz, der von
@@ -225,7 +219,7 @@ Ausgangsneuron feuern.
 
 .. image:: _static/common/network1in.png
     :class: align-left
-    :width: 200
+    :width: 300px
 
 .. list-table::
     :header-rows: 1
@@ -238,6 +232,8 @@ Ausgangsneuron feuern.
     * - x
       - \-
 
+.. unused internal ref is needed as a workaround for broken tabels in jupyter
+.. _nicht:
 
 Überlegt euch zuerst, wie das Netzwerk aussehen muss, das diese
 Operation implementiert. Betrachtet dann den obigen Code, erkennt, was
@@ -307,7 +303,7 @@ Neuron 1 und Neuron 2 feuern.
 
 .. image:: _static/common/network2in.png
     :class: align-left
-    :width: 200
+    :width: 200px
 
 .. list-table::
     :header-rows: 1
@@ -328,6 +324,9 @@ Neuron 1 und Neuron 2 feuern.
     * - x
       - x
       - x
+
+.. unused internal ref is needed as a workaround for broken tabels in jupyter
+.. _und:
 
 Die einfachste Art diese Operation umzusetzen, ist indem man sich die
 synaptischen Gewichte zu Nutze macht. Überlegt euch, wie das Netzwerk

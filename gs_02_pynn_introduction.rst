@@ -15,7 +15,7 @@ Im Folgenden wollen wir ein simples Netzwerk bauen, in dem ein künstliches
 Neuron von einer Gruppe aus fünf Neuronen stimuliert wird.
 
 .. image:: _static/common/pynn_simple_network.png
-    :width: 400
+    :width: 400px
 
 .. code:: ipython3
 
