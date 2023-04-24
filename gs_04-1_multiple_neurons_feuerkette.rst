@@ -74,12 +74,15 @@ Signal durch eine möglichst lange Kette gereicht werden.
         
         # Hier werden die Populationen erstellt.
         for synapse_type in ["exc", "inh"]:
-            for _ in range(numb_pops):
-                pop = pynn.Population(pop_sizes[synapse_type],
-                                      pynn.cells.HXNeuron(**neuron_parameters))
-                pop.record(["spikes"])
-                pop_collector[synapse_type].append(pop)
-        
+            pop_size = pop_sizes[synapse_type]
+            pop = pynn.Population(pop_size * numb_pops,
+                                  pynn.cells.HXNeuron(**neuron_parameters))
+            pop.record(['spikes'])
+            for index in range(numb_pops):
+                mask = slice(index * pop_size, index * pop_size + pop_size)
+                popview = pynn.PopulationView(pop, mask)
+                pop_collector[synapse_type].append(popview)
+
         # Zuerst wird ein Stimulus zum Zeitpunkt t=0 an die jeweils erste Population gegeben.
         stim_pop = pynn.Population(pop_sizes['exc'],
                                    pynn.cells.SpikeSourceArray(spike_times=[0]))
