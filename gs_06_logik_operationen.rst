@@ -157,8 +157,8 @@ Jetzt können wir mit dem Experiment beginne:
     spike_time2 = []
     #################################
     
-    neuron1 = pynn.Population(1, pynn.cells.SpikeSourceArray(spike_times=spike_time1))
-    neuron2 = pynn.Population(1, pynn.cells.SpikeSourceArray(spike_times=spike_time2))
+    neuron1 = pynn.Population(4, pynn.cells.SpikeSourceArray(spike_times=spike_time1))
+    neuron2 = pynn.Population(4, pynn.cells.SpikeSourceArray(spike_times=spike_time2))
     
     # Das Ausgangsneuron wird erstellt.
     output_neuron = pynn.Population(1, pynn.cells.HXNeuron())
