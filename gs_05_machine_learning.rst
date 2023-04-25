@@ -297,11 +297,12 @@ richtig erkennen. Das können wir direkt mal ausprobieren:
             return image_data / 255
     
         def put_image_data(self, image_data):
-            d = self.canvas.create_image_data(
-                    self.canvas.width, self.canvas.height)
-            d[:, :, -1] = image_data.repeat_interleave(
-                    self.scale, -2).repeat_interleave(self.scale, -1) * 255
-            self.canvas.put_image_data(d)
+            # wiederhole die Pixel damit sie auf den Canvas passen
+            data = image_data.repeat_interleave(
+                    self.scale, -2).repeat_interleave(self.scale, -1)[0]
+            # konvertiere die Intensitaeten der Pixel in den RGB Bereich 
+            image = (1 - np.repeat(np.array(data)[:, :, np.newaxis], 3, axis=-1)) * 255
+            self.canvas.put_image_data(image)
             self.changes_pending = True
     
         def inference(self):
