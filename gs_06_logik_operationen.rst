@@ -164,7 +164,7 @@ Jetzt können wir mit dem Experiment beginne:
     output_neuron = pynn.Population(1, pynn.cells.HXNeuron())
     
     # Die Aktivität des Ausgangsneurons wird aufgezeichent.
-    output_neuron.record(["spikes", "v"])  # TODO: auch v?
+    output_neuron.record(["spikes", "v"])
     
     # Die Synapsen und ihre Gewichte werden definiert. Das Gewicht kann einen Wert zwischen 0-63 haben.
     
