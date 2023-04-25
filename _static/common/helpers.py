@@ -16,6 +16,9 @@ if in_collaboratory():
 from dlens_vx_v3 import hxcomm
 import pynn_brainscales.brainscales2 as pynn
 
+logger = pynn.logger.get("demo_helpers")
+pynn.logger.set_loglevel(logger, pynn.logger.LogLevel.INFO)
+
 
 def setup_hardware_client():
     if not in_collaboratory():
@@ -35,6 +38,7 @@ def setup_hardware_client():
     index = int(hashlib.sha256(username.encode()).hexdigest(), 16) \
         %  len(quiggeldy_setups)
     my_setup = quiggeldy_setups.iloc[index]
+    logger.INFO(f"Using setup {my_setup['Identifier']}")
     os.environ['QUIGGELDY_IP'] = my_setup['Host']
     os.environ['QUIGGELDY_PORT'] = my_setup['Port']
 
