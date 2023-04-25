@@ -383,10 +383,10 @@ für eine zunehmende Anzahl an Tipps mehrere Male eine Lösung gesucht.
     for num_clues in nums_clues:
         print(f"Das Sudoku wird {repetitions} mal "
               f"mit {num_clues} vorgegebenen Zahlen gelöst")
-        clues = hide_solution(sudoku, num_clues)
         nums_correct = []
         print("  Erfolg:", end="")
         for i in range(repetitions):
+            clues = hide_solution(sudoku, num_clues)
             solution = get_solution(clues)
             nums_correct.append((solution==sudoku).sum())
             print(f"{nums_correct[-1]/16*100:7.2f}%", end="", flush=True)
