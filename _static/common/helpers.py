@@ -7,9 +7,9 @@ import shutil
 import hashlib
 import pandas as pd
 
-from _static.common.collab_helpers import in_collaboratory, check_kernel
+from _static.common.collab_helpers import in_ebrains_collaboratory, check_kernel
 
-if in_collaboratory():
+if in_ebrains_collaboratory():
     # check for EBRAINS kernel version prior to pynn_brainscales import
     check_kernel()
 
@@ -21,7 +21,7 @@ pynn.logger.set_loglevel(logger, pynn.logger.LogLevel.INFO)
 
 
 def setup_hardware_client():
-    if not in_collaboratory():
+    if not in_ebrains_collaboratory():
         return
 
     # setup quiggeldy enviroment
@@ -52,7 +52,7 @@ def get_nightly_calibration(filename='spiking_cocolist.pbin'):
     locally.
 
     '''
-    if in_collaboratory():
+    if in_ebrains_collaboratory():
         with hxcomm.ManagedConnection() as connection:
             identifier = connection.get_unique_identifier()
 
@@ -89,7 +89,7 @@ def save_nightly_calibration(filename: str = 'spiking_cocolist.pbin',
     '''
     folder = Path() if folder is None else Path(folder)
     output_file = folder.joinpath(filename)
-    if in_collaboratory():
+    if in_ebrains_collaboratory():
         with hxcomm.ManagedConnection() as connection:
                 identifier = connection.get_unique_identifier()
 

@@ -1,7 +1,11 @@
 import os
 
-def in_collaboratory():
-    return os.environ.get('JUPYTERHUB_USER') is not None
+def in_ebrains_collaboratory():
+    lab_image_name = os.environ.get('LAB_IMAGE_NAME')
+    if lab_image_name is None:
+        return False
+
+    return "ebrains" in lab_image_name.lower()
 
 def check_kernel():
     expected_kernel = 'EBRAINS-experimental'
