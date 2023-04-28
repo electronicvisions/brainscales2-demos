@@ -48,7 +48,7 @@ multiplication of two matrices:
 
 .. code:: ipython3
 
-    print(hxtorch.matmul.__doc__)
+    print(hxtorch.perceptron.matmul.__doc__)
 
 .. parsed-literal::
     :class: solution
@@ -80,7 +80,7 @@ This already enables us to multiply matrices using the BSS-2 accelerator:
 
     M1 = torch.full((100,), 15.)
     M2 = torch.full((100, 10), 21.)
-    hxtorch.matmul(M1, M2)
+    hxtorch.perceptron.matmul(M1, M2)
 
 .. parsed-literal::
     :class: solution
@@ -137,7 +137,7 @@ to the synapse drivers.
     )
     def experiment(num_sends, input_value, weight_value, row_number):
         """ Updates the plot with the outputs from the hardware """
-        result = hxtorch.matmul(
+        result = hxtorch.perceptron.matmul(
             torch.tensor([0.] * row_number + [input_value], dtype=torch.float),
             torch.full((row_number + 1, 256), weight_value, dtype=torch.float),
             num_sends=num_sends)
@@ -185,7 +185,7 @@ increasing weight vector.
     )
     def experiment(num_sends, input_value, row_number):
         """ Updates the plot with the outputs from the hardware """
-        result = hxtorch.matmul(
+        result = hxtorch.perceptron.matmul(
             torch.tensor([0.] * row_number + [input_value], dtype=torch.float),
             weight.unsqueeze(0).expand(row_number + 1, -1),
             num_sends=num_sends)
@@ -212,8 +212,8 @@ happens earlier for some neurons and later for others.
 Possible questions:
 ~~~~~~~~~~~~~~~~~~~
 
-How does the result change with several successive calls to ``hxtorch.matmul``?
-^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+How does the result change with several successive calls to ``hxtorch.perceptron.matmul``?
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
 Due to its analog nature, the BrainScaleS-2 ASIC provides slightly
 different values for each call. Quantify the noise on each neuron!

@@ -69,13 +69,13 @@ initialization of the hardware connection:
     hxtorch.init_hardware(hxtorch.CalibrationPath('hagen_cocolist.pbin'))
 
     # measures the hardware gain and the average statistical noise on the outputs
-    hardware_parameter = hxtorch.measure_mock_parameter()
+    hardware_parameter = hxtorch.perceptron.measure_mock_parameter()
 
     print(f"gain factor: {hardware_parameter.gain:.5f}")
     print(f"noise std.:  {hardware_parameter.noise_std:.5f}")
 
     # use the measured parameters for backward pass and in mock mode
-    hxtorch.set_mock_parameter(hardware_parameter)
+    hxtorch.perceptron.set_mock_parameter(hardware_parameter)
 
 Simulating hardware: The mock mode
 ----------------------------------
@@ -92,7 +92,7 @@ This so-called mock mode can be switched on and off individually for
 each hxtorch operation and for each layer via the ``mock`` parameter,
 e.g.
 
-``hxtorch.matmul(..., mock=True)``
+``hxtorch.perceptron.matmul(..., mock=True)``
 
 It is especially convenient when no BrainScaleS-2 system is available
 and allows fast prototyping of DNN models.
@@ -310,9 +310,9 @@ with PyTorch, the code below will also look familiar to you:
         def __init__(self, mock: bool = False):
             super().__init__()
             self.classifier = torch.nn.Sequential(
-                hxtorch.nn.Linear(4, 128, mock=mock),
-                hxtorch.nn.ConvertingReLU(shift=1),
-                hxtorch.nn.Linear(128, 3, avg=5, mock=mock),
+                hxtorch.perceptron.nn.Linear(4, 128, mock=mock),
+                hxtorch.perceptron.nn.ConvertingReLU(shift=1),
+                hxtorch.perceptron.nn.Linear(128, 3, avg=5, mock=mock),
             )
 
         def forward(self, *x):

@@ -93,7 +93,7 @@ zugeordnet.
 
     save_nightly_calibration('hagen_cocolist.pbin')
     hxtorch.init_hardware(hxtorch.CalibrationPath('hagen_cocolist.pbin'))
-    hxtorch.set_mock_parameter(hxtorch.measure_mock_parameter())
+    hxtorch.perceptron.set_mock_parameter(hxtorch.perceptron.measure_mock_parameter())
 
 Im maschinellen Lernen ist das klassifizieren von Bildern ein beliebtes Beispiel, sodass eine große Sammlung von Bildern, welche Zahlen darstellen, frei verfügbar ist.
 Diese Sammlung laden wir im folgenden runter:
@@ -175,17 +175,17 @@ verstecken Lage mit 128 Neuronen.
             self.classifier = torch.nn.Sequential(
                 # Diese Lage verbindet jeden Pixel des Bildes
                 # mit jedem versteckten Neuron:
-                hxtorch.nn.Linear(
+                hxtorch.perceptron.nn.Linear(
                     in_features=28 * 28,  # die Bilder sind 28x28 Pixel groß
                     out_features=num_hidden,
-                    mock=mock), hxtorch.nn.ConvertingReLU(shift=1, mock=True),
-                hxtorch.nn.Linear(
+                    mock=mock), hxtorch.perceptron.nn.ConvertingReLU(shift=1, mock=True),
+                hxtorch.perceptron.nn.Linear(
                     in_features=num_hidden,
                     out_features=num_hidden,
-                    mock=mock), hxtorch.nn.ConvertingReLU(shift=1, mock=True),
+                    mock=mock), hxtorch.perceptron.nn.ConvertingReLU(shift=1, mock=True),
                 # Diese Lage verbindet jedes der verstecken Neuronen
                 # mit einem der 10 möglichen Ausgänge:
-                hxtorch.nn.Linear(
+                hxtorch.perceptron.nn.Linear(
                     in_features=num_hidden,
                     out_features=10,  # es gibt 10 verschiedene Ziffern
                     mock=mock) 
