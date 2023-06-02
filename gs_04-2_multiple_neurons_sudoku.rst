@@ -12,10 +12,6 @@ Bevor wir mit unseren Experimenten beginnen können, müssen wir erneut unsere U
     from _static.common.helpers import setup_hardware_client
     setup_hardware_client()
 
-.. code:: ipython3
-
-   !pip install ipycanvas
-
 
 Sudoku
 ------
