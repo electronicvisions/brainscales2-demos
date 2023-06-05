@@ -37,6 +37,10 @@ power of gradient-based optimization to spiking neural networks. IEEE
 Signal Processing Magazine 36, 6 (2019),51–63.
 https://doi.org/10.1109/MSP.2019.2931595
 
+[5] Wunderlich, T.C., Pehle, C. Event-based backpropagation can compute exact gradients
+for spiking neural networks. Scientific Reports 11, 12829 (2021).
+`doi: 10.1038/s41598-021-91786-z <https://doi.org/10.1038/s41598-021-91786-z>`__.
+
 .. code:: ipython3
 
     %matplotlib inline
@@ -598,6 +602,411 @@ function.
     BATCH_SIZE    = 75
     TRAINSET_SIZE = 5025
     TESTSET_SIZE  = 1050
+
+.. code-block:: ipython3
+    :class: test, html-display-none
+
+    # Training params
+    LR            = 0.002
+    STEP_SIZE     = 5
+    GAMMA         = 0.9
+    EPOCHS        = 1
+    BATCH_SIZE    = 50
+    TRAINSET_SIZE = 500
+    TESTSET_SIZE  = 100
+
+.. code:: ipython3
+
+    # Just for plotting...
+    assert TRAINSET_SIZE % BATCH_SIZE == 0
+
+    # PyTorch stuff... optimizer, scheduler and loss like you normally do.
+    optimizer = torch.optim.Adam(model.parameters(), lr=LR)
+    scheduler = torch.optim.lr_scheduler.StepLR(optimizer, step_size=STEP_SIZE, gamma=GAMMA)
+    loss = torch.nn.CrossEntropyLoss()
+
+    # Data loaders
+    train_loader, test_loader = get_data_loaders(TRAINSET_SIZE, TESTSET_SIZE, BATCH_SIZE)
+
+.. code:: ipython3
+
+    # Functions to update plot
+    update_plot, update_train_data, update_test_data = plot_training(N_HIDDEN, T_SIM, DT)
+    plt.close()
+    output = w.Output()
+    display(output)
+
+    # Initialize the hardware and load a suitable nightly calibration
+    if not MOCK:
+        save_nightly_calibration('spiking2_cocolist.pbin')
+        hxtorch.init_hardware(hxtorch.CalibrationPath('spiking2_cocolist.pbin'))
+
+    # Train and test
+    for epoch in range(0, EPOCHS + 1):
+        # Test
+        loss_test, acc_test, rate_test = test(
+            model, test_loader, loss, epoch, update_test_data)
+
+        # Refresh plot
+        output.clear_output(wait=True)
+        with output:
+            update_plot()
+
+        # Train epoch
+        if epoch < EPOCHS:
+            loss_train, acc_train = train(
+                model, train_loader, loss, optimizer, epoch, update_train_data)
+
+        scheduler.step()
+
+    # Release the hardware connection
+    hxtorch.release_hardware()
+
+EventProp
+~~~~~~~~~
+
+In [5] Wunderlich and Pehle derived the EventProp algorithm, which provides
+a set of equations to compute exact parameter gradients for spiking neural
+networks with LIF neurons, single-exponential-shaped synpases and a quite
+general loss function.
+
+The background section below is meant to give an overview of the equations
+in the EventProp algorthm and provide a basis to understand the
+time-discretized implementation in PyTorch autograd functions below.
+This is all based directly on [5] and for the detailed derivation of the
+algorithm, you might look into the reference.
+
+If you just want to use the functions and train the network using them, you
+might skip directly to the training part.
+
+Background
+^^^^^^^^^^
+
+The state of a neuron :math:`n` is given by its membrane potential
+:math:`V_{n}` and synaptic current :math:`I_{n}`, and their dynamics are
+governed by a set of coupled differential equations
+
+.. math::
+    \begin{align*}
+        & \text{Free dynamics}                  && \quad \text{Transition condition}              && \quad \text{Jumps at transition}   \\
+        &\tau_{\mathrm{m}} \dot{V} = - V + I    && \quad (V)_{n} - V_{\mathrm{th}} = 0 \text{, }(\dot{V})_{n} > 0    && \quad (V^{+})_{n} = 0              \\
+        &\tau_{\mathrm{s}} \dot{I} = - I        && \quad \text{for any } n                        && \quad I^{+} = I^{-} + W e_{n}
+    \end{align*}
+    
+where the superscripts :math:`+` and :math:`-` denote the right- and left-hand
+limit to the post-synaptic spike time.
+
+The loss, which is to be minimized, is of the form
+
+.. math::
+    L = l_{\mathrm{p}} (t^{\mathrm{post}}) + \int_{0}^{T} l_{V} (V, t) \mathrm{d}t,
+
+where :math:`l_{\mathrm{p}}(t^{\mathrm{post}})` and :math:`l_{V} (V, t)` are
+smooth loss functions depending on the membrane potentials :math:`V`, time
+:math:`t` and set of post-synaptic spike times :math:`t^{\mathrm{post}}`.
+
+The system's forward dynamics, defined in the table above, can be introduced
+as constraints via Lagrange multipliers :math:`\lambda_{V}` and :math:`\lambda_{I}`,
+referring to the equation of the respective state variable. From this, an adjoint
+system of differential equations for the lagrange multipliers can be found and
+solved in reverse time. They also undergo jumps at the spike times of neurons
+found by solving (or in our case emulating) the forward dynamics. Using he
+notation :math:`' = - \frac{\mathrm{d}}{\mathrm{d} t}`, the adjoint equations are
+
+.. math::
+    \begin{align*}
+        & \text{Free dynamics} && \quad \text{Transition condition} && \quad \text{Jumps at transition} \\
+        & \tau_{\mathrm{m}} \lambda^{\prime}_{V} = - \lambda_{V} + \frac{\partial l_{V}}{\partial V}
+        && \quad t - t^{\mathrm{post}}_{k} = 0
+        && \quad \left(\lambda_{V}^{-} \right)_{n(k)} = \left(\lambda_{V}^{+} \right)_{n(k)} + \frac{1}{\tau_{\mathrm{m}} (\dot{V}^{-})_{n(k)} } \bigg[ \vartheta \left(\lambda_{V}^{+} \right)_{n(k)} \\
+        & \tau_{\mathrm{s}} \lambda^{\prime}_{I} = - \lambda_{I} + \lambda_{V}
+        && \quad \text{for any } k
+        && \quad\quad + \left( W^{\top} \left( \lambda_{V}^{+} - \lambda_{I} \right) \right) + \frac{\partial l_{\mathrm{post}}}{\partial t^{\mathrm{post}}_{k}} + l_{V}^{-} - l_{V}^{+} \bigg]
+    \end{align*}
+
+The gradient with respect to
+the synaptic weight :math:`w_{ji}`, connecting pre-synaptic neuron :math:`i`
+to post-synaptic neuron :math:`j`, then only depends on the syaptic time
+constant :math:`\tau_{\mathrm{s}}` and the adjoint variable :math:`\lambda_{I}`
+at spike times:
+
+.. math::
+    \frac{\mathrm{d} L}{\mathrm{d}w_{ji}} = - \tau_{\mathrm{s}}
+    \sum_{\text{spikes from } i} (\lambda_{I})_{j}
+
+Implementation
+^^^^^^^^^^^^^^
+
+The neuron and synapse modules in ``hxtorch.snn`` allow users to provide
+custom functions and we use this ability to implement the EventProp
+algorithm [5] as an alternative gradient estimator to the surrogate
+gradients which are used in the part above.
+
+To ensure appropriate backpropagation of the terms in the EventProp
+equations between layers one has to provide two functions handling
+the computation and propagation of gradients, one for ``Neuron`` layer
+and one for the ``Synapse`` layer.
+
+.. code:: ipython3
+
+    from typing import NamedTuple, Optional
+
+    class EventPropNeuron(torch.autograd.Function):
+        """
+        Gradient estimation with time-discretized EventProp using explicit Euler integration.
+        """
+        @staticmethod
+        def forward(ctx, input: torch.Tensor,
+                    params: F.CUBALIFParams, dt: float) -> Tuple[torch.Tensor]:
+            """
+            Forward function, generating spikes at positions > 0.
+
+            :param input: Weighted input spikes in shape (2, batch, time, neurons).
+                The 2 at dim 0 comes from stacked output in EventPropSynapse.
+            :param params: CUBALIFParams object holding neuron parameters.
+
+            :returns: Returns the spike trains and membrane trace.
+                Both tensors are of shape (batch, time, neurons).
+            """
+            dev = input.device
+            T, bs, ps = input[0].shape
+            z = torch.zeros(bs, ps).to(dev)
+            i = torch.zeros(bs, ps).to(dev)
+            v = torch.empty(bs, ps).fill_(params.v_leak).to(dev)
+
+            spikes, current, membrane = [z], [i], [v]
+            for ts in range(T - 1):
+                # Current
+                i = i * (1 - dt * params.tau_syn_inv) + input[0][ts]
+
+                # Membrane
+                dv = dt * params.tau_mem_inv * (params.v_leak - v + i)
+                v = dv + v
+
+                # Spikes
+                z = torch.gt(v - params.v_th, 0.0).to((v - params.v_th).dtype)
+
+                # Reset
+                v = (1 - z) * v + z * params.v_reset
+
+                # Save data
+                spikes.append(z)
+                current.append(i)
+                membrane.append(v)
+
+            forward_result = (
+                torch.stack(spikes),
+                torch.stack(membrane)
+            )
+            ctx.current = torch.stack(current)
+            ctx.save_for_backward(input, *forward_result)
+            ctx.extra_kwargs = {"params": params, "dt": dt}
+
+            return (*forward_result,)
+
+        @staticmethod
+        def backward(ctx, grad_spikes: torch.Tensor,
+                    _: torch.Tensor) -> Tuple[Optional[torch.Tensor], ...]:
+            """
+            Implements 'EventProp' for backward.
+
+            :param grad_spikes: Backpropagted gradient wrt output spikes.
+            :param _: backpropagated gradient wrt to membrane trace (currently not used).
+
+            :returns: Gradient given by adjoint function lambda_i of current.
+            """
+            # input and layer data
+            input_current = ctx.saved_tensors[0][0]
+            z = ctx.saved_tensors[1]
+            T = z.shape[0]
+            params = ctx.extra_kwargs["params"]
+            dt = ctx.extra_kwargs["dt"]
+
+            # adjoints
+            lambda_v, lambda_i = torch.zeros_like(z), torch.zeros_like(z)
+
+            # When executed on hardware, spikes and membrane voltage are injected but the synaptic
+            # current is not recorded. Approximate it:
+            try:
+                i = ctx.current
+            except AttributeError:
+                i = torch.zeros_like(z)
+                # compute current
+                for ts in range(T - 1):
+                    i[ts + 1] = \
+                        i[ts] * (1 - dt * params.tau_syn_inv) \
+                        + input_current[ts]
+
+            for ts in range(T - 1, 0, -1):
+                dv_m = params.v_leak - params.v_th + i[ts - 1]
+                dv_p = params.v_leak - params.v_reset + i[ts - 1]
+
+                lambda_i[ts - 1] = lambda_i[ts] + dt * \
+                    params.tau_syn_inv * (lambda_v[ts] - lambda_i[ts])
+                lambda_v[ts - 1] = lambda_v[ts] * \
+                    (1 - dt * params.tau_mem_inv)
+
+                output_term = z[ts] / dv_m * grad_spikes[ts]
+                output_term[torch.isnan(output_term)] = 0.0
+
+                jump_term = z[ts] * dv_p / dv_m
+                jump_term[torch.isnan(jump_term)] = 0.0
+
+                lambda_v[ts - 1] = (
+                    (1 - z[ts]) * lambda_v[ts - 1]
+                    + jump_term * lambda_v[ts - 1]
+                    + output_term
+                )
+            return torch.stack((lambda_i / params.tau_syn_inv,
+                                lambda_v - lambda_i)), None, None
+
+
+    class EventPropSynapse(torch.autograd.Function):
+        """
+        Synapse function for proper gradient transport when using EventPropNeuron.
+        """
+        @staticmethod
+        def forward(ctx, input: torch.Tensor, weight: torch.Tensor,
+                    _: torch.Tensor = None
+                    ) -> Tuple[torch.Tensor, torch.Tensor]:
+            """
+            This should be used in combination with EventPropNeuron. Multiply input
+            with weight and use a stacked output in order to be able to return two
+            tensors (separate terms in EventProp algorithm), one for previous layer
+            and the other one for weights.
+
+            :param input: Input spikes in shape (batch, time, in_neurons).
+            :param weight: Weight in shape (out_neurons, in_neurons).
+            :param _: Bias, which is unused here.
+
+            :returns: Returns stacked tensor holding weighted spikes and
+                tensor with zeros but same shape.
+            """
+            ctx.save_for_backward(input, weight)
+            output = input.matmul(weight.t())
+            return torch.stack((output, torch.zeros_like(output)))
+
+        @staticmethod
+        def backward(ctx, grad_output: torch.Tensor,
+                    ) -> Tuple[Optional[torch.Tensor],
+                                Optional[torch.Tensor]]:
+            """
+            Split gradient_output coming from EventPropNeuron and return
+            weight * (lambda_v - lambda_i) as input gradient and
+            - tau_s * lambda_i * input (i.e. - tau_s * lambda_i at spiketimes)
+            as weight gradient.
+
+            :param grad_output: Backpropagated gradient with shape (2, batch, time,
+                out_neurons). The 2 is due to stacking in forward.
+
+            :returns: Returns gradients w.r.t. input, weight and bias (None).
+            """
+            input, weight = ctx.saved_tensors
+            grad_input = grad_weight = None
+
+            if ctx.needs_input_grad[0]:
+                grad_input = grad_output[1].matmul(weight)
+            if ctx.needs_input_grad[1]:
+                grad_weight = \
+                    grad_output[0].transpose(0, 1).transpose(1, 2).matmul(
+                        input.transpose(0, 1))
+
+            return grad_input, grad_weight, None
+
+
+    def eventprop_synapse(input: torch.Tensor, weight: torch.Tensor,
+                        bias=None) -> torch.Tensor:
+        """
+        Function wrapper to apply EventPropSynapse.
+
+        :param input: Input spikes in shape (batch, time, in_neurons).
+        :param weight: Weight in shape (out_neurons, in_neurons).
+        :param bias: Bias (which is unused in EventPropSynapse).
+
+        :returns: Returns stacked tensor holding weighted spikes and
+            tensor with zeros but same shape.
+        """
+        return EventPropSynapse.apply(input, weight, bias)
+
+.. code:: ipython3
+
+    class EventPropSNN(SNN):
+
+        def __init__(self, *args, **kwargs):
+            super().__init__(*args, **kwargs)
+            # use EventProp in hidden (spiking) LIF layer
+            self.linear_h.func = eventprop_synapse
+            self.lif_h.func = EventPropNeuron
+            # trace information is not used in EventProp ->  disable cadc recording
+            self.lif_h._enable_cadc_recording = False
+
+.. code:: ipython3
+
+    N_HIDDEN      = 120
+    MOCK          = False
+    DT            = 0.5e-06  # s
+
+    # We need to specify the device we want to use on the host computer
+    if torch.cuda.is_available():
+        device = torch.device("cuda")
+    else:
+        device = torch.device("cpu")
+
+    # The SNN using EventProp functions
+    snn = EventPropSNN(
+        n_in=5,
+        n_hidden=N_HIDDEN,
+        n_out=3,
+        mock=MOCK,
+        dt=DT,
+        tau_mem=6.0e-06,
+        tau_syn=6.0e-06,
+        alpha=50.,
+        trace_shift_hidden=int(.0e-06/DT),
+        trace_shift_out=int(.0e-06/DT),
+        weight_init_hidden=(0.15, 0.25),  # higher mean to ensure spiking
+        weight_init_output=(0.0, 0.1),
+        weight_scale=66.39,
+        trace_scale=0.0147,
+        input_repetitions=1 if MOCK else 5,
+        device=device)
+    snn
+
+Training with EventProp
+^^^^^^^^^^^^^^^^^^^^^^^
+
+.. code:: ipython3
+
+    T_SIM   = 3.8e-05  # s
+    T_EARLY = 0.2e-05  # s
+    T_LATE  = 2.6e-05  # s
+    T_BIAS  = 0.2e-05  # s
+
+    # This encoder translates the points into spikes on a discrete time lattice
+    encoder = CoordinatesToSpikes(
+        seq_length=int(T_SIM / DT),
+        t_early=T_EARLY,
+        t_late=T_LATE,
+        dt=DT,
+        t_bias=T_BIAS,
+        device=device)
+    encoder
+
+.. code:: ipython3
+
+    model = Model(encoder, snn, decoder, readout_scale=10.)
+    model
+
+.. code:: ipython3
+
+    # Training params
+    LR            = 0.002
+    STEP_SIZE     = 5
+    GAMMA         = 0.9
+    EPOCHS        = 4 # Adjust here for longer training...
+    BATCH_SIZE    = 50
+    TRAINSET_SIZE = 5000
+    TESTSET_SIZE  = 1000
 
 .. code-block:: ipython3
     :class: test, html-display-none
