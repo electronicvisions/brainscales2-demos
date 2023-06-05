@@ -35,9 +35,9 @@ def plot_input_encoding(spikes, t_early, t_late, t_bias, t_sim, dt):
         [0, 1, 2, 3, 4],
         ["$t^i_0$", "$t^i_1$", "$t^i_2$", "$t^i_3$", "$t^\mathrm{bias}_4$"])
     ax.set_xticks(
-        [0, t_early, t_late, t_bias, t_bias],
+        [0, t_early, t_late, t_bias, t_sim],
         [0, "$t_\mathrm{early}$", f"$t_\mathrm{{late}} = {{{t_late}}}$",
-         f"$t_\mathrm{{bias}} = {{{t_late}}}$", "$t_\mathrm{sim}$"])
+         f"$t_\mathrm{{bias}} = {{{t_bias}}}$", "$t_\mathrm{sim}$"])
 
 
 def plot_training(n_hidden, t_sim, dt):
