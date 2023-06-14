@@ -594,10 +594,24 @@ function.
     LR            = 0.002
     STEP_SIZE     = 5
     GAMMA         = 0.9
-    EPOCHS        = 2 # Adjust here for longer training...
+    EPOCHS        = 4 # Adjust here for longer training...
     BATCH_SIZE    = 75
     TRAINSET_SIZE = 5025
     TESTSET_SIZE  = 1050
+
+.. code-block:: ipython3
+    :class: test, html-display-none
+
+    # Training params
+    LR            = 0.002
+    STEP_SIZE     = 5
+    GAMMA         = 0.9
+    EPOCHS        = 1
+    BATCH_SIZE    = 50
+    TRAINSET_SIZE = 500
+    TESTSET_SIZE  = 100
+
+.. code:: ipython3
 
     # Just for plotting...
     assert TRAINSET_SIZE % BATCH_SIZE == 0
