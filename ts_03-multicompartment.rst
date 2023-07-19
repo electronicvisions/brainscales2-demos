@@ -57,6 +57,8 @@ We continue by importing several Python packages, which we need to perform our e
     import quantities as pq
 
     import pynn_brainscales.brainscales2 as pynn
+    from pynn_brainscales.brainscales2.morphology import create_mc_neuron, \
+        Compartment, SharedLineConnection
 
 .. include:: common_nightly_calibration.rst
 
@@ -77,61 +79,49 @@ Furthermore, we define some global parameters which we need for the construction
 Constructing a Compartment Chain
 --------------------------------
 
-The ``HXNeuron`` allows to set all relevant parameters of the BrainScaleS-2 neuron circuits.
-It particularly allows to control the direct connections between neuron circuits and the connections to the somatic line.
-
 We will now create a chain of compartments, which are connected via conductances.
 Each compartment in the middle of the chain has two neighbors.
 Therefore, these compartments have to establish two connections via the somatic line.
 As a consequence each is made up of two neuron circuits: the first will connect to the somatic line via the conductance and the second via the switch.
 
-In order to form the chain with ``length`` compartments, we create a set (population) of ``2 * length`` neuron circuits (``HXNeurons``); note that we use two neuron circuits for the first and last compartment as well even though it is not strictly needed.
-We will use the second neuron circuit to determine the properties of the compartment such as capacitance and leak potential.
-We choose the second neuron circuit since we will later also use this circuits adjustable resistance to connect it to its neighboring compartment.
-Consequently, we disable the leak (set the leak conductance to zero) for the first circuit and set its capacitance to zero.
+The PyNN interface allows us to define compartments and the connections between them.
+Once we defined all compartments and connections, we can create a new neuron type.
 
 .. code:: ipython3
 
-    pop = pynn.Population(length * 2,
-                          pynn.cells.HXNeuron())
-
-    # Combine two neuron circuits to one compartment; "disable" first
-    # neuron circuit
-    pynn.PopulationView(pop, np.arange(0, 2 * length, 2)).set(
-        multicompartment_connect_right=True,
-        leak_i_bias=0,
-        leak_enable_division=True,
-        membrane_capacitance_capacitance=0)
-
-As mentioned before, one of the circuits connects via a conductance to the somatic line and the other via the switch.
-In order to establish connections between the compartments, we have to close the somatic line for every second neuron circuit.
-This time we have to ignore the first and last compartment as they only have one connection to the somatic line.
-
-.. code:: ipython3
-
-    # Enable direct connection to somatic line for even neuron circuits
-    # (don't connect first neuron circuit)
-    pynn.PopulationView(pop, np.arange(2, 2 * length, 2)).set(
-        multicompartment_connect_soma=True)
-
-    # Connect resistor to somatic line and close connection to the right
-    # for uneven circuits (don't connect last neuron circuit)
-    pynn.PopulationView(pop, np.arange(1, 2 * length - 1, 2)).set(
-            multicompartment_enable_conductance=True,
-            multicompartment_i_bias_nmda=600,
-            multicompartment_connect_soma_right=True)
+    assert length >= 2
+    compartments = []
+    for n_comp in range(length):
+        positions = [2 * n_comp, 2 * n_comp + 1]
+        # use direct connection to connect to the right
+        connect_shared_line = None if n_comp == 0 else [positions[0]]
+        # use resistor to connect to the right
+        connect_conductance = None if n_comp == (length - 1) else \
+            [(positions[1], 200)]
+        compartments.append(
+            Compartment(positions=positions,
+                        label=f'comp_{n_comp}',
+                        connect_conductance=connect_conductance,
+                        connect_shared_line=connect_shared_line))
 
 
-.. code:: ipython3
+    # close shared line between neighboring compartments
+    connections = []
+    for n_comp in range(length - 1):
+        # start at second circuit in first compartment
+        start = 2 * n_comp + 1
+        connections.append(
+            SharedLineConnection(start=start, stop=start + 1, row=0))
 
-    # Disable spiking
-    pop.set(threshold_enable=False)
+    # create new neuron type
+    CompartmentChain = create_mc_neuron('CompartmentChain',
+                                        compartments=compartments,
+                                        connections=connections,
+                                        single_active_circuit=True)
 
-    # Every uneven neuron circuit controls the capacitance, resistance,
-    # leak, ... of a single compartment. Save views on these circuits as
-    # compartments
-    compartments = [pynn.PopulationView(pop, [n]) for n in
-                    range(1, 2 * length, 2)]
+    # disable spiking since we want to observe the attenuation of PSPs
+    pop = pynn.Population(1, CompartmentChain(threshold_enable=False))
+
 
 External Input and Experiment Definition
 ----------------------------------------
@@ -144,15 +134,15 @@ We create stimulus neurons which inject synaptic inputs in one compartment after
     spike_times = np.arange(length) * isi + 0.5 * isi  # ms (hw)
     # Inject stimulus in one compartment after another
     projections = []
-    for spike_time, compartment in zip(spike_times, compartments):
+    for n_comp, spike_time in enumerate(spike_times):
         pop_in = pynn.Population(inputs, pynn.cells.SpikeSourceArray(
             spike_times=[spike_time]))
 
         # Note: the weight will be set later
         synapse_type = pynn.standardmodels.synapses.StaticSynapse()
         projections.append(
-            pynn.Projection(pop_in, compartment,
-                            pynn.AllToAllConnector(),
+            pynn.Projection(pop_in, pop,
+                            pynn.AllToAllConnector(location_selector=f'comp_{n_comp}'),
                             synapse_type=synapse_type))
 
 
@@ -174,23 +164,22 @@ Since we use a single ADC (analog-to-digital converter) to record the membrane p
         """
 
         # Set parameters
-        for comp in compartments:
-            comp.set(multicompartment_i_bias_nmda=conductance)
+        pop.set(multicompartment_i_bias_nmda=conductance)
         for proj in projections:
             proj.set(weight=weight)
 
 
         # Run on hardware and record mebrane potentials
         membrane_traces = []
-        for comp in compartments:
-            comp.record(['v'])
+        for n_comp in range(length):
+            pop.record(['v'], locations=[f'comp_{n_comp}'])
 
             pynn.run(length * isi)
+
+            membrane_traces.append(pop.get_data(clear=True).segments[-1].irregularlysampledsignals[0])
+
+            pop.record(None)
             pynn.reset()
-
-            membrane_traces.append(comp.get_data().segments[-1].irregularlysampledsignals[0])
-
-            comp.record(None)
 
         return membrane_traces
 
