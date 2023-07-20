@@ -39,6 +39,7 @@ In this session, we will cover the following topics:
    ts_06-dynamic_range
    ts_07-pong
    ts_08-adex_complex_dynamics
+   ts_09-inside_realtime_hook
    tp_00-introduction
    tp_01-properties
    tp_02-yin_yang
