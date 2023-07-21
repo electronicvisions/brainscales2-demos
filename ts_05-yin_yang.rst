@@ -193,7 +193,13 @@ corresponds to one of the three classes:
             self.dt = dt
 
             # Instance to work on
-            self.experiment = hxsnn.Experiment(mock=mock, dt=dt)
+
+            if not mock:
+                save_nightly_calibration('spiking2_cocolist.pbin')
+                self.experiment = hxsnn.Experiment(mock=mock, dt=dt,
+                        calib_path='spiking2_cocolist.pbin')
+            else:
+                self.experiment = hxsnn.Experiment(mock=mock, dt=dt)
 
             # Repeat input
             self.input_repetitions = input_repetitions
@@ -636,10 +642,9 @@ function.
     output = w.Output()
     display(output)
 
-    # Initialize the hardware and load a suitable nightly calibration
+    # Initialize the hardware
     if not MOCK:
-        save_nightly_calibration('spiking2_cocolist.pbin')
-        hxtorch.init_hardware(hxtorch.CalibrationPath('spiking2_cocolist.pbin'))
+        hxtorch.init_hardware()
 
     # Train and test
     for epoch in range(0, EPOCHS + 1):
@@ -1041,10 +1046,9 @@ Training with EventProp
     output = w.Output()
     display(output)
 
-    # Initialize the hardware and load a suitable nightly calibration
+    # Initialize the hardware
     if not MOCK:
-        save_nightly_calibration('spiking2_cocolist.pbin')
-        hxtorch.init_hardware(hxtorch.CalibrationPath('spiking2_cocolist.pbin'))
+        hxtorch.init_hardware()
 
     # Train and test
     for epoch in range(0, EPOCHS + 1):
