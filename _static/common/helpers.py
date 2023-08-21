@@ -76,6 +76,7 @@ def get_nightly_calibration(filename='spiking_cocolist.pbin'):
 
 
 def save_nightly_calibration(filename: str = 'spiking_cocolist.pbin',
+                             source_folder: Optional[str] = None,
                              folder: Optional[str] = None):
     '''
     Save the nightly calibration to the given location.
@@ -84,21 +85,27 @@ def save_nightly_calibration(filename: str = 'spiking_cocolist.pbin',
 
     :param filename: Name of the calibration to download. Typical names are
         'spiking_cocolist.pbin' and 'hagen_cocolist.pbin'.
+    :param source_folder: Source folder to download the calibration from.
     :param folder: Folder to save the calibration in. If not supplied the
         calibration is saved in the current folder.
     '''
+
     folder = Path() if folder is None else Path(folder)
     output_file = folder.joinpath(filename)
+    if source_folder is None:
+        source_folder = "ebrains-experimental" if in_ebrains_collaboratory() \
+            else "latest"
+
     if in_ebrains_collaboratory():
         with hxcomm.ManagedConnection() as connection:
                 identifier = connection.get_unique_identifier()
 
-        folder =  "ebrains-experimental"
-        download_url = "https://openproject.bioai.eu/data_calibration/" \
-                       f"hicann-dls-sr-hx/{identifier}/stable/{folder}/" \
-                       f"{filename}"
+        download_url = \
+            "https://openproject.bioai.eu/data_calibration/" \
+            f"hicann-dls-sr-hx/{identifier}/stable/{source_folder}/" \
+            f"{filename}"
         urllib.request.urlretrieve(download_url, output_file)
     else:
-        calib_path = pynn.helper.nightly_calib_path().parent
-        path_to_calib =  calib_path.joinpath(filename)
+        calib_path = pynn.helper.nightly_calib_path().parent.parent
+        path_to_calib = calib_path.joinpath(source_folder, filename)
         shutil.copy(path_to_calib, output_file)
