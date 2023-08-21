@@ -13,6 +13,7 @@ Welcome to the BrainScaleS-2 Demos & Examples!
    ts_04-mc_genetic_algorithms
    ts_05-yin_yang
    ts_06-dynamic_range
+   ts_07-pong
    tp_00-introduction
    tp_01-properties
    tp_02-yin_yang

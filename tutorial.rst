@@ -34,6 +34,7 @@ In this session, we will cover the following topics:
    ts_03-multicompartment
    ts_04-mc_genetic_algorithms
    ts_05-yin_yang
+   ts_07-pong
 
 In this section of the tutorial, we will go through the technical details and make sure that you are correctly set up for accessing our hardware resources.
 
