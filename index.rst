@@ -14,6 +14,7 @@ Welcome to the BrainScaleS-2 Demos & Examples!
    ts_05-yin_yang
    ts_06-dynamic_range
    ts_07-pong
+   ts_08-adex_complex_dynamics
    tp_00-introduction
    tp_01-properties
    tp_02-yin_yang
