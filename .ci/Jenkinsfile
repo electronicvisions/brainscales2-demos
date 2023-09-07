@@ -10,9 +10,7 @@ try {
 			projects           : ["${PROJECT_NAME}"],
 			container          : [app: "dls"],
 			moduleOptions      : [modules: ["ppu-toolchain"]],
-			testSlurmResource  : getHxTestResource(3),
-			preTestHook        : { configureHxCubeBitfile() },
-			testOptions        : "--test-execall -j1",
+			testOptions        : "--test-execall",
 			setupOptions       : "--release-branch=ebrains-6.0",
 			notificationChannel: "#jenkins-trashbin",  // success is checked globally
 			configureInstallOptions: "--build-profile=ci",
