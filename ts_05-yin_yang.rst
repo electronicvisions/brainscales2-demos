@@ -796,22 +796,21 @@ and one for the ``Synapse`` layer.
 
                 # Save data
                 spikes.append(z)
-                current.append(i)
                 membrane.append(v)
+                current.append(i)
 
-            forward_result = (
-                torch.stack(spikes),
-                torch.stack(membrane)
-            )
-            ctx.current = torch.stack(current)
-            ctx.save_for_backward(input, *forward_result)
+            spikes = torch.stack(spikes)
+            membrane = torch.stack(membrane)
+            current = torch.stack(current)
+
+            ctx.save_for_backward(input, spikes, membrane, current)
             ctx.extra_kwargs = {"params": params, "dt": dt}
 
-            return (*forward_result,)
+            return spikes, membrane, current
 
         @staticmethod
-        def backward(ctx, grad_spikes: torch.Tensor,
-                    _: torch.Tensor) -> Tuple[Optional[torch.Tensor], ...]:
+        def backward(ctx, grad_spikes: torch.Tensor, grad_membrane: torch.Tensor,
+                    grad_current: torch.Tensor) -> Tuple[Optional[torch.Tensor], ...]:
             """
             Implements 'EventProp' for backward.
 
@@ -822,19 +821,20 @@ and one for the ``Synapse`` layer.
             """
             # input and layer data
             input_current = ctx.saved_tensors[0][0]
+            T, _, _ = input_current.shape
             z = ctx.saved_tensors[1]
-            T = z.shape[0]
             params = ctx.extra_kwargs["params"]
             dt = ctx.extra_kwargs["dt"]
 
             # adjoints
-            lambda_v, lambda_i = torch.zeros_like(z), torch.zeros_like(z)
+            lambda_v = torch.zeros_like(input_current)
+            lambda_i = torch.zeros_like(input_current)
 
             # When executed on hardware, spikes and membrane voltage are injected but the synaptic
             # current is not recorded. Approximate it:
-            try:
-                i = ctx.current
-            except AttributeError:
+            if ctx.saved_tensors[3] is not None:
+                i = ctx.saved_tensors[3]
+            else:
                 i = torch.zeros_like(z)
                 # compute current
                 for ts in range(T - 1):
@@ -918,21 +918,6 @@ and one for the ``Synapse`` layer.
 
             return grad_input, grad_weight, None
 
-
-    def eventprop_synapse(input: torch.Tensor, weight: torch.Tensor,
-                        bias=None) -> torch.Tensor:
-        """
-        Function wrapper to apply EventPropSynapse.
-
-        :param input: Input spikes in shape (batch, time, in_neurons).
-        :param weight: Weight in shape (out_neurons, in_neurons).
-        :param bias: Bias (which is unused in EventPropSynapse).
-
-        :returns: Returns stacked tensor holding weighted spikes and
-            tensor with zeros but same shape.
-        """
-        return EventPropSynapse.apply(input, weight, bias)
-
 .. code:: ipython3
 
     class EventPropSNN(SNN):
@@ -940,9 +925,10 @@ and one for the ``Synapse`` layer.
         def __init__(self, *args, **kwargs):
             super().__init__(*args, **kwargs)
             # use EventProp in hidden (spiking) LIF layer
-            self.linear_h.func = eventprop_synapse
+            self.linear_h.func = EventPropSynapse
             self.lif_h.func = EventPropNeuron
             # trace information is not used in EventProp ->  disable cadc recording
+            # of hidden layer
             self.lif_h._enable_cadc_recording = False
 
 .. code:: ipython3
