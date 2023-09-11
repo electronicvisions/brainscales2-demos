@@ -5,6 +5,7 @@ from __future__ import annotations
 from typing import List, Sequence
 from dataclasses import dataclass
 
+import ipywidgets as widget
 import numpy as np
 import quantities as pq
 import matplotlib.pyplot as plt
@@ -13,8 +14,7 @@ from matplotlib.collections import PathCollection
 from matplotlib.axes import Axes
 
 
-def plot_membrane_traces(
-        membrane_traces: List, compartment_chain: CompartmentChain) -> None:
+def plot_membrane_traces(membrane_traces: List, compartment_chain) -> None:
     """
     Display recorded membrane traces.
 
@@ -26,6 +26,8 @@ def plot_membrane_traces(
 
     :param membrane_traces: List of recorded membrane traces of the different
         compartments.
+    :param compartment_chain: Compartment chain class to obtain spike times
+        as well as the chain length from.
     """
     fig, axes = plt.subplots(2, compartment_chain.length, sharex=True,
                              sharey='row', figsize=(10, 4))
@@ -116,8 +118,7 @@ def line_plot(axes: Axes, x_values: Sequence, y_values: Sequence, *,
 
 def visualize_experiment(
         popt: np.ndarray, pcov: np.ndarray, amplitudes: np.ndarray,
-        compartment_chain: CompartmentChain, old_data: List[PlotArchive]
-) -> None:
+        compartment_chain, old_data: List[PlotArchive]) -> None:
     """
     Visualize the attenuation experiment.
 
@@ -220,7 +221,7 @@ def plot_fitness_population(
     axes.plot([], [], color='black', label="mean population")
     axes.plot([], [], color='blue', label="best individual")
     axes.axhline(std_target, ls='--', color="black",
-               label="trial-to-trial boundary")
+                 label="trial-to-trial boundary")
     axes.legend()
     axes.set_xlabel("generation")
     axes.set_ylabel(r"fitness (deviation from target) $\hat{{\lambda}}$")
@@ -262,11 +263,11 @@ def update_figure(population: Sequence, fig: plt.Figure,
     # min fitness
     fig.axes[1].get_lines()[-2].set_data(
         range(len(fitness)), np.min(np.asarray(arr_fitness), axis=0))
-    display(fig)
+    display(fig)  # pylint: disable=undefined-variable
 
 
 def visualization(population: Sequence, fig: plt.Figure,
-                 scat: PathCollection, output: widget.Output) -> str:
+                  scat: PathCollection, output: widget.Output) -> str:
     """
     Clears the previous output and updates the figure.
 

@@ -18,9 +18,6 @@
 # import sys
 # sys.path.insert(0, os.path.abspath('.'))
 
-import sys
-import os
-import nbformat
 import datetime
 now = datetime.datetime.now()
 
@@ -53,7 +50,8 @@ master_doc = 'index'
 
 # General information about the project.
 project = 'BrainScaleS-2 Demos & Examples'
-copyright = '2022, Electronic Vision(s), Kirchhoff-Institute for Physics, Heidelberg University'
+copyright = '2022, Electronic Vision(s), Kirchhoff-Institute for Physics, ' \
+            'Heidelberg University'  # pylint: disable=redefined-builtin
 author = 'Electronic Vision(s) Group'
 
 # The version info for the project you're documenting, acts as replacement for
@@ -124,9 +122,7 @@ html_sidebars = {
 
 # These paths are either relative to html_static_path
 # or fully qualified paths (eg. https://...)
-html_css_files = [
-            'css/visions.css',
-            ]
+html_css_files = ['css/visions.css']
 
 # -- Options for HTMLHelp output ------------------------------------------
 
@@ -211,11 +207,7 @@ jupyter_kernels = {
 }
 
 # Configure Jupyter headers
-jupyter_headers = {
-    "python3": [
-        # nbformat.v4.new_code_cell("%autosave 0")      #@mmcky please make this an option
-    ],
-}
+jupyter_headers = {"python3": []}
 
 # Allow ipython as a language synonym for blocks to be ipython highlighted
 jupyter_lang_synonyms = ["ipython", "ipython3"]
@@ -224,4 +216,4 @@ jupyter_lang_synonyms = ["ipython", "ipython3"]
 jupyter_drop_tests = True
 
 # Drop solution code blocks
-jupyter_drop_solutions=True
+jupyter_drop_solutions = True

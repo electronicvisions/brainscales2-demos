@@ -1,3 +1,4 @@
+# pylint: skip-file
 import matplotlib.pyplot as plt
 import numpy as np
 import torch
@@ -9,9 +10,12 @@ COLORS = ["#6392EB", "#D97C75", "#65AD68"]
 def plot_data(example_point, data: torch.Tensor, target: torch.Tensor):
     fig = plt.figure(figsize=(6, 6))
     ax = fig.gca()
-    ax.scatter(data[target==0, 0], data[target==0, 1], color=COLORS[0], label="yin")
-    ax.scatter(data[target==1, 0], data[target==1, 1], color=COLORS[1], label="yang")
-    ax.scatter(data[target==2, 0], data[target==2, 1], color=COLORS[2], label="dot")
+    ax.scatter(data[target == 0, 0], data[target == 0, 1], color=COLORS[0],
+               label="yin")
+    ax.scatter(data[target == 1, 0], data[target == 1, 1], color=COLORS[1],
+               label="yang")
+    ax.scatter(data[target == 2, 0], data[target == 2, 1], color=COLORS[2],
+               label="dot")
     ax.scatter(*example_point[:2], marker="D", color="black", label="example")
     ax.set_xlabel(r"x")
     ax.set_ylabel(r"y")
@@ -33,11 +37,11 @@ def plot_input_encoding(spikes, t_early, t_late, t_bias, t_sim, dt):
     ax.set_xlim(0, t_sim)
     ax.set_yticks(
         [0, 1, 2, 3, 4],
-        ["$t^i_0$", "$t^i_1$", "$t^i_2$", "$t^i_3$", "$t^\mathrm{bias}_4$"])
+        ["$t^i_0$", "$t^i_1$", "$t^i_2$", "$t^i_3$", r"$t^\mathrm{bias}_4$"])
     ax.set_xticks(
         [0, t_early, t_late, t_bias, t_sim],
-        [0, "$t_\mathrm{early}$", f"$t_\mathrm{{late}} = {{{t_late}}}$",
-         f"$t_\mathrm{{bias}} = {{{t_bias}}}$", "$t_\mathrm{sim}$"])
+        [0, r"$t_\mathrm{early}$", rf"$t_\mathrm{{late}} = {{{t_late}}}$",
+         rf"$t_\mathrm{{bias}} = {{{t_bias}}}$", r"$t_\mathrm{sim}$"])
 
 
 def plot_training(n_hidden, t_sim, dt):
@@ -62,7 +66,7 @@ def plot_training(n_hidden, t_sim, dt):
         "rates_test": []}
 
     fig = plt.figure(constrained_layout=True, figsize=(7, 12))
-    subfigs = fig.subfigures(nrows=3, height_ratios = [8, 2, 2])
+    subfigs = fig.subfigures(nrows=3, height_ratios=[8, 2, 2])
     axs = subfigs[0].subplots(nrows=3)
 
     # Loss
@@ -104,7 +108,8 @@ def plot_training(n_hidden, t_sim, dt):
 
     def update():
         if len(all_data["losses"]):
-            epochs_train = 1. / all_data["n_batches"] * np.arange(0, len(all_data["losses"]))
+            epochs_train = 1. / all_data["n_batches"] * \
+                np.arange(0, len(all_data["losses"]))
             loss_line.set_data(epochs_train, all_data["losses"])
             accs_line.set_data(epochs_train, all_data["accs"])
             rates_line.set_data(epochs_train, all_data["rates"])
@@ -115,7 +120,8 @@ def plot_training(n_hidden, t_sim, dt):
 
         for i in range(3):
             alphas = all_data["scores"][:, i] / all_data["scores"].sum(1)
-            alphas[all_data["scores"].sum(1) <= 0.] = 1. if i == 0 else 0. # PyTorch does the same
+            # PyTorch does the same
+            alphas[all_data["scores"].sum(1) <= 0.] = 1. if i == 0 else 0.
             axs_s[i].clear()
             axs_s[i].scatter(
                 all_data["data"][:, 0], all_data["data"][:, 1], linewidths=0,
@@ -125,14 +131,14 @@ def plot_training(n_hidden, t_sim, dt):
 
         # example
         sc1.set_offsets(
-            np.c_[torch.nonzero(all_data["spikes_in"][:, 0])[:, 0].numpy()*dt,
-            torch.nonzero(all_data["spikes_in"][:, 0])[:, 1].numpy()])
+            np.c_[torch.nonzero(all_data["spikes_in"][:, 0])[:, 0].numpy() * dt,
+                  torch.nonzero(all_data["spikes_in"][:, 0])[:, 1].numpy()])
         sc2.set_offsets(
-            np.c_[torch.nonzero(all_data["spikes_h"][:, 0])[:, 0].numpy()*dt,
-            torch.nonzero(all_data["spikes_h"][:, 0])[:, 1].numpy()])
+            np.c_[torch.nonzero(all_data["spikes_h"][:, 0])[:, 0].numpy() * dt,
+                  torch.nonzero(all_data["spikes_h"][:, 0])[:, 1].numpy()])
         for i, line in enumerate(example_lines):
             line.set_data(
-                np.arange(all_data["trace_out"][:, 0].shape[0])*dt,
+                np.arange(all_data["trace_out"][:, 0].shape[0]) * dt,
                 all_data["trace_out"][:, 0, i])
 
         for i in range(3):

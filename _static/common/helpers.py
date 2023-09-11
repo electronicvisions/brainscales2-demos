@@ -7,14 +7,17 @@ import shutil
 import hashlib
 import pandas as pd
 
-from _static.common.collab_helpers import in_ebrains_collaboratory, check_kernel
+from _static.common.collab_helpers import in_ebrains_collaboratory, \
+    check_kernel
 
 if in_ebrains_collaboratory():
     # check for EBRAINS kernel version prior to pynn_brainscales import
     check_kernel()
 
+# pylint: disable=wrong-import-position
 from dlens_vx_v3 import hxcomm
 import pynn_brainscales.brainscales2 as pynn
+# pylint: enable=wrong-import-position
 
 logger = pynn.logger.get("demo_helpers")
 pynn.logger.set_loglevel(logger, pynn.logger.LogLevel.INFO)
@@ -29,14 +32,14 @@ def setup_hardware_client():
                 'quiggeldy_setups_experimental.csv'
     quiggeldy_setups = pd.read_csv(setup_url, dtype=str)
 
-    os.environ['QUIGGELDY_ENABLED']='1'
+    os.environ['QUIGGELDY_ENABLED'] = '1'
 
     username = os.environ.get('JUPYTERHUB_USER')
     assert username is not None
     os.environ['QUIGGELDY_USER_NO_MUNGE'] = username
 
     index = int(hashlib.sha256(username.encode()).hexdigest(), 16) \
-        %  len(quiggeldy_setups)
+        % len(quiggeldy_setups)
     my_setup = quiggeldy_setups.iloc[index]
     logger.INFO(f"Using setup {my_setup['Identifier']}")
     os.environ['QUIGGELDY_IP'] = my_setup['Host']
@@ -57,18 +60,19 @@ def get_nightly_calibration(filename='spiking_cocolist.pbin'):
             identifier = connection.get_unique_identifier()
 
         # download calibration file
-        folder =  "ebrains-experimental"
+        folder = "ebrains-experimental"
         download_url = "https://openproject.bioai.eu/data_calibration/" \
                        f"hicann-dls-sr-hx/{identifier}/stable/{folder}" \
                        f"/{filename}"
-        contents = urllib.request.urlopen(download_url).read()
+        with urllib.request.urlopen(download_url) as response:
+            contents = response.read()
 
         path_to_calib = filename
-        with open(path_to_calib, 'wb') as f:
-            f.write(contents)
+        with open(path_to_calib, 'wb') as f_handle:
+            f_handle.write(contents)
     else:
         calib_path = pynn.helper.nightly_calib_path().parent
-        path_to_calib =  calib_path.joinpath(filename)
+        path_to_calib = calib_path.joinpath(filename)
 
     chip = pynn.helper.chip_from_file(path_to_calib)
 
@@ -98,7 +102,7 @@ def save_nightly_calibration(filename: str = 'spiking_cocolist.pbin',
 
     if in_ebrains_collaboratory():
         with hxcomm.ManagedConnection() as connection:
-                identifier = connection.get_unique_identifier()
+            identifier = connection.get_unique_identifier()
 
         download_url = \
             "https://openproject.bioai.eu/data_calibration/" \
