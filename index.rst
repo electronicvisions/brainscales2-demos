@@ -2,7 +2,7 @@ Welcome to the BrainScaleS-2 Demos & Examples!
 =========================================================
 
 .. toctree::
-   :maxdepth: 2
+   :maxdepth: 1
    :caption: Demos and Examples
 
    tutorial
