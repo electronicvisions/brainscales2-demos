@@ -1,6 +1,19 @@
 Wie verarbeitet unser Gehirn Informationen?
 ===========================================
 
+.. toctree::
+   :maxdepth: 1
+   :hidden:
+
+   gs_01_neuromorphic_hardware
+   gs_02_pynn_introduction
+   gs_03_single_neuron
+   gs_04-1_multiple_neurons_feuerkette
+   gs_04-2_multiple_neurons_sudoku
+   gs_05_machine_learning
+   gs_06_logik_operationen
+
+
 Was seht ihr auf diesem Bild?
 
 .. image:: _static/girlsday/girlsday_stadtmusikanten_gastfreund.jpg
