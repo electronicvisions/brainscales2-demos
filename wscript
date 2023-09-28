@@ -40,6 +40,7 @@ def build(bld):
         use="pynn_brainscales2 dlens_vx_v3",
         pylint_config=os.path.join(get_toplevel_path(), "code-format", "pylintrc"),
         pycodestyle_config=os.path.join(get_toplevel_path(), "code-format", "pycodestyle"),
+        test_timeout=60
     )
 
     # Build jupyter

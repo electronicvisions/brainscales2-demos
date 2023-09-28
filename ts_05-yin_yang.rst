@@ -451,8 +451,7 @@ use the encoder module ``CoordinatesToSpikes``.
         t_early=T_EARLY,
         t_late=T_LATE,
         dt=DT,
-        t_bias=T_BIAS,
-        device=device)
+        t_bias=T_BIAS)
     encoder
 
 .. code:: ipython3
@@ -462,7 +461,7 @@ use the encoder module ``CoordinatesToSpikes``.
 
 .. code:: ipython3
 
-    plot_input_encoding(spikes, T_EARLY, T_LATE, T_BIAS, T_SIM, DT)
+    plot_input_encoding(spikes.cpu(), T_EARLY, T_LATE, T_BIAS, T_SIM, DT)
 
 As ``decoder`` we use the max-over-time function, which returns the
 highest membrane value along the time for each output neuron in the LI
@@ -979,8 +978,7 @@ Training with EventProp
         t_early=T_EARLY,
         t_late=T_LATE,
         dt=DT,
-        t_bias=T_BIAS,
-        device=device)
+        t_bias=T_BIAS)
     encoder
 
 .. code:: ipython3
