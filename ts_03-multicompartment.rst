@@ -17,7 +17,6 @@ This can be useful to increase the fan-in of a single compartment as it is now c
 
 In addition to these "membrane connections" each neuron circuit can also connect either directly (:math:`S_{ms}`) or via a conductance :math:`R_{ms}` to a "shared line".
 This offers the possibility to connect several compartments via conductances and to form various multi-compartmental neuron models.
-multi
 We will demonstrate the implementation of a multi-compartmental model by the example of a compartment chain and will investigate how excitatory postsynaptic potentials propagate along the chain.
 The following figure displays a sketch of a chain with four compartments in the top part; in the bottom the hardware implementation is illustrated.
 
