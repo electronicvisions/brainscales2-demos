@@ -125,7 +125,7 @@ We now define an SNNs which we want to train to classify the class of a
 given sample. For that we use an SNN with one hidden leaky-integrate and
 fire (LIF) layer projecting its spike events onto one leaky-integrator
 (LI) readout layer, as in [3]. Each neuron in the output layer
-corresponds to one of the three classes:
+corresponds to one of the three classes: ying, yang and dot.
 
 .. code:: ipython3
 
@@ -714,7 +714,7 @@ as constraints via Lagrange multipliers :math:`\lambda_{V}` and :math:`\lambda_{
 referring to the equation of the respective state variable. From this, an adjoint
 system of differential equations for the lagrange multipliers can be found and
 solved in reverse time. They also undergo jumps at the spike times of neurons
-found by solving (or in our case emulating) the forward dynamics. Using he
+found by solving (or in our case emulating) the forward dynamics. Using the
 notation :math:`' = - \frac{\mathrm{d}}{\mathrm{d} t}`, the adjoint equations are
 
 .. math::
