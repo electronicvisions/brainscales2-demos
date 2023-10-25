@@ -41,9 +41,13 @@ def setup_hardware_client():
     index = int(hashlib.sha256(username.encode()).hexdigest(), 16) \
         % len(quiggeldy_setups)
     my_setup = quiggeldy_setups.iloc[index]
-    logger.INFO(f"Using setup {my_setup['Identifier']}")
     os.environ['QUIGGELDY_IP'] = my_setup['Host']
     os.environ['QUIGGELDY_PORT'] = my_setup['Port']
+
+    with hxcomm.ManagedConnection() as connection:
+        identifier = connection.get_unique_identifier()
+
+    logger.INFO(f'Connection to {identifier} established')
 
 
 def get_nightly_calibration(filename='spiking_cocolist.pbin'):
