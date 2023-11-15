@@ -18,6 +18,11 @@ For inspiration, please refer to the following list for examples of previous sci
 * `Spiking neuromorphic chip learns entangled quantum states <https://arxiv.org/abs/2008.01039>`_
 * `Structural plasticity on an accelerated analog neuromorphic hardware system <https://www.sciencedirect.com/science/article/pii/S0893608020303555>`_
 * `Emulating dendritic computing paradigms on analog neuromorphic hardware <https://www.sciencedirect.com/science/article/pii/S0306452221004218>`_
+* `The BrainScaleS-2 Accelerated Neuromorphic System With Hybrid Plasticity <https://www.frontiersin.org/articles/10.3389/fnins.2022.795876/full>`_
+* `hxtorch.snn: Machine-learning-inspired Spiking Neural Network Modeling on BrainScaleS-2 <https://dl.acm.org/doi/abs/10.1145/3584954.3584993>`_
+* `An accurate and flexible analog emulation of AdEx neuron dynamics in silicon <https://arxiv.org/pdf/2209.09280.pdf>`_
+* `Spiking Neural Network Nonlinear Demapping on Neuromorphic Hardware for IM/DD Optical Communication <https://ieeexplore.ieee.org/abstract/document/10059327>`_
+* `Simulation-based inference for model parameterization on analog neuromorphic hardware <https://iopscience.iop.org/article/10.1088/2634-4386/ad046d>`_
 
 
 In this session, we will cover the following topics:
