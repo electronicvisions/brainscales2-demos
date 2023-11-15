@@ -48,9 +48,9 @@ In this part we will explore some of the spiking capabilities of the
 BrainScaleS-2 neuromorphic accelerator using our implementation of the
 pyNN interface.
 
-There are 512 neuron compartments emulating the leaky integrate and fire
-model and 131,072 STP/STDP synapses in one HICANN-X chip, but we will stick
-to a single neuron for now.
+There are 512 neuron circuits emulating the adaptive exponential
+integrate-and-fire model model and 131,072 STP/STDP synapses in one
+HICANN-X chip, but we will stick to a single neuron for now.
 
 A silent neuron
 ---------------
