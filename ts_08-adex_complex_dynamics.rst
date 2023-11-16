@@ -208,7 +208,7 @@ subthreshold adaptation strength.
         pop[1:2].record(["v"])
 
         # dummy run to initiate placement and routing
-        pynn.run(0)
+        pynn.run(None)
 
         stimulus_program = construct_stimulus(target_neuron)
 

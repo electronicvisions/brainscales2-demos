@@ -159,10 +159,11 @@ We define some functions to solve and display the sudoku.
         for row, row_populations in enumerate(pops_collector):
             for col, field_populations in enumerate(row_populations):
                 num_spikes = [
-                    len(num_population.get_data("spikes").segments[0].spiketrains[0])
+                    len(num_population.get_data("spikes").segments[-1].spiketrains[0])
                     for num_population in field_populations
                 ]
                 grid[row, col] = np.argmax(num_spikes) + 1
+        pynn.reset()
         return grid
 
     # functions to display the sudoku:
