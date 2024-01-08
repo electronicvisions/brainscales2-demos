@@ -33,8 +33,12 @@ now = datetime.datetime.now()
 extensions = [
     'sphinxcontrib.jupyter',
     'sphinx.ext.mathjax',
+    'sphinx.ext.todo',
     'IPython.sphinxext.ipython_console_highlighting',
 ]
+
+todo_include_todos = True
+
 
 # Add any paths that contain templates here, relative to this directory.
 templates_path = ['_templates']
@@ -132,6 +136,7 @@ htmlhelp_basename = 'demosdoc'
 
 # -- Options for LaTeX output ---------------------------------------------
 
+latex_engine = 'xelatex'
 latex_elements = {
     # The paper size ('letterpaper' or 'a4paper').
     #
@@ -154,8 +159,8 @@ latex_elements = {
 # (source start file, target name, title,
 #  author, documentclass [howto, manual, or own class]).
 latex_documents = [
-    (master_doc, 'brainscales2-demos.tex', 'BrainScaleS-2 Demos',
-     'Electronic Vision(s) Group', 'manual'),
+    ('fortgeschrittenen_praktikum', 'fortgeschrittenen_praktikum.tex',
+     'Fortgeschrittenenpraktikum', 'Electronic Vision(s) Group', 'manual'),
 ]
 
 

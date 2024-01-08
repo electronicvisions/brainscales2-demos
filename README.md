@@ -13,4 +13,4 @@ make html
 make jupyter
 ```
 
-To look at the result files: `jupyter-notebook _build/jupyter`.
+To look at the result files: `jupyter-notebook _build/jupyter/jupyter`.

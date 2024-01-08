@@ -8,7 +8,10 @@ try {
 	withCcache() {
 		wafDefaultPipeline(
 			projects           : ["${PROJECT_NAME}"],
-			container          : [app: "dls"],
+			container          : [
+				app: "dls",
+				singularityArgs: "--overlay /containers/overlays/2021-09-27_bullseye_texlive.img"
+			],
 			moduleOptions      : [modules: ["ppu-toolchain"]],
 			testSlurmResource  : getHxTestResource(3),
 			preTestHook        : { configureHxCubeBitfile() },
@@ -23,7 +26,7 @@ try {
 		runOnSlave(label: "frontend") {
 			archiveArtifacts("build/${PROJECT_NAME}/**/*")
 			publishHTML([allowMissing: false,
-			             reportDir   : "build/${PROJECT_NAME}/html",
+			             reportDir   : "build/${PROJECT_NAME}/html/html",
 			             reportFiles : "index.html",
 			             reportName  : "HTML Output"])
 		}
@@ -31,7 +34,7 @@ try {
 
 	conditionalStage(name: "Deployment to GitHub Pages", skip: !deploy) {
 		runOnSlave(label: "frontend") {
-			dir("build/much-demos-such-wow/jupyter") {
+			dir("build/much-demos-such-wow/jupyter/jupyter") {
 				jesh("git init")
 				jesh("for fn in *.ipynb; do patch \"\$fn\" \"${env.WORKSPACE}/much-demos-such-wow/ebrains_kernel.patch\"; done")
 				jesh("git add *.ipynb _static")

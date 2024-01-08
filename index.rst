@@ -5,5 +5,5 @@ Welcome to the BrainScaleS-2 Demos & Examples!
    :maxdepth: 1
 
    Demos and Examples <tutorial>
-   Girlsday <girlsday>
-   Advanced Lab Course <fortgeschrittenen_praktikum>
+   girlsday
+   fortgeschrittenen_praktikum

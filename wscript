@@ -16,6 +16,10 @@ def options(opt):
     opt.load("shelltest")
     opt.load('pylint')
     opt.load('pycodestyle')
+    hopts = opt.add_option_group('demos options')
+    hopts.add_withoption('solution', default=False,
+                         help = 'Build sphinx with "Solution" tag')
+    hopts.add_withoption('latex', default=True, help = 'Build PDF.')
 
 
 def configure(conf):
@@ -31,6 +35,7 @@ def build(bld):
     srcdir = bld.path.find_dir('.').get_src()
     blddir = bld.path.find_dir('.').get_bld()
     testdir = blddir.find_or_declare('test')
+
     sphinxbuild = "python -m sphinx"
 
     # Code style
@@ -42,20 +47,32 @@ def build(bld):
         pycodestyle_config=os.path.join(get_toplevel_path(), "code-format", "pycodestyle"),
         test_timeout=60
     )
+    # Add Tags to sphinx build (e.g. for solution)
+    tags = ""
+    if bld.options.with_solution:
+        tags += "-t Solution"
 
     # Build jupyter
     bld(name='doc-much-demos-such-wow-jupyter',
-        rule=f'{sphinxbuild} -M jupyter {srcdir} {blddir}',
+        rule=f'{sphinxbuild} -M jupyter {srcdir} {blddir}/jupyter -E {tags}',
         always=True)
 
     bld(name='doc-much-demos-such-wow-jupyter-test',
-        rule=f'{sphinxbuild} -M jupyter {srcdir} {testdir} -D jupyter_drop_tests=0 -t exclude_nmpi',
+        rule=(f'{sphinxbuild} -M jupyter {srcdir} {testdir} '
+              + '-D jupyter_drop_tests=0 -t exclude_nmpi -t Solution'),
         always=True)
 
     # Build HTML
     bld(name='doc-much-demos-such-wow-html',
-        rule=f'{sphinxbuild} -M html {srcdir} {blddir} -W',
+        rule=f'{sphinxbuild} -M html {srcdir} {blddir}/html -E {tags} -W',
         always=True)
+
+    # Build PDF
+    if bld.options.with_latex:
+        bld(name='doc-much-demos-such-wow-pdf',
+            rule=f'{sphinxbuild} -M latexpdf {srcdir} {blddir}/latex -E {tags}',
+            always=False)
+
 
     # HW test
     bld(

@@ -12,40 +12,37 @@ stimulated by a group of five neurons.
 
 .. image:: _static/common/pynn_simple_network.png
     :width: 400
+    :align: center
 
-.. code:: ipython3
+.. include:: common_note_helpers.rst
 
-    # import the module PyNN
-    import pynn_brainscales.brainscales2 as pynn
+.. only:: jupyter
+   
+    .. code:: ipython3
+    
+        # import the module PyNN
+        import pynn_brainscales.brainscales2 as pynn
+    
+        # set the environment
+        from _static.common.helpers import setup_hardware_client, get_nightly_calibration
+    
+        setup_hardware_client()
+        calib = get_nightly_calibration()
+        pynn.setup(initial_config=calib)
 
-    # set the environment
-    from _static.common.helpers import setup_hardware_client, get_nightly_calibration
-
-    setup_hardware_client()
-    calib = get_nightly_calibration()
-    pynn.setup(initial_config=calib)
-
-Groups of neurons are called `populations
-<http://neuralensemble.org/docs/PyNN/reference/populations.html#populations>`_.
-Such a population is
-instantiated by setting the number of neurons it should contain, the
-cell type of these neurons and the values of the cell parameters. The
-`cell type
-<http://neuralensemble.org/docs/PyNN/reference/neuronmodels.html>`_
-of our artificial neurons is called ``HXNeuron``. Its
-parameters are not expressed in the same units as for biological
-neurons, but in hardware units. These two systems of units are not
-directly related. Also within the hardware units there is no general
-translation to physical voltages and currents. These values
-can have different meanings for the different parameters on a chip, for
-example, a threshold voltage of 300 may be higher than a leakage voltage
-of 400. But also compared to other chips that are designed completely
-identical the actual measured values can vary slightly.
+Groups of neurons are called `populations <http://neuralensemble.org/docs/PyNN/reference/populations.html#populations>`_.
+Such a population is instantiated by setting the number of neurons it should contain, the cell type of these neurons and the values of the cell parameters.
+The `cell type <http://neuralensemble.org/docs/PyNN/reference/neuronmodels.html>`_ of our artificial neurons is called ``HXNeuron``.
+Its parameters are not expressed in the same units as for biological neurons, but in hardware units.
+These two systems of units are not directly related.
+Also within the hardware units there is no general translation to physical voltages and currents.
+Furthermore, these values can have different meanings for the different parameters on a chip, for example, a threshold voltage of 300 may be higher than a leakage voltage of 400.
+Especially in the comparison between chips, even though they are designed completely identical, the actual measured values can vary slightly.
 
 .. code:: ipython3
 
     # define the neuron parameters of the population
-    numb_neurons = 1
+    n_neurons = 1
     neuron_parameters = {                          # range
         "leak_v_leak": 400,                        # (300-1000)
         "leak_i_bias": 200,                        # (0-1022)
@@ -60,12 +57,11 @@ identical the actual measured values can vary slightly.
     neuron_type = pynn.cells.HXNeuron(**neuron_parameters)
 
     # save the configured neuron in the population 'pop'
-    pop = pynn.Population(numb_neurons, neuron_type)
+    pop = pynn.Population(n_neurons, neuron_type)
 
-The spikes of all neurons that have been stored in populations can be
-recorded. Furthermore, it is also possible to record the membrane
-potential of a single neuron. Consequently, for this purpose the
-population must have a size of one.
+The spikes of all neurons that have been stored in populations can be recorded.
+Furthermore, it is also possible to record the membrane potential of a single neuron.
+Consequently, for this purpose the population must have a size of one.
 
 .. warning::
 
@@ -80,20 +76,10 @@ population must have a size of one.
     # population 'pop'
     pop.record(["spikes", "v"])
 
-Different populations can be connected by so-called `projections
-<http://neuralensemble.org/docs/PyNN/reference/projections.html>`_.
-For this, firstly it must be specified which is the pre-synaptic (source)
-and which the post-synaptic (receiver) population. Furthermore, the way
-in which the neurons within the populations are exactly connected to
-each other is specified, e.g. all neurons are connected or only a
-certain percentage of the neurons are connected to each other. In
-addition, the synaptic weight which describes the strength of the
-connection and the `synapse type
-<http://neuralensemble.org/docs/PyNN/reference/plasticitymodels.html>`_
-are specified. This can either be
-excitatory, meaning that the membrane voltage increases in case of
-stimulation, or it is inhibitory, which causes the membrane voltage to
-decrease.
+Different populations can be connected by so-called `projections <http://neuralensemble.org/docs/PyNN/reference/projections.html>`_.
+For this, firstly it must be specified which is the pre-synaptic (source) and which the post-synaptic (receiver) population. Furthermore, the way in which the neurons within the populations are exactly connected to each other is specified, e.g., all neurons are connected, or only a certain percentage of the neurons are connected to each other.
+In addition, the synaptic weight which describes the strength of the connection and the `synapse type <http://neuralensemble.org/docs/PyNN/reference/plasticitymodels.html>`_ are specified.
+This can either be excitatory, meaning that the membrane voltage increases in case of stimulation, or it is inhibitory, which causes the membrane voltage to decrease.
 
 .. code:: ipython3
 

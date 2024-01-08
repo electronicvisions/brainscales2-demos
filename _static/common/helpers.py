@@ -24,25 +24,36 @@ pynn.logger.set_loglevel(logger, pynn.logger.LogLevel.INFO)
 
 
 def setup_hardware_client():
-    if not in_ebrains_collaboratory():
+    if in_ebrains_collaboratory():
+        setup_url = 'https://brainscales-r.kip.uni-heidelberg.de:7443/nmpi/' \
+                    'quiggeldy_setups_experimental.csv'
+        quiggeldy_setups = pd.read_csv(setup_url, dtype=str)
+
+        os.environ['QUIGGELDY_ENABLED'] = '1'
+
+        username = os.environ.get('JUPYTERHUB_USER')
+        assert username is not None
+        os.environ['QUIGGELDY_USER_NO_MUNGE'] = username
+
+        index = int(hashlib.sha256(username.encode()).hexdigest(), 16) \
+            % len(quiggeldy_setups)
+        my_setup = quiggeldy_setups.iloc[index]
+        os.environ['QUIGGELDY_IP'] = my_setup['Host']
+        os.environ['QUIGGELDY_PORT'] = my_setup['Port']
+    elif os.environ.get("QUIGGELDY_IP") is not None and\
+            os.environ.get("QUIGGELDY_PORT") is not None:
+        # quiggeldy port and IP manually set
+        os.environ['QUIGGELDY_ENABLED'] = '1'
+        os.environ['QUIGGELDY_USER_NO_MUNGE'] = os.environ.get("USER")
+    elif os.environ.get("SLURM_FPGA_IPS") is not None:
+        # on cluster with Slurm-managed resources
         return
-
-    # setup quiggeldy enviroment
-    setup_url = 'https://brainscales-r.kip.uni-heidelberg.de:7443/nmpi/' \
-                'quiggeldy_setups_experimental.csv'
-    quiggeldy_setups = pd.read_csv(setup_url, dtype=str)
-
-    os.environ['QUIGGELDY_ENABLED'] = '1'
-
-    username = os.environ.get('JUPYTERHUB_USER')
-    assert username is not None
-    os.environ['QUIGGELDY_USER_NO_MUNGE'] = username
-
-    index = int(hashlib.sha256(username.encode()).hexdigest(), 16) \
-        % len(quiggeldy_setups)
-    my_setup = quiggeldy_setups.iloc[index]
-    os.environ['QUIGGELDY_IP'] = my_setup['Host']
-    os.environ['QUIGGELDY_PORT'] = my_setup['Port']
+    else:
+        # not in collab, on cluster, or with manually configured
+        # quiggeldy connection
+        raise Exception("No proper hardware connection is possible check the "
+                        "setup (detected to not be in ebrains, have quiggeldy "
+                        "available or slurm in reach)")
 
     with hxcomm.ManagedConnection() as connection:
         identifier = connection.get_unique_identifier()

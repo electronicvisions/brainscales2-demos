@@ -1,1 +1,7 @@
 _build/
+build/
+lib/
+include/
+share/
+bin/
+.lock-waf_linux_build
