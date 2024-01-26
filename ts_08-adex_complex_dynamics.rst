@@ -111,45 +111,17 @@ subthreshold adaptation strength.
 
 .. code:: ipython3
 
-    import pyhaldls_vx_v3 as haldls
     import pyhalco_hicann_dls_vx_v3 as halco
-    import pystadls_vx_v3 as stadls
-    import pyfisch_vx_v3 as fisch
-    import pylola_vx_v3 as lola
 
-    def construct_stimulus(target_neuron):
-        neuron_config = lola.AtomicNeuron(
-            pynn.simulator.state.grenade_chip_config.neuron_block.atomic_neurons[halco.AtomicNeuronOnDLS(halco.EnumRanged_512_(target_neuron))]
-        )
-
-        target_neuron_coord = halco.AtomicNeuronOnDLS(halco.EnumRanged_512_(target_neuron))
-        target_neuron_config_coord = target_neuron_coord.toNeuronConfigOnDLS()
-
+    def adjust_calibration():
         for i in halco.iter_all(halco.CommonNeuronBackendConfigOnDLS):
             pynn.simulator.state.grenade_chip_config.neuron_block.backends[i].enable_clocks = True
             pynn.simulator.state.grenade_chip_config.neuron_block.backends[i].clock_scale_fast = 3
             pynn.simulator.state.grenade_chip_config.neuron_block.backends[i].clock_scale_slow = 3
-            pynn.simulator.state.grenade_chip_config.neuron_block.backends[i].clock_scale_adaptation_pulse = 7
-            pynn.simulator.state.grenade_chip_config.neuron_block.backends[i].clock_scale_post_pulse = 5
-
-        neuron_config.readout.enable_buffered_access = True
-        neuron_config.readout.enable_amplifier = True
-        neuron_config.readout.source = lola.AtomicNeuron.Readout.Source.adaptation
-
-        stimulus_builder = stadls.PlaybackProgramBuilder()
-
-        neuron_config.constant_current.enable = False
-        stimulus_builder.write(target_neuron_config_coord, neuron_config.asNeuronConfig())
-
-        stimulus_builder.block_until(halco.TimerOnDLS(), haldls.Timer.Value(int(100 * fisch.fpga_clock_cycles_per_us)))
-        neuron_config.constant_current.enable = True
-        stimulus_builder.write(target_neuron_config_coord, neuron_config.asNeuronConfig())
-
-        stimulus_builder.block_until(halco.TimerOnDLS(), haldls.Timer.Value(int(700 * fisch.fpga_clock_cycles_per_us)))
-        neuron_config.constant_current.enable = False
-        stimulus_builder.write(target_neuron_config_coord, neuron_config.asNeuronConfig())
-
-        return stimulus_builder
+            pynn.simulator.state.grenade_chip_config.neuron_block.backends[i].\
+                clock_scale_adaptation_pulse = 7
+            pynn.simulator.state.grenade_chip_config.neuron_block.backends[i].\
+                clock_scale_post_pulse = 5
 
 .. code:: ipython3
 
@@ -207,15 +179,15 @@ subthreshold adaptation strength.
         pop[0:1].record(["adaptation", "spikes"])
         pop[1:2].record(["v"])
 
-        # dummy run to initiate placement and routing
-        pynn.run(None)
+        adjust_calibration()
 
-        stimulus_program = construct_stimulus(target_neuron)
-
-        pynn.simulator.state.injection_inside_realtime_begin = stimulus_program
-
-        # Execute experiment
-        pynn.run(1)
+        # schedule and execute hardware run
+        pop[0:1].set(constant_current_enable=False)
+        pynn.run(0.1, pynn.RunCommand.APPEND)
+        pop[0:1].set(constant_current_enable=True)
+        pynn.run(0.6, pynn.RunCommand.APPEND)
+        pop[0:1].set(constant_current_enable=False)
+        pynn.run(0.3, pynn.RunCommand.EXECUTE)
 
         plot_membrane_dynamics(pop)
         plt.show()

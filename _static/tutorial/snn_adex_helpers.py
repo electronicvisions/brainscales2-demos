@@ -27,13 +27,20 @@ def plot_membrane_dynamics(pop):
     two-neuron population `pop` comprising one target and one readout neuron.
     """
 
-    w = pop.get_data("adaptation").segments[0].irregularlysampledsignals[0]
-    t_w = w.times
-    w = np.array(w)
+    w_snippets = pop.get_data("adaptation").segments[0].\
+        irregularlysampledsignals
+    t_w = w_snippets[0].times
+    w = np.array(w_snippets[0])
+    for ws in w_snippets[1:]:
+        t_w = np.concatenate((t_w, ws.times))
+        w = np.concatenate((w, np.array(ws)))
 
-    v = pop.get_data("v").segments[0].irregularlysampledsignals[0]
-    t_v = v.times
-    v = np.array(v)
+    v_snippets = pop.get_data("v").segments[0].irregularlysampledsignals
+    t_v = v_snippets[0].times
+    v = np.array(v_snippets[0])
+    for vs in v_snippets[1:]:
+        t_v = np.concatenate((t_v, vs.times))
+        v = np.concatenate((v, np.array(vs)))
 
     spike_times = pop[0:1].get_data().segments[-1].spiketrains[-1]
 
