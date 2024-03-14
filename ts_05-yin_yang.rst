@@ -196,8 +196,9 @@ corresponds to one of the three classes: ying, yang and dot.
 
             if not mock:
                 save_nightly_calibration('spiking2_cocolist.pbin')
-                self.experiment = hxsnn.Experiment(mock=mock, dt=dt,
-                        calib_path='spiking2_cocolist.pbin')
+                self.experiment = hxsnn.Experiment(mock=mock, dt=dt)
+                self.experiment.default_execution_instance.load_calib(
+                    calib_path='spiking2_cocolist.pbin')
             else:
                 self.experiment = hxsnn.Experiment(mock=mock, dt=dt)
 
