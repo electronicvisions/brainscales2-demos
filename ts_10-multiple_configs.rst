@@ -2,7 +2,7 @@ Demonstration of multiple chip-reconfigurations during an experiment
 ====================================================================
 
 This modification of the :doc:`plasticity experiment <ts_02-plasticity_rate_coding>` showcases the
-dynamic reconfiguration of the chip by using the new add() functionality of pynn.brainscales. This
+dynamic reconfiguration of the chip by using the new append functionality of pynn.brainscales. This
 example only changes synaptic weights during the experiment, but any arbitrary changes to the chip
 configuration can be applied this way.
 
@@ -82,23 +82,22 @@ Reconfiguration and Execution
 
 We want to reconfigure our projection every 10ms to represent the weights of the next row of our
 image. In order to do this, we iterate over all rows of our image and set the synapse weights
-accordingly inside the loop followed by the new ``pynn.add()`` call, which adds a new section with
-the current configuration and a duration of ``runtime`` to the experiment. In the last loop
-iteration however we don't want to call ``pynn.add()`` but ``pynn.run()`` to trigger the real
-execution on the hardware in addition to schedule our last snippet of the program. In the performed
-hardware run, all our staged configurations are being executed one after another for the given
-runtime each.
+accordingly inside the loop followed by a call of ``pynn.run()`` with the append command, which
+appends a new snippet with the current configuration and a duration of ``runtime`` to the
+experiment. After we have scheduled our complete experiment, we call ``pynn.run()`` with the
+execute command to trigger the execution of the experiment on hardware. In the performed hardware
+run, all our staged configurations are being executed one after another for the given runtime each.
 
 .. code:: ipython3
 
     for i in range(64):
         projection.set(weight=image[i])
-        if i < 63:
-            # add() will let this configuration run for a duration of "runtime" when executing
-            pynn.add(runtime)
-        else:
-            # run() calls add() a last time and performs hardware run
-            pynn.run(runtime)
+        # Append a snippet of duration 'runtime' with the currently described network configuration
+        # to the experiment
+        pynn.run(runtime, pynn.RunCommand.APPEND)
+
+    # Trigger the execution of a hardware run without scheduling another snippet
+    pynn.run(None, pynn.RunCommand.EXECUTE)
 
 Evaluation
 ----------
