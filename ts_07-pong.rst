@@ -905,6 +905,8 @@ able to observe an onset of the diagonal in the weights.
         with output:
             data.update_plot(plot_data, logical_weights)
 
+        pynn.reset()
+
     pynn.end()
 
 In the plot above, a diagonal matrix should be visible after rougly a
