@@ -224,7 +224,7 @@ erhalten.
         # Das Netzwerk wird emuliert
         pynn.run(runtime)
         # Die Lösung wird ausgelesen
-        spikes = np.array(pop.get_data().segments[-1].spiketrains)
+        spikes = pop.get_data().segments[-1].spiketrains
         pynn.reset()
         spike_counts = np.zeros(len(spikes))
         for idx, train in enumerate(spikes):
