@@ -2,9 +2,6 @@
 Exploring the analog MAC operation
 ==================================
 
-.. note::
-   Currently, this code is not executable on the EBRAINS platform.
-
 This example presents the non-spiking mode of the BrainScaleS-2 ASIC and
 some of its characteristics. The operation of this so-called hagen mode
 is explained in more detail in the matrix multiplication introduction.
