@@ -14,6 +14,10 @@ configuration can be applied this way.
     import pynn_brainscales.brainscales2 as pynn
     from dlens_vx_v3 import hal
 
+    # setup shared connection to hardware
+    from _static.common.helpers import setup_hardware_client
+    setup_hardware_client()
+
 The Experiment
 --------------
 

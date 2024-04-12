@@ -21,6 +21,10 @@ then can be executed as the "inside realtime section", i.e. the main part of the
     import pynn_brainscales.brainscales2 as pynn
     from dlens_vx_v3 import hal, lola, halco, sta
 
+    # setup shared connection to hardware
+    from _static.common.helpers import setup_hardware_client
+    setup_hardware_client()
+
 The Experiment
 --------------
 
