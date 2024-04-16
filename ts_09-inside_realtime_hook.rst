@@ -15,9 +15,11 @@ then can be executed as the "inside realtime section", i.e. the main part of the
 
 .. code:: ipython3
 
+    %matplotlib inline
     from os.path import join
     import numpy as np
     import matplotlib.pyplot as plt
+
     import pynn_brainscales.brainscales2 as pynn
     from dlens_vx_v3 import hal, lola, halco, sta
 
@@ -164,6 +166,7 @@ picture:
 
 And that's our final result:
 
-.. image:: _static/tutorial/inside_realtime_hook.pdf
+.. image:: _static/tutorial/inside_realtime_hook.png
    :width: 50%
    :align: center
+   :class: solution

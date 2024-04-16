@@ -8,6 +8,7 @@ configuration can be applied this way.
 
 .. code:: ipython3
 
+    %matplotlib inline
     from os.path import join
     import numpy as np
     import matplotlib.pyplot as plt
@@ -140,5 +141,6 @@ from the beginning again.
 And that's our final result:
 
 .. image:: _static/tutorial/reconfigurate_synapse_weights.png
-    :width: 50%
-    :align: center
+   :width: 50%
+   :align: center
+   :class: solution
