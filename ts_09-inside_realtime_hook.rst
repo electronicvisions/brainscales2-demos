@@ -164,7 +164,8 @@ picture:
     plt.ylabel("neuron index")
     fig.show()
 
-And that's our final result:
+We see a replicated version of the original image encoded in the time evolution of
+the neurons' firing rates.
 
 .. image:: _static/tutorial/inside_realtime_hook.png
    :width: 50%

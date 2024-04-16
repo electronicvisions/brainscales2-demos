@@ -138,7 +138,8 @@ from the beginning again.
      plt.ylabel("neuron index")
      fig.show()
 
-And that's our final result:
+We see a replicated version of the original image encoded in the time evolution of
+the neurons' firing rates.
 
 .. image:: _static/tutorial/reconfigurate_synapse_weights.png
    :width: 50%
