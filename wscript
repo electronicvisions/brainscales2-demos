@@ -26,7 +26,7 @@ def configure(conf):
 
 
 def build(bld):
-    bld.env.DLSvx_HARDWARE_AVAILABLE = "SLURM_HWDB_YAML" in os.environ
+    bld.env.BBS_HARDWARE_AVAILABLE = "SLURM_HWDB_YAML" in os.environ
 
     srcdir = bld.path.find_dir('.').get_src()
     blddir = bld.path.find_dir('.').get_bld()
@@ -64,7 +64,7 @@ def build(bld):
         use="doc-much-demos-such-wow-jupyter-test pynn_brainscales2 hxtorch",
         test_environ=dict(BLD_DIR=str(testdir)),
         test_timeout=1000,
-        skip_run=not bld.env.DLSvx_HARDWARE_AVAILABLE
+        skip_run=not bld.env.BBS_HARDWARE_AVAILABLE
     )
 
     bld.add_post_fun(summary)
