@@ -209,7 +209,6 @@ richtig erkennen. Das können wir direkt mal ausprobieren:
         def __init__(self, model, numbers, *, 
                      scale: int = 10, line_width: float = 2.5, autostop: bool = True):
             self.down = False
-            self.erase = False
             self.changes_pending = True
             self.running = False
             self.model = model
@@ -224,6 +223,12 @@ richtig erkennen. Das können wir direkt mal ausprobieren:
                 width=scale * 28, height=scale * 28,
                 sync_image_data=True,
                 layout=w.Layout(border='solid gray', margin='10px'))
+
+            # Wir verwenden "gray", da "black" nur die Transparenz auf 0 setzt,
+            # wir aber aktiv die RGB Werte setzen wollen.
+            self.canvas.fill_style = "gray"
+            self.clear()
+
             self.color_chooser = w.RadioButtons(
                 description='Farbe ✏️', options=['schwarz', 'weiß'])
             self.clear_button = w.Button(description='Löschen', button_style='')
@@ -263,8 +268,7 @@ richtig erkennen. Das können wir direkt mal ausprobieren:
                 x = (round(x/self.scale) - self.line_width / 2) * self.scale
                 y = (round(y/self.scale) - self.line_width / 2) * self.scale
                 lw = self.scale * self.line_width
-                func = self.canvas.clear_rect if self.erase else self.canvas.fill_rect
-                func(x, y, lw, lw)
+                self.canvas.fill_rect(x, y, lw, lw)
                 self.changes_pending = True
     
         def draw_number(self, n: int, *_):
@@ -281,21 +285,30 @@ richtig erkennen. Das können wir direkt mal ausprobieren:
             self.down = False
     
         def choose_color(self, color):
-            self.erase = (color == 'weiß')
-    
+            self.canvas.fill_style = 'white' if (color == 'weiß') else "gray"
+
         def clear(self, *args):
-            self.canvas.clear()
+            tmp_color = self.canvas.fill_style
+            self.canvas.fill_style = 'white'
+            self.canvas.fill_rect(0, 0, self.canvas.width, self.canvas.height)
+            self.canvas.fill_style = tmp_color
             self.changes_pending = True
     
         def get_image_data(self):
             try:
                 s = slice(round(self.scale/2), None, self.scale)
-                image_data = self.canvas.get_image_data()[s, s, -1]
+                image_data = self.canvas.get_image_data()[s, s, 0]
+                # Unser Modell erwartet Werte zwischen 0 und 1 wobei
+                # schwarze Pixel ursprünglich mit 1 gekennzeichnet waren.
+                # Da wir grau zum Zeichnen verwendet haben (R=G=B=128) setzen
+                # wir alle Pixel mit einem Wert kleiner gleich 128 auf 1
+                image_data = (image_data <= 128).astype(float)
             except:
                 image_data = self.canvas.create_image_data(
                     self.canvas.width//self.scale, self.canvas.height//self.scale)[..., -1]
-            return image_data / 255
-    
+                image_data = image_data / 255
+            return image_data
+
         def put_image_data(self, image_data):
             # wiederhole die Pixel damit sie auf den Canvas passen
             data = image_data.repeat_interleave(
