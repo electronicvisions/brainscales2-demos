@@ -914,10 +914,10 @@ class PongGame:
         for step_id in range(len(self.inference_steps)):
             self.inference_results[0, step_id] = \
                 synapses_left.plasticity_rule.get_observable_array(
-                    "winner_neuron")[step_id].data[0]
+                    "winner_neuron")[0][step_id].data[0]
             self.inference_results[1, step_id] = \
                 synapses_right.plasticity_rule.get_observable_array(
-                    "winner_neuron")[step_id].data[0]
+                    "winner_neuron")[0][step_id].data[0]
 
         pynn.end()
 

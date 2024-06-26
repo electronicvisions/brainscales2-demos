@@ -877,12 +877,12 @@ able to observe an onset of the diagonal in the weights.
                 # extract rewards and success from recording
                 data_index = row + parameters.n_inputs * run_epoch
                 success[row] = synapses.plasticity_rule.get_observable_array(
-                    "success")[data_index].data[0]
+                    "success")[0][data_index].data[0]
 
                 # The reward was saved as a char array and needs to be
                 # converted back to a float:
                 raw_data = synapses.plasticity_rule.get_observable_array(
-                    "rewards")[data_index].data
+                    "rewards")[0][data_index].data
                 packed_data = struct.pack("4B", *raw_data[:4][::-1])
                 rewards[row] = struct.unpack("f", packed_data)[0]
 
