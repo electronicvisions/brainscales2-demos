@@ -104,6 +104,7 @@ onto the neurons' firing rate.
             #include "grenade/vx/ppu/synapse_array_view_handle.h"
             #include "grenade/vx/ppu/neuron_view_handle.h"
             #include "libnux/vx/dls.h"
+            #include <array>
 
             using namespace grenade::vx::ppu;
             using namespace libnux::vx;
@@ -133,22 +134,17 @@ onto the neurons' firing rate.
                 if (synapses[0].hemisphere != ppu) {{
                     return;
                 }}
-                for (size_t row = 0; row < synapses[0].rows.size; ++row) {{
-                    if (synapses[0].rows.test(row)) {{
-                        // load new vertical line of image
-                        vector_row_t weight_row;
-                        size_t w = 0;
-                        for (size_t column = 0;
-                             column < synapses[0].columns.size; ++column) {{
-                            if (synapses[0].columns.test(column)) {{
-                                weight_row[column] = image[w][current_row];
-                                w++;
-                            }}
-                        }}
-
-                        // alter weights in synapse memory
-                        synapses[0].set_weights(weight_row, row);
+                for (size_t row = 0; row < synapses[0].rows.size(); ++row) {{
+                    // load new vertical line of image
+                    vector_row_t weight_row;
+                    size_t w = 0;
+                    for (auto const column: synapses[0].columns) {{
+                        weight_row[column] = image[w][current_row];
+                        w++;
                     }}
+
+                    // alter weights in synapse memory
+                    synapses[0].set_weights(weight_row, row);
                 }}
                 current_row++;
             }}

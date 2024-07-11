@@ -379,10 +379,8 @@ below the cell.
                     random, VectorIfCondition::lesser, VectorRowFracSat8(0), random);
                 random = vector_if(
                     random - 63, VectorIfCondition::greater, VectorRowFracSat8(63), random);
-                for (size_t row = 0; row < synapses[0].rows.size; ++row) {{
-                    if (synapses[0].rows.test(row)) {{
-                        synapses[0].set_weights(VectorRowMod8(random), row);
-                    }}
+                for (size_t row = 0; row < synapses[0].rows.size(); ++row) {{
+                    synapses[0].set_weights(VectorRowMod8(random), row);
                 }}
 
                 // prepare for next correlation experiment:
@@ -578,44 +576,39 @@ below the cell.
                     * {parameters.get_learning_rate(epoch)};
 
                 // update weights
-                size_t active_row = 0;
-                for (size_t row = 0; row < synapses[0].rows.size; ++row) {{
-                    if (synapses[0].rows.test(row)) {{
-                        VectorRowMod8 weights = synapses[0].get_weights(row);
-                        VectorRowMod8 result;
-                        get_causal_correlation(&result.even.data, &result.odd.data, row);
+                for (size_t row = 0; row < synapses[0].rows.size(); ++row) {{
+                    VectorRowMod8 weights = synapses[0].get_weights(row);
+                    VectorRowMod8 result;
+                    get_causal_correlation(&result.even.data, &result.odd.data, synapses[0].rows[row]);
 
-                        // shift result by 1 bit to stay in signed 8-bit int range
-                        VectorRowFracSat8 result_fracsat =
-                            (result >> 1).convert_contiguous();
-                        VectorRowFracSat8 baselines_fracsat =
-                            (correlation_baselines >> 1).convert_contiguous();
-                        VectorRowFracSat8 correlation_fracsat =
-                            baselines_fracsat - result_fracsat;
+                    // shift result by 1 bit to stay in signed 8-bit int range
+                    VectorRowFracSat8 result_fracsat =
+                        (result >> 1).convert_contiguous();
+                    VectorRowFracSat8 baselines_fracsat =
+                        (correlation_baselines >> 1).convert_contiguous();
+                    VectorRowFracSat8 correlation_fracsat =
+                        baselines_fracsat - result_fracsat;
 
-                        // multiplication of fracsat type scales down by 128 to
-                        // ensure we stay in value range, hence we multiply
-                        // the update_rate by 128
-                        VectorRowFracSat8 weight_update =
-                            correlation_fracsat * static_cast<int8_t>(update_rate * 128);
+                    // multiplication of fracsat type scales down by 128 to
+                    // ensure we stay in value range, hence we multiply
+                    // the update_rate by 128
+                    VectorRowFracSat8 weight_update =
+                        correlation_fracsat * static_cast<int8_t>(update_rate * 128);
 
-                        // truncate weight update, i.e. round symetrically to zero:
-                        // for negative updates, we want to add 1.
-                        weight_update = vector_if(
-                            weight_update, VectorIfCondition::lesser,
-                            weight_update + 1, weight_update);
-                        VectorRowFracSat8 new_weights =
-                            static_cast<VectorRowFracSat8>(weights)
-                            + weight_update;
+                    // truncate weight update, i.e. round symetrically to zero:
+                    // for negative updates, we want to add 1.
+                    weight_update = vector_if(
+                        weight_update, VectorIfCondition::lesser,
+                        weight_update + 1, weight_update);
+                    VectorRowFracSat8 new_weights =
+                        static_cast<VectorRowFracSat8>(weights)
+                        + weight_update;
 
-                        // clip weights to hardware range limits
-                        new_weights = check_boundaries(new_weights);
-                        weights = static_cast<VectorRowMod8>(new_weights);
+                    // clip weights to hardware range limits
+                    new_weights = check_boundaries(new_weights);
+                    weights = static_cast<VectorRowMod8>(new_weights);
 
-                        synapses[0].set_weights(weights, row);
-
-                        active_row++;
-                    }}
+                    synapses[0].set_weights(weights, row);
                 }}
 
                 // update mean rewards
@@ -654,17 +647,15 @@ below the cell.
                             deviation * {parameters.homeostasis_rate};
                     }}
 
-                    for (size_t row = 0; row < synapses[0].rows.size; ++row) {{
-                        if (synapses[0].rows.test(row)) {{
-                            VectorRowMod8 weights = synapses[0].get_weights(row);
-                            VectorRowFracSat8 new_weights =
-                                static_cast<VectorRowFracSat8>(weights) + update;
+                    for (size_t row = 0; row < synapses[0].rows.size(); ++row) {{
+                        VectorRowMod8 weights = synapses[0].get_weights(row);
+                        VectorRowFracSat8 new_weights =
+                            static_cast<VectorRowFracSat8>(weights) + update;
 
-                            new_weights = check_boundaries(new_weights);
-                            weights = static_cast<VectorRowMod8>(new_weights);
+                        new_weights = check_boundaries(new_weights);
+                        weights = static_cast<VectorRowMod8>(new_weights);
 
-                            synapses[0].set_weights(weights, row);
-                        }}
+                        synapses[0].set_weights(weights, row);
                     }}
 
                     // reset row counter and spike accumulators
