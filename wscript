@@ -58,13 +58,15 @@ def build(bld):
         always=True)
 
     # HW test
-    bld(name="doc-much-demos-such-wow_shelltests",
-        tests=bld.path.ant_glob("tests/shell/**/*"),
-        features="use shelltest",
-        use="doc-much-demos-such-wow-jupyter-test pynn_brainscales2 hxtorch",
+    bld(
+        target='doc-much-demos-such-wow_ipynb_executability_tests',
+        tests=bld.path.ant_glob('tests/py/*.py'),
+        features='use pytest',
+        use=['doc-much-demos-such-wow-jupyter-test', 'pynn_brainscales2', 'hxtorch'],
+        install_path='${PREFIX}/bin/tests/py',
         test_environ=dict(BLD_DIR=str(testdir)),
         test_timeout=1000,
-        skip_run=not bld.env.BBS_HARDWARE_AVAILABLE
+        skip_run=not bld.env.BBS_HARDWARE_AVAILABLE,
     )
 
     bld.add_post_fun(summary)
