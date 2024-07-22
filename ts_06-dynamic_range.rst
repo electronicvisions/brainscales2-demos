@@ -38,15 +38,11 @@ Define network in PyNN
 ----------------------
 
 First, we will set up some variables determining the sweep we want to perform.
-The maximum weight of a single synapse is 63.
-Therefore we will add more projections if we exceed this maximum.
 
 .. code:: ipython3
 
     neurons = range(0, 512, 64)
-    max_weight = 63
-    max_number_of_projections = 5
-    weights = range(0, max_number_of_projections * max_weight, 32)
+    weights = range(0, 300, 32)
     receptor_types = ["inhibitory", "excitatory"]
 
 We will store the results in a dictionary.
@@ -96,39 +92,25 @@ Next we run the network multiple times with various configurations.
             input_spiketimes = [0.5]
             stimulus = pynn.Population(1,
                                        pynn.cells.SpikeSourceArray(spike_times=input_spiketimes))
-
-            projections = []
+            proj = pynn.Projection(stimulus,
+                                   population,
+                                   pynn.AllToAllConnector(),
+                                   receptor_type=receptor_type,
+                                   synapse_type=pynn.standardmodels.synapses.StaticSynapse(weight=0))
 
             # Adjust weights of existing projections and add new projections if the desired weight
             # exceeds the maximum weight which can currently be implemented.
             for w in weights:
 
-                needed_projections = int(np.ceil(w / max_weight))
-                new_projections = needed_projections - len(projections)
-
-                for _ in range(new_projections):
-                    proj = pynn.Projection(stimulus,
-                                           population,
-                                           pynn.AllToAllConnector(),
-                                           receptor_type=receptor_type,
-                                           synapse_type=pynn.standardmodels.synapses.StaticSynapse(weight=0))
-                    projections.append(proj)
-
                 sign = 1 if receptor_type == "excitatory" else -1
 
-                # projections with maximum weight
-                for proj in projections[:(w // max_weight)]:
-                    proj.set(weight=sign * max_weight)
-
-                # projection with the remaining weight
-                if projections:
-                    projections[-1].set(weight=sign * (w % max_weight))
+                proj.set(weight=sign * w)
 
                 pynn.run(1) # ms (hw)
                 membrane = population.get_data().segments[-1].irregularlysampledsignals[0]
 
-                min_membrane = float(membrane[10:].min())
-                max_membrane = float(membrane[10:].max())
+                min_membrane = float(membrane.min())
+                max_membrane = float(membrane.max())
 
                 results["weight"].append(w)
                 results["receptor_type"].append(receptor_type)
