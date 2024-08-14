@@ -24,17 +24,17 @@ class TestIpynb(unittest.TestCase):
             def generate_test(filename: str):
                 def test_func(_: TestIpynb):
                     subprocess.run(
-                        [
-                            'ipython',
-                            '--colors=NoColor',
-                            '-c',
-                            "import IPython;"
-                            "IPython.get_ipython().safe_execfile_ipy('"
-                            f"{osp.basename(filename)}', "
-                            "raise_exceptions=True)"
-                        ],
+                        "ulimit -c 0; "
+                        "ipython "
+                        "--colors=NoColor "
+                        "-c "
+                        "\"import IPython; "
+                        "IPython.get_ipython().safe_execfile_ipy('"
+                        f"{osp.basename(filename)}', "
+                        "raise_exceptions=True)\"",
                         cwd=osp.dirname(filename),
                         check=True,
+                        shell=True,
                     )
 
                 return test_func
