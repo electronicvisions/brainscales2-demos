@@ -761,8 +761,8 @@ and one for the ``Synapse`` layer.
         Gradient estimation with time-discretized EventProp using explicit Euler integration.
         """
         @staticmethod
-        def forward(ctx, input: torch.Tensor,
-                    params: F.CUBALIFParams, dt: float) -> Tuple[torch.Tensor]:
+        def forward(ctx, input: torch.Tensor, params: NamedTuple, dt: float,
+                hw_data: Optional[torch.Tensor] = None) -> Tuple[torch.Tensor]:
             """
             Forward function, generating spikes at positions > 0.
 
@@ -773,13 +773,20 @@ and one for the ``Synapse`` layer.
             :returns: Returns the spike trains and membrane trace.
                 Both tensors are of shape (batch, time, neurons).
             """
+            # If hardware observables are given, return them directly.
+            if hw_data is not None:
+                ctx.extra_kwargs = {"params": params, "dt": dt}
+                ctx.save_for_backward(input, *hw_data)
+                return hw_data
+
+            # Otherwise integrate the neuron dynamics in software
             dev = input.device
             T, bs, ps = input[0].shape
             z = torch.zeros(bs, ps).to(dev)
             i = torch.zeros(bs, ps).to(dev)
             v = torch.empty(bs, ps).fill_(params.v_leak).to(dev)
-
             spikes, current, membrane = [z], [i], [v]
+
             for ts in range(T - 1):
                 # Current
                 i = i * (1 - dt * params.tau_syn_inv) + input[0][ts]
@@ -863,7 +870,7 @@ and one for the ``Synapse`` layer.
                     + output_term
                 )
             return torch.stack((lambda_i / params.tau_syn_inv,
-                                lambda_v - lambda_i)), None, None
+                                lambda_v - lambda_i)), None, None, None
 
 
     class EventPropSynapse(torch.autograd.Function):
@@ -918,6 +925,17 @@ and one for the ``Synapse`` layer.
 
             return grad_input, grad_weight, None
 
+
+    def eventprop_synapse(input: torch.Tensor, weight: torch.Tensor,
+                        _: torch.Tensor = None) -> torch.Tensor:
+        return EventPropSynapse.apply(input, weight)
+
+
+    def eventprop_neuron(input: torch.Tensor, params: NamedTuple, dt: float,
+                        hw_data: Optional[torch.Tensor]) -> Tuple[torch.Tensor]:
+        return EventPropNeuron.apply(input, params, dt, hw_data)
+
+
 .. code:: ipython3
 
     class EventPropSNN(SNN):
@@ -925,8 +943,8 @@ and one for the ``Synapse`` layer.
         def __init__(self, *args, **kwargs):
             super().__init__(*args, **kwargs)
             # use EventProp in hidden (spiking) LIF layer
-            self.linear_h.func = EventPropSynapse
-            self.lif_h.func = EventPropNeuron
+            self.linear_h.func = eventprop_synapse
+            self.lif_h.func = eventprop_neuron
             # trace information is not used in EventProp ->  disable cadc recording
             # of hidden layer
             self.lif_h._enable_cadc_recording = False
