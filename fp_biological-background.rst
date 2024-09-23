@@ -145,9 +145,12 @@ Further, a recovery variable is introduced to capture adaptation and resonance p
 
 .. math::
         :label: eq:adex
+        :nowrap:
 
+        \begin{align}
         \tau_m \frac{\mathrm{d}u_i}{\mathrm{d}t} &= - \left( u_i - u_\text{rest} \right) + R \left( I_\text{stim} - I_\text{ad} \right) + \Delta_\text{T} \mathrm{exp}\left( \frac{u_i-u_T}{\Delta_\text{T}} \right) \\ 
         \tau_w \frac{\mathrm{d}I_\text{ad}}{\mathrm{d}t} &= a \left( u_i - u_\text{rest} \right) - I_\text{ad}
+        \end{align}
 
 The equation above is arranged in such a way that the extension to the LIF-equation :eq:`eq:lif` is easily visible.
 As new terms are introduced: 

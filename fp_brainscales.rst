@@ -129,10 +129,14 @@ Correlation measurements
 The synapses, finally, also support the implementation of correlation-based plasticity rules and for that purpose implement local sensor circuits integrating the pair-wise correlation between pre- and postsynaptic firing activity:
 
 .. math::
+   :nowrap:
+
+    \begin{align*}
     c_{+} &= \sum_{t_\text{post}^k} \eta_{+} \cdot \exp \left(- \frac{t_\text{post}^k - t_\text{pre}^{k}}{\tau_{+}} \right)  \,,  \text{ with}\quad
         t_\text{pre}^{k} = \max_{ t_\text{post}^{k-1} < t_\text{pre}^{l} < t_\text{post}^{k} } \left( t_\text{pre}^{l} \right) ,\, \\
         c_{-} &= \sum_{t_\text{pre}^l} \eta_{-} \cdot \exp \left(- \frac{t_\text{pre}^l - t_\text{post}^{l}}{\tau_{-}} \right) \,,  \text{ with}\quad
         t_\text{post}^{l} = \max_{ t_\text{pre}^{l-1} < t_\text{post}^{k} < t_\text{pre}^{l} } \left( t_\text{post}^{k} \right) ,\,
+   \end{align*}
 
 Here, :math:`\eta_{+/-}` indicate the scale of the respective weight increments, and :math:`\tau_{+/-}` the support of the exponential kernels.
 The causal and anti-causal correlation traces, :math:`c_{+}` and :math:`c_{-}`, only consider pairs of spikes which obey a nearest-neighbor constraint.

@@ -20,11 +20,15 @@ and augments the membrane equation by a second differential equation for
 an adaptation current :math:`w`:
 
 .. math::
-   C\frac{\operatorname{d} V}{\operatorname{d} t} &= -g_l\left(V-E_l\right)
+   :nowrap:
+
+    \begin{align}
+           C\frac{\operatorname{d} V}{\operatorname{d} t} &= -g_l\left(V-E_l\right)
                    \,+\, g_\text{l}\Delta_\text{T}\operatorname{exp}\left(\frac{V-V_\text{T}}{\Delta_\text{T}}\right)
                    \,-\, w
                    \,+\, I_\text{stim}\\[1em]
                    \tau_w \frac{\operatorname{d}w}{\operatorname{d}t} &= a\left(V-E_\text{l}\right) - w \,.
+    \end{align}
 
 On top of the LIF model, these equations introduce the exponential slope
 and threshold :math:`\Delta_\text{T}` and :math:`V_\text{T}`,
