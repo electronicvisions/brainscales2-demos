@@ -47,12 +47,10 @@ try {
 		}
 	}
 } catch (Throwable t) {
-	notifyFailure(mattermostChannel: "#1nicedemo")
 	notifyFailure(mattermostChannel: "#dls-software")
 	throw t
 }
 
 if (currentBuild.currentResult != "SUCCESS") {
-	notifyFailure(mattermostChannel: "#1nicedemo")
 	notifyFailure(mattermostChannel: "#dls-software")
 }
