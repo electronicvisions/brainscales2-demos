@@ -107,7 +107,7 @@ neurons.
                     synapse_type=synapse)
 
     # Finish configuration
-    pynn.preprocess()
+    pynn.run(None, pynn.RunCommand.PREPARE)
 
 Construction of the inside realtime hook
 ----------------------------------------
