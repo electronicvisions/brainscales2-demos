@@ -68,8 +68,8 @@ To ensure, that our recording neurons spike when receiving input spikes, we pass
     pynn.setup(enable_neuron_bypass=True)
 
     runtime = 10  # runtime per configuration in ms
-    n_spikes = 100
-    spikes = np.linspace(0, runtime, n_spikes)
+    n_spikes = 100 * len(image)
+    spikes = np.linspace(0, runtime * len(image), n_spikes)
 
     input_population = pynn.Population(1, pynn.cells.SpikeSourceArray(spike_times = spikes))
     recording_population = pynn.Population(64, pynn.cells.HXNeuron())
@@ -95,7 +95,7 @@ run, all our staged configurations are being executed one after another for the 
 
 .. code:: ipython3
 
-    for i in range(64):
+    for i in range(len(image)):
         projection.set(weight=image[i])
         # Append a snippet of duration 'runtime' with the currently described network configuration
         # to the experiment
@@ -123,7 +123,7 @@ from the beginning again.
     spiketrains = recording_population.get_data('spikes').segments[0].spiketrains
     spiketrains_concatenated = [ [] for _ in range(64) ]
     for spiketrain in spiketrains:
-        spiketrains_concatenated[spiketrain.annotations["source_id"]-1].extend(spiketrain.times)
+        spiketrains_concatenated[spiketrain.annotations["source_id"] - 1].extend(spiketrain.times)
 
 .. code:: ipython3
 
