@@ -10,7 +10,7 @@ def in_ebrains_collaboratory():
 
 
 def check_kernel():
-    expected_kernel = 'EBRAINS-experimental'
+    expected_kernel = 'EBRAINS-24.04'
     actual_kernel = os.environ.get('LAB_KERNEL_NAME', None)
     if actual_kernel is None:
         raise RuntimeError(
