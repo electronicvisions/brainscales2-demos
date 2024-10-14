@@ -26,7 +26,7 @@ pynn.logger.set_loglevel(logger, pynn.logger.LogLevel.INFO)
 def setup_hardware_client():
     if in_ebrains_collaboratory():
         setup_url = 'https://brainscales-r.kip.uni-heidelberg.de:7443/nmpi/' \
-                    'quiggeldy_setups_experimental.csv'
+                    'quiggeldy_setups.csv'
         quiggeldy_setups = pd.read_csv(setup_url, dtype=str)
 
         os.environ['QUIGGELDY_ENABLED'] = '1'
@@ -75,7 +75,7 @@ def get_nightly_calibration(filename='spiking_cocolist.pbin'):
             identifier = connection.get_unique_identifier()
 
         # download calibration file
-        folder = "ebrains-experimental"
+        folder = "ebrains-stable"
         download_url = "https://openproject.bioai.eu/data_calibration/" \
                        f"hicann-dls-sr-hx/{identifier}/stable/{folder}" \
                        f"/{filename}"
@@ -112,7 +112,7 @@ def save_nightly_calibration(filename: str = 'spiking_cocolist.pbin',
     folder = Path() if folder is None else Path(folder)
     output_file = folder.joinpath(filename)
     if source_folder is None:
-        source_folder = "ebrains-experimental" if in_ebrains_collaboratory() \
+        source_folder = "ebrains-stable" if in_ebrains_collaboratory() \
             else "latest"
 
     if in_ebrains_collaboratory():
