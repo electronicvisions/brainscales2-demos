@@ -25,6 +25,7 @@ pynn.logger.set_loglevel(logger, pynn.logger.LogLevel.INFO)
 
 def setup_hardware_client():
     if in_ebrains_collaboratory():
+        pynn.logger.set_loglevel(pynn.logger.get("grenade"), pynn.logger.LogLevel.ERROR)
         setup_url = 'https://brainscales-r.kip.uni-heidelberg.de:7443/nmpi/' \
                     'quiggeldy_setups_experimental.csv'
         quiggeldy_setups = pd.read_csv(setup_url, dtype=str)
