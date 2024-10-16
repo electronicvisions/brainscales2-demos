@@ -202,10 +202,12 @@ Make sure to also save the resulting plot.
 Simple spike train statistics
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
-- Calculate the mean and standard deviation of the neuron's firing rate.
+- Calculate the neuron's average firing rate.
 - Derive the inter-spike intervals (ISIs) of the spike train recorded in the previous exercise.
   The inter-spike interval denotes the time between two consecutive spikes of a neuron.
   Plot a histogram of the ISIs.
+- Identify a method to calculate the mean and standard deviation of the neuron's instantaneous firing rate.
+  The instantaneous firing rate provides a moment-by-moment measure of the neuron’s activity.
 
 Hint: You may use, e.g., `np.diff <https://numpy.org/doc/stable/reference/generated/numpy.diff.html>`_, `np.mean <https://numpy.org/doc/stable/reference/generated/numpy.mean.html>`_, and `np.std <https://numpy.org/doc/stable/reference/generated/numpy.std.html>`_ to complete these tasks.
 
@@ -239,7 +241,6 @@ This will allow to enable/disable a constant current source and observe the impa
     interact(
         experiment,
         title="Task 2: Current introduced firing",
-        refractory_time=IntSlider(min=0, max=255, step=1, value=20),
         v_leak=IntSlider(min=400, max=1022, step=1, value=1000),
         v_threshold=IntSlider(min=0, max=500, step=1, value=500),
         v_reset=IntSlider(min=300, max=1022, step=1, value=400),
@@ -248,7 +249,7 @@ This will allow to enable/disable a constant current source and observe the impa
     )
 
 - To quantify your observations write a program that sweeps over a current range from 0 up to 800.
-- Plot the firing frequency including its error over current.
+- Plot the neuron's mean instantaneous firing rate including its error over current.
 
 
 .. only:: Solution
@@ -289,11 +290,11 @@ This will allow to enable/disable a constant current source and observe the impa
 
             # print(f"i:{i_offset} / f=({f[n]:.2f} +- {df[n]:.2f})kHz")
 
-            plt.errorbar(i, f, yerr=df,
-                marker='.', capsize=4, capthick=2, linestyle="None")
-            plt.title("Task 2: f-I Curve")
-            plt.xlabel("Current [c.u.]")
-            plt.ylabel("Firing Rate [kHz]")
+        plt.errorbar(i, f, yerr=df,
+            marker='.', capsize=4, capthick=2, linestyle="None")
+        plt.title("Task 2: f-I Curve")
+        plt.xlabel("Current [c.u.]")
+        plt.ylabel("Firing Rate [kHz]")
 
 
 Synaptic stimuli and PSP stacking

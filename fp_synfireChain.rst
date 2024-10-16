@@ -186,6 +186,7 @@ This scaffold can be used to investigate the behaviour of a synfire chain and an
             :return: spikes of all neurons and membrane trace of the first exc. neuron
             """
             # emulate the network
+            pynn.reset()
             pynn.run(float(duration.rescale(pq.ms)))
 
             # read back all recorded spikes
@@ -194,7 +195,7 @@ This scaffold can be used to investigate the behaviour of a synfire chain and an
             for syn_type in ['exc', 'inh']:
                 for pop_index, pop in enumerate(populations[syn_type]):
                     spike_collector[syn_type][pop_index] = \
-                        pop.get_data("spikes").segments[0].spiketrains
+                        pop.get_data("spikes").segments[-1].spiketrains
 
             # read back the membrane potential
             mem_v = populations['exc'][0][[0]].get_data("v").segments[-1].irregularlysampledsignals[0]
@@ -317,9 +318,6 @@ Make comments in your lab book.
 
     .. code:: ipython3
 
-        # dont forget to call pynn.end() before setting up a new network
-        pynn.end()
-
         projs, pops = setup_network(
             numb_pops=...,                       # chain length
             pop_sizes={'exc': ..., 'inh': ...})  # size of each chain link
@@ -334,9 +332,6 @@ Make comments in your lab book.
 .. only:: Solution
 
     .. code:: ipython3
-
-        # dont forget to call pynn.end() before setting up a new network
-        pynn.end()
 
         projs, pops = setup_network(
             numb_pops=8,                     # chain length
@@ -378,9 +373,6 @@ The closed loop is already implemented and just need to be activated.
 
     .. code:: ipython3
 
-        # dont forget to call pynn.end() before setting up a new network
-        pynn.end()
-
         projs, pops = setup_network(...)
 
         set_network_weights(weights=..., projections=projs)
@@ -392,9 +384,6 @@ The closed loop is already implemented and just need to be activated.
 .. only:: Solution
 
     .. code:: ipython3
-
-        # dont forget to call pynn.end() before setting up a new network
-        pynn.end()
 
         projs, pops = setup_network(
             numb_pops=20,
