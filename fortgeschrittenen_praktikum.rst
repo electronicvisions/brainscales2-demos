@@ -3,7 +3,14 @@ Welcome to the Advanced Physics Lab for Physicists by the Electronic Vision(s) G
 
 .. image:: _static/fp/bss2.jpg
 
-Hello and welcome to this lab course! You will learn the basic tools for running experiments on the BrainScaleS-2 platform. We invite you to read the following material before you start the lab course.
+Hello and welcome to this lab course!
+You will learn about BrainScaleS-2, a neuromorphic platform developed in Heidelberg, and gain hands-on experience with the tools required to conduct experiments on this platform.
+For that, we will familiarize you with concepts in neuromorphic computing and how they originated from neuroscience.
+We start with an overview of the biological behavior of neurons and synapses and present models from literature that are useful in neuromorphic computing.
+We then introduce the BrainScaleS-2 system and the software module used to interface with it.
+In the experiment part, you will first investigate the behavior of silicon neurons using Lu.i, an analog electronic implementation of a simple neuron model.
+Following this, you will learn how to set up and run experiments on BrainScaleS-2 and apply your knowledge in configuring a feedforward network and solving sudoku using neural networks.
+We invite you to read the following material before you start the lab course.
 
 .. toctree::
    :maxdepth: 2
@@ -40,8 +47,8 @@ Hello and welcome to this lab course! You will learn the basic tools for running
     ~~~~~~~~~~~~~~~~~~~~
 
     There are further experiments that are not part of the usual course, but can be both very instructive and helpful in case you want to do a long/short report.
-    They include working on the calibration, studying the synaptic input, more complex neuron models or training neural networks.
-    If you are interested, have a look online.
+    These experiments include working on the calibration, studying the synaptic input, dealing with more complex neuron models, and training neural networks.
+    If you are interested, you can have a look online at the `Electronic Visions github page <https://github.com/electronicvisions/brainscales2-demos/tree/jupyter-notebooks>`_.
 
 .. only:: not html
 
