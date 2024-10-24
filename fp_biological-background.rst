@@ -188,3 +188,19 @@ Here, an additional variable is used, the spike-triggered adaptation :math:`b`.
 
 This model is called AdEx due to the adaptation and exponential terms.
 Depending on the parametrization, it can describe different neuron types and model more sophisticated behaviors observed in biological neurons.
+
+Synaptic Plasticity
+~~~~~~~~~~~~~~~~~~~
+The modification in the strength and structure of the synapses is referred to as synaptic plasticity.
+This modification affects the synaptic signal that is received by a postsynaptic neuron.
+Neuroscientists have long thought of synaptic plasticity as the basic mechanism underlying learning and memory, which explains the interest behind studying and modeling this mechanism.
+
+In computational neuroscience, the strength and effect of a synapse is modeled by a synaptic weight :math:`w`.
+Positive synaptic weights generally indicate excitatory synapses while negative synaptic weights indicate inhibitory synapses.
+The higher the absolute value of the synaptic weight, the stronger the synaptic current affecting the postsynaptic neuron.
+A plasticity rule is a set of mathematical expressions that govern the relationship between neuronal activity and synaptic plasticity.
+There are two types of plasticity rules.
+Phenomenological models are simple expressions that do not explicitly model the physiology of the synapse.
+Rather, they are based on an immediate input-output relationship between neuronal activity and synaptic plasticity.
+On the other hand, biophysical models incorporate further details on the complex biophysical phenomena governing synaptic plasticity.
+In this lab course, we focus on phenomenological models.
