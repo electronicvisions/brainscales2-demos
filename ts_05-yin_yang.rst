@@ -187,9 +187,8 @@ corresponds to one of the three classes: ying, yang and dot.
             super().__init__()
 
             # Neuron parameters
-            lif_params = F.CUBALIFParams(
-                1. / tau_mem, 1. / tau_syn, alpha=alpha)
-            li_params = F.CUBALIParams(1. / tau_mem, 1. / tau_syn)
+            lif_params = F.CUBALIFParams(tau_mem, tau_syn, alpha=alpha)
+            li_params = F.CUBALIParams(tau_mem, tau_syn)
             self.dt = dt
 
             # Instance to work on
@@ -784,22 +783,22 @@ and one for the ``Synapse`` layer.
             T, bs, ps = input[0].shape
             z = torch.zeros(bs, ps).to(dev)
             i = torch.zeros(bs, ps).to(dev)
-            v = torch.empty(bs, ps).fill_(params.v_leak).to(dev)
+            v = torch.empty(bs, ps).fill_(params.leak).to(dev)
             spikes, current, membrane = [z], [i], [v]
 
             for ts in range(T - 1):
                 # Current
-                i = i * (1 - dt * params.tau_syn_inv) + input[0][ts]
+                i = i * (1 - dt / params.tau_syn) + input[0][ts]
 
                 # Membrane
-                dv = dt * params.tau_mem_inv * (params.v_leak - v + i)
+                dv = dt / params.tau_mem * (params.leak - v + i)
                 v = dv + v
 
                 # Spikes
-                z = torch.gt(v - params.v_th, 0.0).to((v - params.v_th).dtype)
+                z = torch.gt(v - params.threshold, 0.0).to((v - params.threshold).dtype)
 
                 # Reset
-                v = (1 - z) * v + z * params.v_reset
+                v = (1 - z) * v + z * params.reset
 
                 # Save data
                 spikes.append(z)
@@ -846,17 +845,17 @@ and one for the ``Synapse`` layer.
                 # compute current
                 for ts in range(T - 1):
                     i[ts + 1] = \
-                        i[ts] * (1 - dt * params.tau_syn_inv) \
+                        i[ts] * (1 - dt / params.tau_syn) \
                         + input_current[ts]
 
             for ts in range(T - 1, 0, -1):
-                dv_m = params.v_leak - params.v_th + i[ts - 1]
-                dv_p = params.v_leak - params.v_reset + i[ts - 1]
+                dv_m = params.leak - params.threshold + i[ts - 1]
+                dv_p = params.leak - params.reset + i[ts - 1]
 
-                lambda_i[ts - 1] = lambda_i[ts] + dt * \
-                    params.tau_syn_inv * (lambda_v[ts] - lambda_i[ts])
+                lambda_i[ts - 1] = lambda_i[ts] + dt / \
+                    params.tau_syn * (lambda_v[ts] - lambda_i[ts])
                 lambda_v[ts - 1] = lambda_v[ts] * \
-                    (1 - dt * params.tau_mem_inv)
+                    (1 - dt / params.tau_mem)
 
                 output_term = z[ts] / dv_m * grad_spikes[ts]
                 output_term[torch.isnan(output_term)] = 0.0
@@ -869,7 +868,7 @@ and one for the ``Synapse`` layer.
                     + jump_term * lambda_v[ts - 1]
                     + output_term
                 )
-            return torch.stack((lambda_i / params.tau_syn_inv,
+            return torch.stack((lambda_i * params.tau_syn,
                                 lambda_v - lambda_i)), None, None, None
 
 
