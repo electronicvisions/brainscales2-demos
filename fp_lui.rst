@@ -46,7 +46,7 @@ For this purpose, you will rely on a voltage-controlled current source.
 The output current of this circuit is governed by the following equation:
 
 .. math::
-    I(U) = \frac{1-U}{R_\text{sense}}
+    I(U) = \frac{V_\text{CC}-U}{R_\text{sense}}
 
 In the present case, :math:`R_\text{sense}` is 10 kΩ.
 
