@@ -33,19 +33,19 @@ Experiment setup
 .. include:: common_note_helpers.rst
 
 .. only:: jupyter
-   
+
    To prepare for the execution of experiments on the neuromorphic system, you have to first connect to the scheduling server as follows.
    You will need to run this cell once after starting or resetting the Jupyter backend.
    The easiest way to escape from a broken state, will be to select "Kernel -> Restart" in the menu above and reexecute the following cell.
-   
+
    .. include:: common_quiggeldy_setup.rst
    .. include:: common_nightly_calibration.rst
-   
+
    We store results for documentation and to perform evaluations in a common
    place for each of the tasks.
-   
+
    .. code:: ipython3
-   
+
       import pathlib
       results_folder = pathlib.Path('results/task1')
       results_folder.mkdir(parents=True, exist_ok=True)
@@ -60,7 +60,7 @@ Experiment setup
       from pynn_brainscales.brainscales2 import Population
       from pynn_brainscales.brainscales2.standardmodels.cells import SpikeSourceArray
       from pynn_brainscales.brainscales2.standardmodels.synapses import StaticSynapse
-       
+
    The following function allows us to quickly plot the membrane trace and spikes of a neuron.
 
    .. code:: ipython3
@@ -96,78 +96,78 @@ Experiment setup
           plt.ylabel("ADC readout [a.u.]")
           if ylim:
               plt.ylim(ylim)
-   
+
 
 For our first experiment, we create a single neuron and record its spikes as well as its membrane potential.
 
 .. code:: ipython3
 
    def experiment(title, v_leak, v_threshold, v_reset, i_bias_leak, savefig = False):
-        """
-        Set up a leak over threshold neuron.
+       """
+       Set up a leak over threshold neuron.
 
-        :param v_leak: Leak potential.
-        :param v_threshold: Spike threshold potential.
-        :param v_reset: Reset potential.
-        :param i_bias_leak: Controls the leak conductance (membrane time constant).
-        :param savefig: Save the experiment figure.
-        """
+       :param v_leak: Leak potential.
+       :param v_threshold: Spike threshold potential.
+       :param v_reset: Reset potential.
+       :param i_bias_leak: Controls the leak conductance (membrane time constant).
+       :param savefig: Save the experiment figure.
+       """
 
-        plt.figure()
-        plt.title(title)
+       plt.figure()
+       plt.title(title)
 
-        # everything between pynn.setup() and pynn.end() 
-        # below is part of one hardware run.
-        pynn.setup()
+       # everything between pynn.setup() and pynn.end()
+       # below is part of one hardware run.
+       pynn.setup()
 
-        # a pynn.Population corresponds to a certain number of 
-        # neuron circuits on the chip
-        pop = pynn.Population(1, pynn.cells.HXNeuron(
-            # Leak potential, range: 400-1000
-            leak_v_leak=v_leak,
-            # Leak conductance, range: 0-1022
-            leak_i_bias=i_bias_leak,
-            # Threshold potential, range: 0-500
-            threshold_v_threshold=v_threshold,
-            # Reset potential, range: 300-1000
-            reset_v_reset=v_reset,
-            # Membrane capacitance, range: 0-63
-            membrane_capacitance_capacitance=63,
-            # Refractory time (counter), range: 0-255
-            refractory_period_refractory_time=255,
-            # Enable reset on threshold crossing
-            threshold_enable=True,
-            # Reset conductance, range: 0-1022
-            reset_i_bias=1022,
-            # Increase reset conductance
-            reset_enable_multiplication=True))
+       # a pynn.Population corresponds to a certain number of
+       # neuron circuits on the chip
+       pop = pynn.Population(1, pynn.cells.HXNeuron(
+           # Leak potential, range: 400-1000
+           leak_v_leak=v_leak,
+           # Leak conductance, range: 0-1022
+           leak_i_bias=i_bias_leak,
+           # Threshold potential, range: 0-500
+           threshold_v_threshold=v_threshold,
+           # Reset potential, range: 300-1000
+           reset_v_reset=v_reset,
+           # Membrane capacitance, range: 0-63
+           membrane_capacitance_capacitance=63,
+           # Refractory time (counter), range: 0-255
+           refractory_period_refractory_time=255,
+           # Enable reset on threshold crossing
+           threshold_enable=True,
+           # Reset conductance, range: 0-1022
+           reset_i_bias=1022,
+           # Increase reset conductance
+           reset_enable_multiplication=True))
 
-        pop.record(["v", "spikes"])
+       pop.record(["v", "spikes"])
 
-        # this triggers a hardware execution 
-        # with a duration of 0.2 ms
-        pynn.run(0.2)
-        plot_membrane_dynamics(pop, ylim=(100, 800))
+       # this triggers a hardware execution
+       # with a duration of 0.2 ms
+       pynn.run(0.2)
+       plot_membrane_dynamics(pop, ylim=(100, 800))
 
-        if savefig:
-            plt.savefig(results_folder.joinpath(f'fp_task1_{time.strftime("%Y%m%d-%H%M%S")}.png'))
+       if savefig:
+           plt.savefig(results_folder.joinpath(f'fp_task1_{time.strftime("%Y%m%d-%H%M%S")}.png'))
 
-        plt.show()
+       plt.show()
 
-        mem = pop.get_data("v").segments[-1].irregularlysampledsignals[0]
-        spikes = pop.get_data("spikes").segments[-1].spiketrains[0]
-        pynn.end()
+       mem = pop.get_data("v").segments[-1].irregularlysampledsignals[0]
+       spikes = pop.get_data("spikes").segments[-1].spiketrains[0]
+       pynn.end()
 
-        return mem, spikes
+       return mem, spikes
 
 .. only:: jupyter
 
    .. code:: ipython3
-   
+
        from ipywidgets import interact, IntSlider
        from functools import partial
        IntSlider = partial(IntSlider, continuous_update=False)
-   
+
        interact(
            experiment,
            title="Task 1: Leak over threshold",
@@ -226,8 +226,8 @@ Hint: You may use, e.g., `np.diff <https://numpy.org/doc/stable/reference/genera
 Recording the f-I curve of a silicon neuron
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
-Next, we want to study the behavior of neurons with a current source. 
-For this, we introduce a new parameters for our neuron model.
+Next, we want to study the behavior of neurons with a current source.
+For this, we introduce a new parameter for our neuron model.
 This will allow to enable/disable a constant current source and observe the impact.
 
 - Add `constant_current_enable` (True/False) and `constant_current_i_offset` (range=0-1022) as parameters into your experiment
@@ -289,15 +289,15 @@ This will allow to enable/disable a constant current source and observe the impa
 
             # print(f"i:{i_offset} / f=({f[n]:.2f} +- {df[n]:.2f})kHz")
 
-            plt.errorbar(i, f, yerr=df, 
+            plt.errorbar(i, f, yerr=df,
                 marker='.', capsize=4, capthick=2, linestyle="None")
             plt.title("Task 2: f-I Curve")
             plt.xlabel("Current [c.u.]")
-            plt.ylabel("Firing Rate [kHz]") 
+            plt.ylabel("Firing Rate [kHz]")
 
 
-Synaptic stimuli and PSP staking
-^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+Synaptic stimuli and PSP stacking
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
 We now confirmed a normal behavior of the neuron.
 In this task we want to look at the responses of the neuron to stimulations of incoming spikes.
@@ -314,7 +314,7 @@ Steps:
 .. only:: jupyter
 
     .. code::
-        
+
         # Write here your solution
 
 .. only:: Solution
