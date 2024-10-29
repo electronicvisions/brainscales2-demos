@@ -1,7 +1,7 @@
 Solving sudokus with BrainScaleS-2
 ==================================
 
-In this task we want to apply our newly gained knowledge to well-known problem:
+In this task we want to apply our newly gained knowledge to a well-known problem:
 We will deal with solving a sudoku on spiking hardware.
 
 If you never before encountered this logic puzzle from 1984, let's define the rules.
@@ -23,7 +23,7 @@ In our case, each field would have four neurons representing the numbers 1 to 4,
 A neuron being active is interpreted as that field being filled with the respective number, consequently a given, hinted number is represented by a continuously spiking neuron.
 An excluding constraint will be realised with an inhibitory synapse due to the suppressing effect on the activity.
 To allow the network to explore different states, a random Poisson-distributed background noise is applied to all neurons.
-In addition, each neuron is excitatorily connected to themselves to maintain possible activity.
+In addition, each neuron is excitatorily connected to itself to maintain possible activity.
 
 
 Let's start with a simplified version of a sudoku with a 4x4 grid, as shown in the figure.
@@ -60,7 +60,7 @@ Experiment setup
         from functools import partial
         from typing import Callable
         from itertools import product
-    
+
         import numpy as np
 	import matplotlib
         import matplotlib.pyplot as plt
@@ -84,7 +84,7 @@ Experiment setup
 
         %matplotlib inline
 
-We start by creating a population of neurons satisfying the required number and additionally creating a view for each field to later access them easier
+We start by creating a population with the required number of neurons. Additionally, we create a view for each field to facilitate easier access later
 ``pops_collector[row][field][neuron]``
 
 .. code:: ipython3
@@ -183,20 +183,21 @@ We start by creating a population of neurons satisfying the required number and 
         return clues
 
     def get_solution(runtime, clues):
-        """Executes the network ad returns the current solution."""
+        """Executes the network and returns the current solution."""
         set_clues(clues)
         grid = np.zeros((4, 4), dtype=int)
 
-        # Define duration of poisson spikes 
+        # Define duration of poisson spikes
         poisson_source.set(duration=runtime - 0.01)
 
         # emulate the network
+        pynn.reset()
         pynn.run(runtime)
         # read back solution
         for row, row_populations in enumerate(pops_collector):
             for col, field_populations in enumerate(row_populations):
                 num_spikes = [
-                    len(num_population.get_data("spikes").segments[0].spiketrains[0])
+                    len(num_population.get_data("spikes").segments[-1].spiketrains[0])
                     for num_population in field_populations
                 ]
                 grid[row, col] = np.argmax(num_spikes) + 1
@@ -228,6 +229,9 @@ We start by creating a population of neurons satisfying the required number and 
 
 .. only:: Solution
 
+    Solution:
+    ~~~~~~~~~
+
     .. code:: ipython3
 
         # create inhibitory connections to neurons in the same field
@@ -251,8 +255,8 @@ We start by creating a population of neurons satisfying the required number and 
                                     pynn.OneToOneConnector(),
                                     synapse_type = StaticSynapse(weight = inh_weight),
                                     receptor_type = "inhibitory")
-                            
-                            
+
+
         # create inhibitory connections to neurons in the same row
         # representing the same number
         w_inh_row = -50
@@ -337,7 +341,7 @@ We start by creating a population of neurons satisfying the required number and 
 
 .. code:: ipython3
 
-    # The below will only work, of course, if you implemented the correct constraints above.
+    # The cell below will only work, of course, if you implemented the correct constraints above.
     # Red/green frame show (in)correctness of the proposed solution (consistency with the given sudoku).
 
     def experiment(**kwargs):
@@ -349,9 +353,9 @@ We start by creating a population of neurons satisfying the required number and 
 
 The hardware will try to solve the given sudoku.
 If you want to implement your own sudoku with unknown numbers you can enter `0` as an empty field.
-(*Hint:*: When you change the sudoku, rerun the cell)
+(*Hint*: When you change the sudoku, rerun the cell)
 
-The hints are chosen randomly. By varying the seed you vary the position of the clue and by changing the number the sudoku changes the difficulty. 
+The hints are chosen randomly. By varying the seed you vary the position of the clue and by changing the number the sudoku changes the difficulty.
 
 Exercises
 ---------
@@ -361,11 +365,11 @@ Exercises
   Try to explain.
 
 .. only:: Solution
-    
-    The sudoku is not solved correctly.
+
+    **The sudoku is not solved correctly.
     In the spike pattern one can observe the neurons that are related to the clues due to their regular spiking.
-    All other neurons are on their own and therefore the resulting numbers depend on calibration and thermodynamics. 
-    The numbers in the fields are related to the neurons, that spiked the most in the runtime 
+    All other neurons are on their own and therefore the resulting numbers depend on calibration and thermodynamics.
+    The numbers in the fields are related to the neurons, that spiked the most in the runtime.**
 
 - **Task 2:**
   Now implement the four constrains rules discussed above.
@@ -381,23 +385,23 @@ Now you have a working sudoku solver. Let's test it:
 
 .. only:: Solution
 
-    In some cases (especially in when the number of clues decreases) the solver can fail
-    If one closely observes the firing pattern, it looks like the solver converged to right number (right neuron was firing last) but due to the implementation of winning strategy in `get_solution()`, the wrong number is chosen.
-    The winning strategy in this case is given by 
+    **In some cases (especially in when the number of clues decreases) the solver can fail
+    If one closely observes the firing pattern, it looks like the solver converged to the right number (right neuron was firing last) but due to the implementation of winning strategy in `get_solution()`, the wrong number is chosen.
+    The winning strategy in this case is given by**
 
     .. code:: ipython3
 
         # num_spikes = [
-        #     len(num_population.get_data("spikes").segments[0].spiketrains[0])
+        #     len(num_population.get_data("spikes").segments[-1].spiketrains[0])
         #     for num_population in field_populations
         # ]
         # grid[row, col] = np.argmax(num_spikes) + 1
 
-    and therefore the neuron is chosen who fired most in runtime.
-    Possible solutions to tackle this problem are:
-    - Have longer runtime
-    - Look at last spike (not quite reliable)
-    - Look at a fraction of time before runtime and count their the spikes
+    **and therefore the neuron is chosen who fired most in runtime.
+    Possible solutions to tackle this problem are:**
+    - **Extend the runtime**
+    - **Look at last spike (not quite reliable)**
+    - **Examine only a fraction of the runtime near the end and count the spikes within this period**
 
 - **Task 4:**
   What do you expect to happen, if you set the number of clues to zero?
@@ -406,10 +410,10 @@ Now you have a working sudoku solver. Let's test it:
 
 .. only:: Solution
 
-    The sudoku is solved correctly (most of the time?)
+    **The sudoku is solved correctly (most of the time?)
     Random noise and thermodynamics choose some neurons and their numbers are fixed. From that all other related neurons are inhibited.
     That's why a valid solution is generated.
-    It might be, that the solution doesn't change. This is hardware related (although the calibration should take care of it)
+    It might be, that the solution doesn't change. This is hardware related (although the calibration should take care of it)**
 
 - **Task 5:**
   Now, investigate how the success rate is related to the number of clues.
@@ -423,7 +427,7 @@ Now you have a working sudoku solver. Let's test it:
 
 .. only:: Solution
 
-    Actually this is a good question, have to investigate (1 or 4 or both (more likely the latter))
+    **Actually this is a good question, have to investigate (1 or 4 or both (more likely the latter))**
 
 - **Task 7:**
   Crunching some numbers:
@@ -432,10 +436,10 @@ Now you have a working sudoku solver. Let's test it:
 
 .. only:: Solution
 
-    4x4
-    Number Neurons = 4**3 = 64
-    Number Synapses = 1 self + 1 BG + 1 Clue + 3 ownField + 3 row + 3 column + localSquare = 13 (24 if outgoing connections are counted as well)
+    **4x4**
+    - **Number of Neurons = 4^3 = 64**
+    - **Number of Synapses = 1 self + 1 BG + 1 Clue + 3 ownField + 3 row + 3 column + localSquare = 13 (24 if outgoing connections are counted as well)**
 
-    9x9
-    Number Neurons = 9**3 = 729
-    Number Synapses = 73 (144)
+    **9x9**
+    - **Number of Neurons = 9^3 = 729**
+    - **Number of Synapses = 73 (144)**
