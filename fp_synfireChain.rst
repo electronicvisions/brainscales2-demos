@@ -95,7 +95,8 @@ This scaffold can be used to investigate the behaviour of a synfire chain and an
             # record membrane potential from first neuron of first excitatory
             # population of chain
             pop1exc = pop_collector['exc'][0]
-            pop1exc[[0]].record('v')
+            pop1exc[[0]].record('v', device='pad_0_buffered')
+            pop1exc[[0]].record('v', device='madc')
 
             # kick starter input pulse at t = 0
             stim_pop = pynn.Population(pop_sizes['exc'],
