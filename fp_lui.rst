@@ -57,6 +57,91 @@ A second set of cables allows you to read out the voltage at the lower node of :
 - Plot your results.
 - Derive an equation for :math:`f_\text{theo}(\vartheta, \tau_m, R, I)`.
   You might need to define your integration limits.
-  (Hint 1: Consult equation :eq:`eq:lif` as a starting point; 
+  (Hint 1: Consult equation :eq:`eq:lif` as a starting point;
   hint 2: You'll find :math:`R\cdot I > \vartheta` as a condition)
 - Fit the function to your measurements.
+
+.. only:: Solution
+
+    Solution:
+    ~~~~~~~~~
+
+    .. code:: ipython3
+
+        import numpy as np
+        import matplotlib.pyplot as plt
+        from scipy.optimize import curve_fit
+
+
+        def get_data(filename=None):
+            if filename is None:
+                # Use dummy results
+                return np.array([[5.1, 0.],
+                                 [5., 0.],
+                                 [4.96, 1.],
+                                 [4.83, 2.24],
+                                 [4.68, 3.47],
+                                 [4.54, 4.46],
+                                 [4.3, 6.1],
+                                 [4.16, 7.14],
+                                 [4., 8.06],
+                                 [3.89, 8.6],
+                                 [3.78, 9.26],
+                                 [3.62, 10.],
+                                 [3.55, 10.6],
+                                 [3.3, 11.4],
+                                 [3., 13.9],
+                                 [2.62, 15.6],
+                                 [2.44, 16.7],
+                                 [2.05, 17.8],
+                                 [1.75, 17.8]])
+            else:
+                # Load results from file
+                with open(filename, "r") as f:
+                    data = f.readlines()
+                return np.array([[float(da) for da in d.split()] for d in data])
+
+
+        data = get_data()
+        V_CC = 5.1
+        x = data[:, 0]
+        x = (V_CC - x) / 10000
+        y = data[:, 1]
+
+
+        def func(I, tau_m, vdd, R, E_l):
+            tau_ref = 0.0012
+            return np.nan_to_num(
+                1 / (tau_ref + tau_m * np.log((vdd / 4 - E_l - R * I) / (vdd / 2 - E_l - R * I))))
+
+
+        bounds = {
+            "min": {
+                "tau_m": 0,
+                "vdd": 2.5,
+                "R": 0,
+                "E_l": 0},
+            "max": {
+                "tau_m": 10,
+                "vdd": 3.5,
+                "R": np.inf,
+                "E_l": 3.5}
+        }
+        start = {
+            "tau_m": 1,
+            "vdd": 3,
+            "R": 10000,
+            "E_l": 0
+        }
+
+        param_bounds = [list(b.values()) for b in bounds.values()]
+        p0 = list(start.values())
+        fitted_parameters, pcov = curve_fit(func, x, y, p0=p0, bounds=param_bounds)
+
+        print(
+            f"tau_m = {fitted_parameters[0]}, vdd = {fitted_parameters[1]}, R = {fitted_parameters[2]}, E_l = {fitted_parameters[3]}")
+        plt.plot(x, y, label="measured")
+        vals = np.arange(0, np.max(x), 1e-6)
+        plt.plot(vals, func(vals, *fitted_parameters), label="fit")
+        plt.legend()
+        plt.savefig("result.png")
