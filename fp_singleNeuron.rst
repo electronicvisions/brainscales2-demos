@@ -164,7 +164,7 @@ For our first experiment, we create a single neuron and record its spikes as wel
 
    .. code:: ipython3
 
-       from ipywidgets import interact, IntSlider
+       from ipywidgets import interact, IntSlider, FloatSlider
        from functools import partial
        IntSlider = partial(IntSlider, continuous_update=False)
 
@@ -228,7 +228,7 @@ Hint: You may use, e.g., `np.diff <https://numpy.org/doc/stable/reference/genera
 Recording the f-I curve of a silicon neuron
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
-Next, we want to study the behavior of neurons with a current source.
+Next, we want to study the behavior of a single neuron stimulated with a current source.
 For this, we introduce a new parameter for our neuron model.
 This will allow to enable/disable a constant current source and observe the impact.
 
@@ -300,17 +300,25 @@ This will allow to enable/disable a constant current source and observe the impa
 Synaptic stimuli and PSP stacking
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
-We now confirmed a normal behavior of the neuron.
-In this task we want to look at the responses of the neuron to stimulations of incoming spikes.
-Your goal will be to recreate the image of PSP-Staking from the introduction.
-You might take a look into pynn_introduction again
+In the previous tasks, we analyzed the spiking dynamics of an isolated neuron.
+In this task, we want to look at the membrane response of the neuron to stimulations of incoming spikes.
+Your goal is to reproduce the image of PSP-Stacking (summation) from the introduction.
+For this, you might find it helpful to look into pynn_introduction again.
 
 Steps:
 
-- Set up a population of one neuron to record its membrane potential
-- Create a population of at least one `SpikeSourceArray` as a stimulating population
-- Connect the stimulating population to the neuron population
-- Find a suitable spike pattern to recreate the plot (you might require multiple spikes)
+- Set up a population of one neuron with the default neuron parameters to record its membrane potential.
+- Create a population of one `SpikeSourceArray` as a stimulating population.
+- Connect the stimulating population to the neuron population.
+- Find a suitable spike pattern to recreate the plot (you might require multiple spikes).
+- Can the neuron spike with the current neuron configuration?
+  Explain.
+- Suggest and implement changes in the configuration so that the neuron spikes.
+  Try to apply one change at a time.
+  Explain your choices.
+- Can you tell which changes can be theoretically equivalent?
+
+*Hint*: Changes can be related to neuron parameters, projection, or population.
 
 .. only:: jupyter
 
@@ -320,7 +328,10 @@ Steps:
 
 .. only:: Solution
 
-    For my setup I used one target neuron and 3 spiking neurons with a continuous spiking pattern
+    Solution:
+    ~~~~~~~~~
+
+    **For my setup I used one target neuron and 3 spiking neurons with a continuous spiking pattern.**
 
     .. code::
 
@@ -364,3 +375,23 @@ Steps:
         plt.ylabel("Membrane Potential [a. u.]")
 
         plt.plot(analog_data.times, analog_data)
+
+    **The neuron can spike with the default neuron parameters and 1 neuron in the stimulating population in the presence of sufficiently close input spikes.
+    Here I try to list all suggested changes:**
+
+    - **Decrease the time between spikes, in case this was not already implemented.**
+    - **Increase the number of spikes, in case this was not already implemented.**
+    - **Increase leak potential, everything else kept unchanged.**
+    - **Decrease threshold potential, everything else kept unchanged.**
+    - **Increase the synaptic weight, in case it was not at the maximum.
+      This can lead to spiking on its own if spikes were sufficient.**
+    - **Increase the number of neurons in the stimulating population.**
+
+
+    **Theoretically-equivalent suggestions:**
+
+    - **Increasing leak potential and decreasing threshold potential.**
+    - **Increasing the synaptic weight and increasing the number of neurons in the stimulating population, up to a certain extent.
+      The effect of the latter can be higher.
+      However, this is only true if we are only concerned about spiking.**
+
