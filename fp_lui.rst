@@ -102,35 +102,38 @@ A second set of cables allows you to read out the voltage at the lower node of :
 
 
         data = get_data()
-        V_CC = 5.1
+        V_CC = 5.2
         x = data[:, 0]
         x = (V_CC - x) / 10000
         y = data[:, 1]
 
 
-        def func(I, tau_m, vdd, R, E_l):
+        def func(I, tau_m, V_thres, R, E_l, V_reset):
             tau_ref = 0.0012
             return np.nan_to_num(
-                1 / (tau_ref + tau_m * np.log((vdd / 4 - E_l - R * I) / (vdd / 2 - E_l - R * I))))
+                1 / (tau_ref + tau_m * np.log((V_reset - E_l - R * I) / (V_thres - E_l - R * I))))
 
 
         bounds = {
             "min": {
                 "tau_m": 0,
-                "vdd": 2.5,
+                "V_thres": 0,
                 "R": 0,
-                "E_l": 0},
+                "E_l": 0,
+                "V_reset": 0},
             "max": {
                 "tau_m": 10,
-                "vdd": 3.5,
+                "V_thres": 3.5,
                 "R": np.inf,
-                "E_l": 3.5}
+                "E_l": 3.5,
+                "V_reset": 0.2}
         }
         start = {
             "tau_m": 1,
-            "vdd": 3,
+            "V_thres": 1.5,
             "R": 10000,
-            "E_l": 0
+            "E_l": 0.5,
+            "V_reset": 0.
         }
 
         param_bounds = [list(b.values()) for b in bounds.values()]
@@ -138,7 +141,7 @@ A second set of cables allows you to read out the voltage at the lower node of :
         fitted_parameters, pcov = curve_fit(func, x, y, p0=p0, bounds=param_bounds)
 
         print(
-            f"tau_m = {fitted_parameters[0]}, vdd = {fitted_parameters[1]}, R = {fitted_parameters[2]}, E_l = {fitted_parameters[3]}")
+            f"tau_m = {fitted_parameters[0]}, V_thres = {fitted_parameters[1]}, R = {fitted_parameters[2]}, E_l = {fitted_parameters[3]}, V_reset = {fitted_parameters[4]}")
         plt.plot(x, y, label="measured")
         vals = np.arange(0, np.max(x), 1e-6)
         plt.plot(vals, func(vals, *fitted_parameters), label="fit")
