@@ -42,6 +42,7 @@ In this session, we will cover the following topics:
    ts_09-inside_realtime_hook
    ts_10-multiple_configs
    ts_11-hxtorch_snn_intro
+   ts_11-plasticity_homeostasis
    tp_00-introduction
    tp_01-properties
    tp_02-yin_yang
