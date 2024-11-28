@@ -125,7 +125,7 @@ We now define an SNNs which we want to train to classify the class of a
 given sample. For that we use an SNN with one hidden leaky-integrate and
 fire (LIF) layer projecting its spike events onto one leaky-integrator
 (LI) readout layer, as in [3]. Each neuron in the output layer
-corresponds to one of the three classes: ying, yang and dot.
+corresponds to one of the three classes: yin, yang and dot.
 
 To avoid time-consuming implicit calibration from given "Neuron" parameters we
 load a prepared calibration. Note, that changing "Neuron" hardware parameters
