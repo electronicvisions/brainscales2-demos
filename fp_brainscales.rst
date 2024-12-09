@@ -3,6 +3,7 @@ The BrainScaleS-2 system
 
 .. note::
    This chapter was taken from `Billaudelle, S. (2022). From Transistors to Learning Systems: Circuits and Algorithms for Brain-inspired Computing (Doctoral dissertation, Heidelberg University) <https://katalog.ub.uni-heidelberg.de/cgi-bin/titel.cgi?katkey=68941134&sess=cbc4363f59a962a6b4b8de4981e3ddaa&query=billaudelle%20transistors>`_ with only minor adaptations.
+   It provides a comprehensive overview of the BrainScaleS-2 system for interested readers. However, to successfully complete this lab course, only a fundamental understanding of the core concepts, basic implementation details, and approximate orders of magnitude for relevant parameters is required.
 
 BrainScaleS-2 is a spiking, accelerated mixed-signal neuromorphic platform:
 It captures the dynamics of neurons and synapses in mostly analog integrated circuits and augments this physical emulation of the underlying differential equations by digital periphery.
@@ -66,7 +67,7 @@ The primary purpose of the synapse driver circuits [#billaudelle2017design]_ is 
 In that process, they generate the control signals required by the synapses and ensure their correct timing.
 These, most importantly, encompass an enable signal (``dacen``) of typically 4 ns to gate the current emitted by the synapse DACs.
 Furthermore, the synapse drivers provide the 6 bit event address (``address[5:0]``), a corresponding enable signal (``adren``), and the "sign" of the whole row of synapses.
-The synapse drivers are able to process events with a separation of 8 ns and can thus handle up to 125 Event/s.
+The synapse drivers are able to process events with a separation of 8 ns and can thus handle up to 125 MEvent/s.
 Each synapse driver interfaces two rows of synapses, trading symmetry for a more area-efficient implementation.
 On a full-size BrainScaleS-2 ASIC, both synapse arrays respectively host 256 rows and thus feature 128 synapse driver instances.
 Each driver listens to one of four event interfaces and can be individually addressed via a 5 bit row select mask, corresponding to bits 6 to 10 of the event packages.
@@ -144,7 +145,7 @@ When two postsynaptic events are interleaved by multiple presynaptic ones, only 
 In this example, the anti-causal branch would be incremented based on the pair of the first pre- and postsynaptic spike.
 
 These sensors represent the accumulated correlation traces on two capacitors, which can be read out via dedicated parallel ADCs.
-Theirs states can be specifically reset to start a new measurement interval.
+Their states can be specifically reset to start a new measurement interval.
 4 bit of local SRAM allow to coarsely equalize production-induced fixed-pattern deviations across the synapse array.
 
 Neurons
@@ -231,7 +232,7 @@ A significant body of work goes beyond static neural networks and focus on diffe
 The 1000-fold acceleration of BrainScaleS-2, however, impedes a real-time interaction with an off-the-shelf host computer and stipulates a tightening of the control loop.
 
 BrainScaleS-2 augments the accelerated dynamics of the analog neuromorphic core with custom embedded processors [#friedmann2016demonstrating]_ [#friedmann2013new]_, one per vertical half of the ASIC.
-These PPU implement the Power instruction set architecture and operate on 32 bit integers.
+These PPUs implement the Power instruction set architecture and operate on 32 bit integers.
 They are clocked at a configurable frequency defaulting to 250 MHz.
 Each processor instance has access to 16 kiB of main SRAM collocating instructions as well as data.
 They can, furthermore, transparently access a larger, shared memory region provided by the FPGA and made available via the high-speed communication links.
