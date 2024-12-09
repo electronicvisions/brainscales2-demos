@@ -15,7 +15,7 @@ Generally speaking the simplest hardware experiment can be divided in three step
 - analysis of hardware observables.
 
 More sophisticated experiments can involve multiple iterations of these basic three steps or a subset of them.
-At the level of abstraction you will be working on for these lab exercises, most of the intricacies of the hardware configuration and execution will be hidden behind a common high-level API, called `PyNN`.
+At the level of abstraction you will be working on for these lab exercises, most of the intricacies of the hardware configuration and execution will be hidden behind a common high-level :term:`API`, called `PyNN`.
 
 In the next section we will set up a connection to an RPC server that multiplexes connections to the hardware, which will allow us to work with the system interactively.
 This process is handled by a custom microscheduler (*quiggeldy*), a conceptual view of which you can see in the following figure.

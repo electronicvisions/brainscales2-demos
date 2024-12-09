@@ -19,7 +19,7 @@ Characterizing the MADC
 
 Before we continue our investigations of analog neurons, we need to characterize the readout chain used for the neurons' signals. Since HICANN-X has digital communication interfaces, the analog voltage recordings of a neuron need to be digitized on chip.
 
-Characterizing the analog-to-digital-converter (ADC) means applying a known voltage externally and recording the value returned by the ADC. Later, we will reverse this relation in order to convert measured data back to SI units.
+Characterizing the analog-to-digital-converter (:term:`ADC`) means applying a known voltage externally and recording the value returned by the :term:`ADC`. Later, we will reverse this relation in order to convert measured data back to SI units.
 
 In the following, we define a function which applies an external voltage and returns samples from the MADC. Your task is to sweep the external voltage and analyze the returned reads. Plot the characteristic and perform a linear fit to a suitable range. You will use the parameters of your fit in the following notebooks.
 
@@ -37,7 +37,7 @@ We first test the function above by setting a medium voltage, say 0.5 V. Look at
 
 .. code:: ipython3
 
-   
+
    from dlens_vx_v3 import hxcomm
 
    # since we're not using the PyNN frontend here, we need to define our own
@@ -50,7 +50,7 @@ We first test the function above by setting a medium voltage, say 0.5 V. Look at
 Exercises
 ^^^^^^^^^
 
-* Measure the sampled value for voltages between 0 and 1.2 V. We recommend steps of 0.05 V. For each data point, save a mean ADC value. Hint: Use something like ``result["value"]`` for calculating your mean ADC values. Complete the cell below to do so:
+* Measure the sampled value for voltages between 0 and 1.2 V. We recommend steps of 0.05 V. For each data point, save a mean :term:`ADC` value. Hint: Use something like ``result["value"]`` for calculating your mean :term:`ADC` values. Complete the cell below to do so:
 
 Hint: You can use the measure_voltage function.
 
@@ -67,7 +67,7 @@ Hint: You can use the measure_voltage function.
 
       with hxcomm.ManagedConnection() as connection:
             for voltage_id, voltage in enumerate(voltages):
-              samples = ... 
+              samples = ...
               results[voltage_id] = ...
               errors[voltage_id] = ...
           ...
@@ -80,7 +80,7 @@ Hint: You can use the measure_voltage function.
 
         import matplotlib.pyplot as plt
         plt.figure(figsize=(12, 8))
-        
+
         # TODO
         ...
 
@@ -99,7 +99,7 @@ Hint: You can use the measure_voltage function.
       # TODO
 
 * Plot your linear fit and save the plot.
-* Save the fit parameters for later, so you can convert ADC values to Volt.
+* Save the fit parameters for later, so you can convert :term:`ADC` values to Volt.
 
 
 .. only:: Solution
@@ -170,7 +170,7 @@ and define plotting functions
 .. code:: ipython3
 
     import pynn_brainscales.brainscales2 as pynn
-    
+
     from pynn_brainscales.brainscales2 import Population
     from pynn_brainscales.brainscales2.standardmodels.cells import SpikeSourceArray
     from pynn_brainscales.brainscales2.standardmodels.synapses import StaticSynapse
@@ -236,11 +236,11 @@ The following experiment code let's you interactively explore the measurement we
 
         plt.figure()
 
-        # everything between pynn.setup() and pynn.end() 
+        # everything between pynn.setup() and pynn.end()
         # below is part of one hardware run.
         pynn.setup(initial_config=calib, neuronPermutation=[neuron_idx])
 
-        # a pynn.Population corresponds to a certain number of 
+        # a pynn.Population corresponds to a certain number of
         # neuron circuits on the chip
         pop = pynn.Population(1, pynn.cells.HXNeuron(
             # Leak potential, range: 400-1000
@@ -264,7 +264,7 @@ The following experiment code let's you interactively explore the measurement we
 
         pop.record(["v", "spikes"])
 
-        # this triggers a hardware execution 
+        # this triggers a hardware execution
         # with a duration of 0.2 ms
         pynn.run(0.2)
         plot_membrane_dynamics(pop, ylim=(100, 800))
@@ -274,7 +274,7 @@ The following experiment code let's you interactively explore the measurement we
         spikes = pop.get_data("spikes").segments[-1].spiketrains[0]
         pynn.end()
 
-        return mem, spikes   
+        return mem, spikes
 
 
 We now define a function which returns the measured membrane voltage trace for a given set of parameters
@@ -337,7 +337,7 @@ This defines the main function for the parameter sweep
         y_measured = get_data(number_of_neurons, sweep_range, sweep_neuron_param,
                  filter_function, neuron_params)
 
-        # 
+
         measured_mean = np.mean(y_measured, axis=0)
         measured_err = np.std(y_measured, axis=0)
         return sweep_range, y_measured, measured_mean, measured_err
@@ -379,11 +379,11 @@ for respective parameters. Start with full range and narrow down.
     adc_sweep_range = np.arange(50, 301, 50)
     param_name = "threshold"
     threshold_data = main(num_neurons, adc_sweep_range, param_name)
-    
+
     adc_sweep_range = np.arange(500, 901, 100)
     param_name = "leak"
     leak_data = main(num_neurons, adc_sweep_range, param_name)
-    
+
     adc_sweep_range = np.arange(400, 901, 100)
     param_name = "reset"
     reset_data = main(num_neurons, adc_sweep_range, param_name)

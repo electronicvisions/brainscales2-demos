@@ -82,3 +82,44 @@ If you are curious and want to learn more about the kind of work that has been d
 * `Spiking neuromorphic chip learns entangled quantum states <https://arxiv.org/abs/2008.01039>`_
 * `Structural plasticity on an accelerated analog neuromorphic hardware system <https://www.sciencedirect.com/science/article/pii/S0893608020303555>`_
 * `Emulating dendritic computing paradigms on analog neuromorphic hardware <https://www.sciencedirect.com/science/article/pii/S0306452221004218>`_
+
+Glossary
+~~~~~~~~
+
+.. glossary::
+
+    ADC
+        Analog-to-digital converter.
+
+    DAC
+        Digital-to-analog converter.
+
+    ASIC
+        Application-specific integrated circuit.
+
+    PPU
+        Plasticity processing unit.
+
+    FPGA
+        Field-programmable gate array.
+
+    SRAM
+        Static random-access memory.
+
+    MOSFET
+        Metal–oxide–semiconductor field-effect transistor.
+
+    PCB
+        Printed circuit board.
+
+    IO
+        Input/output.
+
+    SIMD
+        Single instruction, multiple data.
+
+    API
+        Application programming interface.
+
+    ANN
+        Artificial neural network.
