@@ -441,4 +441,4 @@ Now you have a working sudoku solver. Let's test it:
 
     **9x9**
     - **Number of Neurons = 9^3 = 729**
-    - **Number of Synapses = 73 (144)**
+    - **Number of Synapses = 31 (60)**
