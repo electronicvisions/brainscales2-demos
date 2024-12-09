@@ -117,7 +117,7 @@ First, the spikes always have the same shape, i.e., the shape does not contain a
 Instead, all information will be coded in the timings of the spikes.
 Second, the membrane potential processes the information.
 Another feature that needs to be modeled is when :math:`u_i(t)` reaches a critical voltage threshold :math:`\vartheta`, a spike has to be initiated, causing this neuron "to fire" at this time :math:`t_i^{(m)}`.
-Such a model was proposed by `Lapique (1907) <https://link.springer.com/article/10.1007/s00422-007-0189-6>`_ and is called leaky fire-and-integrate (LIF).
+Such a model was proposed by `Lapique (1907) <https://link.springer.com/article/10.1007/s00422-007-0189-6>`_ and is called leaky integrate-and-fire (LIF).
 
 Essentially, the cell membrane acts as a good insulator.
 When a current :math:`I(t)` arrives at the membrane, additional charge is deposited.

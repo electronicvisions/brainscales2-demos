@@ -358,7 +358,7 @@ Closing the loop
 -----------------
 
 Close the loop from the last to the first population.
-Does the neurons still fire after the software has completed?
+Do the neurons still fire after the software has completed?
 Make comments in your lab book.
 
 .. only:: Solution
@@ -368,7 +368,7 @@ Make comments in your lab book.
 Hint: For this part it might be easier to switch to a smaller chain with larger populations.
 
 Hint: Take a look into the code above.
-The closed loop is already implemented and just need to be activated.
+The closed loop is already implemented and just needs to be activated.
 
 .. only:: not Solution
 

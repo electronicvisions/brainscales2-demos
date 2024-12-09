@@ -371,7 +371,7 @@ Exercises
     The numbers in the fields are related to the neurons, that spiked the most in the runtime.**
 
 - **Task 2:**
-  Now implement the four constrains rules discussed above.
+  Now implement the four constraint rules discussed above.
   If they are correctly implemented you should get a solved sudoku (keep number of hints and seed).
 
 Now you have a working sudoku solver. Let's test it:
