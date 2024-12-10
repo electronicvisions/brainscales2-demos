@@ -457,7 +457,8 @@ class InferenceReadoutRule(pynn.PlasticityRule):
         neurons to read spike counter values from.
     """
 
-    def __init__(self, timer: pynn.Timer, neuron_ids: np.ndarray):
+    def __init__(
+            self, timer: pynn.Timer, neuron_ids: np.ndarray, same_id: int):
         """
         Initialize plastic synapse with execution timing information,
         hyperparameters and initial weight.
@@ -470,7 +471,7 @@ class InferenceReadoutRule(pynn.PlasticityRule):
             pynn.PlasticityRule.ObservableArray.Type.uint8
         observables["winner_neuron"].size = 1
 
-        super().__init__(timer=timer, observables=observables)
+        super().__init__(timer=timer, observables=observables, same_id=same_id)
 
         self.neuron_ids = neuron_ids
 
@@ -874,7 +875,8 @@ class PongGame:
                         .id2logicalneuron(index)
                         .get_atomic_neurons()[0].toEnum())
                     for index in range(pop_output_right.first_id,
-                                       pop_output_right.last_id + 1)])),
+                                       pop_output_right.last_id + 1)]),
+                same_id=0),
             weight=learned_weights)
         pynn.Projection(
             pop_input, pop_output_right, pynn.AllToAllConnector(),
@@ -893,14 +895,17 @@ class PongGame:
                         .id2logicalneuron(index)
                         .get_atomic_neurons()[0].toEnum())
                     for index in range(pop_output_left.first_id,
-                                       pop_output_left.last_id + 1)])),
+                                       pop_output_left.last_id + 1)]),
+                same_id=1),
             weight=ideal_weights)
         pynn.Projection(
             pop_input, pop_output_left, pynn.AllToAllConnector(),
             synapse_type=synapses_left, receptor_type="excitatory")
 
         synapses_init = pynn.standardmodels.synapses.PlasticSynapse(
-            plasticity_rule=InferenceInitRule(timer=inference_init_timer),
+            plasticity_rule=InferenceInitRule(
+                timer=inference_init_timer,
+                same_id=2),
             weight=0)
         pynn.Projection(
             pop_init, pop_output_right, pynn.AllToAllConnector(),

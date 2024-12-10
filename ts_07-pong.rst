@@ -424,7 +424,7 @@ below the cell.
         Update synapse weights according to STDP learning rule.
         """
 
-        def __init__(self, timer: pynn.Timer):
+        def __init__(self, timer: pynn.Timer, same_id: int):
             """
             Initialize plastic synapse with execution timing information,
             hyperparameters and initial weight.
@@ -441,7 +441,8 @@ below the cell.
                 pynn.PlasticityRule.ObservableArray.Type.uint8
             observables["success"].size = 1
 
-            super().__init__(timer=timer, observables=observables)
+            super().__init__(
+                timer=timer, observables=observables, same_id=same_id)
 
         def generate_kernel(self) -> str:
             """
@@ -819,7 +820,7 @@ able to observe an onset of the diagonal in the weights.
         1, pynn.cells.SpikeSourceArray(spike_times=spiketrains_noise))
 
     synapses = pynn.standardmodels.synapses.PlasticSynapse(
-        plasticity_rule=PlasticityRule(timer=plasticity_timer),
+        plasticity_rule=PlasticityRule(timer=plasticity_timer, same_id=0),
         weight=logical_weights if logical_weights is not None
         else np.ones((parameters.n_inputs, parameters.n_outputs), dtype=int))
     projection = pynn.Projection(
@@ -827,7 +828,7 @@ able to observe an onset of the diagonal in the weights.
         synapse_type=synapses, receptor_type="excitatory")
 
     synapses_noise = pynn.standardmodels.synapses.PlasticSynapse(
-        plasticity_rule=NoiseSynapseRule(timer=init_timer),
+        plasticity_rule=NoiseSynapseRule(timer=init_timer, same_id=1),
         weight=63)
     projection_noise = pynn.Projection(
         pop_noise, pop_output, pynn.AllToAllConnector(),
