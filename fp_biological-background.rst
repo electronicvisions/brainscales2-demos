@@ -98,7 +98,7 @@ In case the threshold is not reached, i.e., when only a few presynaptic spikes o
     \sum_j \sum_f \epsilon_{ij} \left(t - t_j^{(f)}\right)
     \right] + u_\text{rest}
 
-This is also called PSP-Stacking (Image was taken from `Gerstner et al. 2014, Chapter 1.2 <ttps://courses.edx.org/c4x/EPFLx/BIO465x/asset/nd_ch1.pdf>`_).
+This is also called PSP-Stacking (Image was taken from `Gerstner et al. 2014, Chapter 1.2 <https://courses.edx.org/c4x/EPFLx/BIO465x/asset/nd_ch1.pdf>`_).
 
 In the next step, we want to use the equations to derive a concrete model of the neuron, so that it is possible to implement on a neuromorphic substrate.
 
