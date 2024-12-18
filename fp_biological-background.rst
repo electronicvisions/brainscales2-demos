@@ -1,9 +1,11 @@
 Biological background
 =====================
 
-.. image:: _static/fp/cajal_cortex_drawings.png
-   :width: 40%
-   :align: center
+.. only:: not latex
+
+    .. image:: _static/fp/cajal_cortex_drawings.png
+       :width: 40%
+       :align: center
 
 Before digging into the field of neuromorphic computing, it is essential to understand concepts from the central nervous system, the source of inspiration behind this field.
 The central nervous system is a highly complex system responsible for many functions in diverse life forms.
@@ -77,18 +79,28 @@ The pulse is referred to as a "spike" and the neuron is said to have "spiked".
 After such a pulse, the membrane potential drops below the resting potential, and later it returns to the resting state.
 This final phase is called hyperpolarization or spike-afterpotential.
 During the hyperpolarization, the neuron can hardly be stimulated.
-The trajectory of such an event can be observed in following image.
 
-.. image:: _static/fp/fp_introduction_psp_staking.png
-   :width: 40%
-   :align: center
+.. only:: latex
 
+    The trajectory of such an event can be observed in :numref:`psp_stacking`.
 
-On the x-axis is the time while on the y-axis is the membrane potential.
-At given times :math:`t_i^{(n)}` the :math:`n\text{th}` spike from neuron :math:`i` arrives at our observed neuron.
-Each spike leads to a rise of the membrane potential :math:`u`.
-The dotted line indicates the assumed path if there hasn't been a change in current.
-At the instance :math:`t_2^{(2)}`, stimulation from incoming spikes is enough for :math:`u` to cross :math:`\vartheta` (threshold), and the neuron by itself fires.
+.. only:: not latex
+
+    The trajectory of such an event can be observed in the following image.
+
+.. _psp_stacking:
+
+.. figure:: _static/fp/fp_introduction_psp_staking.png
+    :width: 40%
+    :align: center
+
+    Membrane potential :math:`u` of a postsynaptic neuron receiving inputs from two presynaptic neurons (:math:`j = 1,2`).
+    Each presynaptic spike generates an excitatory postsynaptic potential, which contributes to the cumulative depolarization of the membrane potential.
+    Dotted lines indicate the hypothetical trajectory of the membrane potential in the absence of additional stimulation.
+    When :math:`u` reaches the threshold :math:`\vartheta`, an action potential is triggered, indicated by a large positive pulse-like excursion (arrow).
+    This pulse exceeds the graph's bounds and is followed by a reset, where the membrane potential returns to a value below the resting potential :math:`u_\text{rest}`.
+    Taken from `Gerstner et al. 2014, Chapter 1.2 <https://courses.edx.org/c4x/EPFLx/BIO465x/asset/nd_ch1.pdf>`_.
+
 In case the threshold is not reached, i.e., when only a few presynaptic spikes occur, the membrane potential behaves as the sum of the individual PSPs:
 
 .. math::
@@ -96,9 +108,9 @@ In case the threshold is not reached, i.e., when only a few presynaptic spikes o
 
     u_i(t) \approx \left[
     \sum_j \sum_f \epsilon_{ij} \left(t - t_j^{(f)}\right)
-    \right] + u_\text{rest}
+    \right] + u_\text{rest}.
 
-This is also called PSP-Stacking (Image was taken from `Gerstner et al. 2014, Chapter 1.2 <https://courses.edx.org/c4x/EPFLx/BIO465x/asset/nd_ch1.pdf>`_).
+This is also called PSP-Stacking.
 
 In the next step, we want to use the equations to derive a concrete model of the neuron, so that it is possible to implement on a neuromorphic substrate.
 
@@ -125,17 +137,32 @@ This behavior is similar to that of a capacitor, so we abstract a cell membrane 
 As previously discussed, the membrane potential decays over time; therefore, the charge leaks.
 This can be modeled by a resistance :math:`R`.
 In addition, we require a source to define the resting potential.
-This completes the basic circuitry for a neuron model:
 
-.. image:: _static/fp/fp_circuit.png
-   :width: 30%
-   :align: center
+.. only:: latex
+
+    This completes the basic circuitry for a neuron model, as depicted in :numref:`fp_circuit`.
+
+    .. _fp_circuit:
+
+    .. figure:: _static/fp/fp_circuit.png
+        :width: 30%
+        :align: center
+
+        Circuit diagram of the LIF neuron. The neuron's membrane potential is modeled by the voltage :math:`u` across a capacitor :math:`C`, which is connected via the resistor :math:`R` to a constant voltage source :math:`U_\text{rest}`, representing the resting potential. Stimulation is provided by a time-dependent current source :math:`I(t)`.
+
+.. only:: not latex
+
+    This completes the basic circuitry for a neuron model:
+
+    .. image:: _static/fp/fp_circuit.png
+        :width: 30%
+        :align: center
 
 If we analyze the electrical circuit, we can find a differential equation describing the behavior of the capacitor voltage:
 
 .. math::
     :label: eq:lif
-    
+
     \tau_m \frac{\mathrm{d} u_i(t)}{\mathrm{d} t} = - \left[u_i(t) -u_\text{rest} \right] + R \cdot I(t)
 
 

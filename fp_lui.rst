@@ -7,9 +7,23 @@ The printed circuit board (PCB) features a configurable, fully analog implementa
 The neuron emits a short pulse whenever the membrane potential crosses a predefined threshold voltage.
 Neurons communicate by exchanging these spikes because multiple boards can be connected via jumper wires to form networks.
 
-.. image:: _static/common/lui-with-coin_lq_cropped.jpeg
-   :width: 50%
-   :align: center
+.. only:: not latex
+
+    .. image:: _static/common/lui-with-coin_lq_cropped.jpeg
+        :width: 50%
+        :align: center
+
+.. only:: latex
+
+    A picture of a Lu.i is shown in :numref:`lui`.
+
+    .. _lui:
+
+    .. figure:: _static/common/lui-with-coin_lq_cropped.jpeg
+        :width: 50%
+        :align: center
+
+        Photograph of a Lu.i electronic neuron circuit, with a 2-euro coin included for scale.
 
 You may find additional information including schematics on the project's homepage, `giantaxon.org <http://giantaxon.org>`_.
 
@@ -36,12 +50,27 @@ Before you begin, connect Lu.i's membrane to the oscilloscope.
 Measuring of an f-I curve
 ^^^^^^^^^^^^^^^^^^^^^^^^^
 
-Next, you will record your first f-I curve, i.e., the dependence of a neuron's firing rate on its stimulating current.
-For this purpose, you will rely on a voltage-controlled current source.
+.. only:: not latex
 
-.. image:: _static/fp/lui_current_source.png
-   :width: 45%
-   :align: center
+    Next, you will record your first f-I curve, i.e., the dependence of a neuron's firing rate on its stimulating current.
+    For this purpose, you will rely on a voltage-controlled current source.
+
+    .. image:: _static/fp/lui_current_source.png
+        :width: 45%
+        :align: center
+
+.. only:: latex
+
+    Next, you will record your first f-I curve, i.e., the dependence of a neuron's firing rate on its stimulating current.
+    For this purpose, you will rely on a voltage-controlled current source, depicted in :numref:`lui_current_source`.
+
+    .. _lui_current_source:
+
+    .. figure:: _static/fp/lui_current_source.png
+        :width: 45%
+        :align: center
+
+        Circuit diagram of the measurement setup for the Lu.i. board. A voltage-controlled current source injects current into the Lu.i., while the membrane potential is monitored using an oscilloscope.
 
 The output current of this circuit is governed by the following equation:
 

@@ -25,14 +25,22 @@ An excluding constraint will be realised with an inhibitory synapse due to the s
 To allow the network to explore different states, a random Poisson-distributed background noise is applied to all neurons.
 In addition, each neuron is excitatorily connected to itself to maintain possible activity.
 
+.. only:: not latex
 
-Let's start with a simplified version of a sudoku with a 4x4 grid, as shown in the figure.
+    Let's start with a simplified version of a sudoku with a 4x4 grid, as shown in the figure.
+
+.. only:: latex
+
+    Let's start with a simplified version of a sudoku with a 4x4 grid, as shown in :numref:`sudoku`.
+
 Assume the grey three is given, applying the previously mentioned constraints we obtain:
 
 * Due to 1, the purple threes are not allowed.
 * Due to 2, the green threes are not allowed.
 * Due to 3, the blue threes are not allowed.
 * Due to the choice of our encoding, the orange numbers are not allowed (in each field only one number is allowed to be active)
+
+.. _sudoku:
 
 .. figure:: _static/common/sudoku.png
     :width: 60%

@@ -1,7 +1,9 @@
 Welcome to the Advanced Physics Lab for Physicists by the Electronic Vision(s) Group
 ====================================================================================
 
-.. image:: _static/fp/bss2.jpg
+.. only:: not latex
+
+    .. image:: _static/fp/bss2.jpg
 
 Welcome to this lab course!
 You will learn about BrainScaleS-2, a neuromorphic platform developed in Heidelberg, and gain hands-on experience with the tools required to conduct experiments on this platform.

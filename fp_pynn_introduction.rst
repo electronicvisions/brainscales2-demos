@@ -7,25 +7,38 @@ that allows you to form groups of neurons and to connect them in
 different ways to each other. Also, the parameters of individual neurons
 can be varied and the resulting dynamic can be observed.
 
-In the following, we want to build a simple network in which a neuron is
-stimulated by a group of five neurons.
+.. only:: not latex
 
-.. image:: _static/common/pynn_simple_network.png
-    :width: 400
-    :align: center
+    In the following, we want to build a simple network in which a neuron is stimulated by a group of five neurons.
+
+    .. image:: _static/common/pynn_simple_network.png
+        :width: 400
+        :align: center
+
+.. only:: latex
+
+    In the following, we want to build a simple network in which a neuron is stimulated by a group of five neurons, as depicted in :numref:`pynn_simple_network`.
+
+    .. _pynn_simple_network:
+
+    .. figure:: _static/common/pynn_simple_network.png
+        :width: 400
+        :align: center
+
+        Illustration of a source population (src) comprising five neurons connected to a target population (pop) consisting of a single neuron.
 
 .. include:: common_note_helpers.rst
 
 .. only:: jupyter
-   
+
     .. code:: ipython3
-    
+
         # import the module PyNN
         import pynn_brainscales.brainscales2 as pynn
-    
+
         # set the environment
         from _static.common.helpers import setup_hardware_client, get_nightly_calibration
-    
+
         setup_hardware_client()
         calib = get_nightly_calibration()
         pynn.setup(initial_config=calib)

@@ -2,6 +2,7 @@ The BrainScaleS-2 system
 ========================
 
 .. note::
+
    This chapter was taken from `Billaudelle, S. (2022). From Transistors to Learning Systems: Circuits and Algorithms for Brain-inspired Computing (Doctoral dissertation, Heidelberg University) <https://katalog.ub.uni-heidelberg.de/cgi-bin/titel.cgi?katkey=68941134&sess=cbc4363f59a962a6b4b8de4981e3ddaa&query=billaudelle%20transistors>`_ with only minor adaptations.
    It provides a comprehensive overview of the BrainScaleS-2 system for interested readers. However, to successfully complete this lab course, only a fundamental understanding of the core concepts, basic implementation details, and approximate orders of magnitude for relevant parameters is required.
 
@@ -14,13 +15,27 @@ The speed-up is relevant for applications in the two fields of machine intellige
 The emulated dynamics are flexibly configurable to target vastly different operating points.
 They support simple, non-time-continuous artificial neurons as well as biologically realistic dynamics in structured multi-compartmental cells.
 
-.. image:: _static/fp/bss2.jpg
-   :width: 60%
-   :align: center
+.. only:: not latex
+
+    .. image:: _static/fp/bss2.jpg
+        :width: 60%
+        :align: center
 
 BrainScaleS-2 expands on this static emulation of the neural dynamics and provides the means for implementing on-chip plasticity rules and advanced learning experiments.
 For that purpose, it features custom embedded processor cores tailored for an efficient interaction with accelerated network dynamics.
 These on-chip controllers can be freely programmed to dynamically reconfigure all aspects of the system, facilitating the implementation of learning rules and closed-loop cybernetic experiments directly on the chip itself.
+
+.. only:: latex
+
+    A photograph of the chip is shown in :numref:`bss2`.
+
+    .. _bss2:
+
+    .. figure:: _static/fp/bss2.jpg
+        :width: 60%
+        :align: center
+
+        Photograph of a BrainScaleS-2 chip mounted on its carrier board. The chip is bonded to the board for electrical connectivity.
 
 
 Overview
@@ -42,10 +57,23 @@ This can be used for debugging purposes or to directly inject stimuli from the c
 Events from all of these sources are merged together in an event routing module and then forwarded to the analog neuromorphic core, output spikes originating from the neuron circuits can travel in the opposite direction.
 In both cases, the respective source of a spike is encoded in a 14 bit event label [#karasenko2020neumann]_.
 
-.. image:: _static/fp/block_level.png
-   :width: 50%
-   :align: center
+.. only:: latex
 
+    A block-level diagram of the BrainScaleS-2 system is shown in :numref:`block_level`.
+
+    .. _block_level:
+
+    .. figure:: _static/fp/block_level.png
+        :width: 70%
+        :align: center
+
+        Block-level diagram of a BrainScaleS-2 system, including the :term:`ASIC` itself as well as an :term:`FPGA` managing the communication to the host system.
+
+.. only:: not latex
+
+    .. image:: _static/fp/block_level.png
+       :width: 50%
+       :align: center
 
 The analog neuromorphic core
 ----------------------------
@@ -89,13 +117,27 @@ More detailed information on the interface and the addressing scheme are provide
 Synapses
 ^^^^^^^^
 
-The synapse circuits [#friedmann2016demonstrating]_ take on one of the most central roles in the analog neuromorphic core.
-They perform the actual in-memory computation, to a large part define the network topology, and feature sensor circuits facilitating the on-chip implementation of correlation-based, biology-inspired learning rules.
+.. only:: latex
 
-.. image:: _static/fp/synapse.png
-   :width: 100%
-   :align: center
+    The synapse circuits [#friedmann2016demonstrating]_, depicted in :numref:`synapse_matrix`, take on one of the most central roles in the analog neuromorphic core.
+    They perform the actual in-memory computation, to a large part define the network topology, and feature sensor circuits facilitating the on-chip implementation of correlation-based, biology-inspired learning rules.
 
+    .. _synapse_matrix:
+
+    .. figure:: _static/fp/synapse.png
+        :width: 100%
+        :align: center
+
+        Illustration of the synapse matrix as the central in-memory compute array as well as the synapse drivers (triangles) and neuron circuits (circles). The synapse drivers can each forward events from up to 64 distinctive sources, here indicated by color, to two rows of synapses. Each synapse compares a locally stored label to the 6 bit event address and emits a current pulse to the postsynaptic neuron, when eligible. The resulting charge is proportional to the synaptic weight, also stored in 6 bit of :term:`SRAM`, and the pulse width, which can be modulated by the synapse driver. Sensor circuits in each synapse allow to track the correlation between pre- and postsynaptic activity.
+
+.. only:: not latex
+
+    The synapse circuits [#friedmann2016demonstrating]_ take on one of the most central roles in the analog neuromorphic core.
+    They perform the actual in-memory computation, to a large part define the network topology, and feature sensor circuits facilitating the on-chip implementation of correlation-based, biology-inspired learning rules.
+
+    .. image:: _static/fp/synapse.png
+        :width: 100%
+        :align: center
 
 Synaptic efficacy
 """""""""""""""""
@@ -105,7 +147,9 @@ The magnitude of the synaptic current is scaled by the respective weight value, 
 The rather short pulse widths of 0 to 4 ns, correspondingly modulated by the synapse driver circuits, appear instantaneous when compared to the time scales of the emulated neural dynamics, which typically take place on orders of few to dozens of microseconds.
 The resulting current pulses can thus be integrated and interpreted as instantaneously deposited charges proportional to both the synaptic efficacy :math:`w` and the potentially modulated pulse width:
 
-.. math::  Q_\text{syn} = \int_{t_\text{0}}^{t_\text{0} + \delta t} I_\text{syn}w \operatorname{d}t = \delta t \cdot I_\text{syn}(w) \,.
+.. math::
+
+    Q_\text{syn} = \int_{t_\text{0}}^{t_\text{0} + \delta t} I_\text{syn}w \operatorname{d}t = \delta t \cdot I_\text{syn}(w) \,.
 
 The overall weight can be controlled via the digital 6 bit weight value and a global bias current provided by the analog parameter storage.
 The amplitude results from the multiplicative factor of the synapse circuit's current :term:`DAC`, and the bias current of 0 to 1 µA.
@@ -130,14 +174,14 @@ Correlation measurements
 The synapses, finally, also support the implementation of correlation-based plasticity rules and for that purpose implement local sensor circuits integrating the pair-wise correlation between pre- and postsynaptic firing activity:
 
 .. math::
-   :nowrap:
+    :nowrap:
 
     \begin{align*}
     c_{+} &= \sum_{t_\text{post}^k} \eta_{+} \cdot \exp \left(- \frac{t_\text{post}^k - t_\text{pre}^{k}}{\tau_{+}} \right)  \,,  \text{ with}\quad
         t_\text{pre}^{k} = \max_{ t_\text{post}^{k-1} < t_\text{pre}^{l} < t_\text{post}^{k} } \left( t_\text{pre}^{l} \right) ,\, \\
         c_{-} &= \sum_{t_\text{pre}^l} \eta_{-} \cdot \exp \left(- \frac{t_\text{pre}^l - t_\text{post}^{l}}{\tau_{-}} \right) \,,  \text{ with}\quad
         t_\text{post}^{l} = \max_{ t_\text{pre}^{l-1} < t_\text{post}^{k} < t_\text{pre}^{l} } \left( t_\text{post}^{k} \right) ,\,
-   \end{align*}
+    \end{align*}
 
 Here, :math:`\eta_{+/-}` indicate the scale of the respective weight increments, and :math:`\tau_{+/-}` the support of the exponential kernels.
 The causal and anti-causal correlation traces, :math:`c_{+}` and :math:`c_{-}`, only consider pairs of spikes which obey a nearest-neighbor constraint.
@@ -181,14 +225,28 @@ The memory array basically functions as a content-addressable memory: whenever t
 Analog I/O
 ^^^^^^^^^^
 
-.. image:: _static/fp/analog_io.png
-   :width: 100%
-   :align: center
+.. only:: not latex
+
+    .. image:: _static/fp/analog_io.png
+        :width: 100%
+        :align: center
 
 Analogously to the flexible parameterization of the analog circuits BrainScaleS-2 attempts to provide far-reaching access to most of the internally evolving states.
 It for that purpose allows to route many of these potentials across the :term:`ASIC` and to apply them to one of two analog :term:`IO` pads, making them available to external measurement equipment or reference potentials [#kiene2017mixed]_.
 Two very different :term:`ADCs<ADC>` can, furthermore, digitize these signals directly on the chip itself.
 These capabilities do not only facilitate lower level measurements and the commissioning of the neuromorphic circuits but are also crucial to more directly interact with the system and bridge the gap between the analog and digital domains to, e.g., implement advanced plasticity rules.
+
+.. only:: latex
+
+    The analog readout chain is shown in :numref:`analog_io`.
+
+    .. _analog_io:
+
+    .. figure:: _static/fp/analog_io.png
+        :width: 100%
+        :align: center
+
+        Simplified schematic drawing of the analog readout chain on BrainScaleS-2. Many of the analog signals within the analog neuromorphic core can be routed to one of two input/output (IO) pads of the :term:`ASIC`, allowing to either directly gain a low-impedance, bidirectional access to some of the circuits or handle voltages exceeding the input range of the on-chip :term:`ADC` for external measurements, here visualized exemplarily. All relevant state variables can, in addition, be digitized via the on-chip :term:`ADC`, from up to two sources simultaneously by interleaving the two channels. The resulting samples are streamed out as event packages via the highs-speed communication links.
 
 High-speed analog readout
 """""""""""""""""""""""""
@@ -252,15 +310,17 @@ System integration and experiment flow
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
 It is definitely a challenge to design and build flexible yet reliable neuromorphic circuits -- and then another one to make them usable and accessible to a broader user base.
-Our :term:`ASIC` rely on an enormous stack of peripheral circuitry and software.
+Our :term:`ASIC` relies on an enormous stack of peripheral circuitry and software.
 They are available in different form factors, from laboratory setups to smaller and portable [#stradmann2021demonstrating]_ as well as multi-chip systems [#thommes2022demonstrating]_.
 All of them, however, share a very similar overall architecture:
 The neuromorphic :term:`ASIC` is supported by a set of :term:`PCBs<PCB>` providing necessary power supplies, analog references, and :term:`IO` circuits.
 The chip itself is interfaced via an :term:`FPGA` bridging the available bandwidths and time scales of the accelerated emulation on one side (on the order of microseconds) and the comparably "sluggish" latencies of typical host computers and networking equipment (on the order of milliseconds) on the other.
 
-.. image:: _static/fp/experiment_flow.png
-   :width: 100%
-   :align: center
+.. only:: not latex
+
+    .. image:: _static/fp/experiment_flow.png
+        :width: 100%
+        :align: center
 
 The :term:`FPGA` thus exposes a real-time interface to the neuromorphic :term:`ASIC`.
 The user code executed on the experiment host compiles *playback programs*, which are then asynchronously interpreted and executed by a state machine on the :term:`FPGA`.
@@ -271,10 +331,27 @@ Responses to read requests are buffered and tracked on the :term:`FPGA`.
 The host computer holds uncompleted futures, which are populated as soon as the response data is available.
 Similarly, spikes emitted by the :term:`ASIC` are buffered on the :term:`FPGA` and then sent to the experiment host.
 
-The above figure visualizes an exemplary experiment and the data flow between the host machine and the neuromorphic system.
-It includes the :term:`PPU`, which can assume many of the functions of the experiment host and introduces another layer of asynchronicity.
-Typically, an experiment is broken up into multiple playback programs for the initialization and the actual real-time experiments.
-The analog emulation, notably, does -- depending on the setup -- continue even without interaction with the outside.
+.. only:: not latex
+
+    The above figure visualizes an exemplary experiment and the data flow between the host machine and the neuromorphic system.
+    It includes the :term:`PPU`, which can assume many of the functions of the experiment host and introduces another layer of asynchronicity. 
+    Typically, an experiment is broken up into multiple playback programs for the initialization and the actual real-time experiments.
+    The analog emulation, notably, does -- depending on the setup -- continue even without interaction with the outside.
+
+.. only:: latex
+
+    :numref:`experiment_flow` visualizes an exemplary experiment and the data flow between the host machine and the neuromorphic system.
+    It includes the :term:`PPU`, which can assume many of the functions of the experiment host and introduces another layer of asynchronicity. 
+    Typically, an experiment is broken up into multiple playback programs for the initialization and the actual real-time experiments.
+    The analog emulation, notably, does -- depending on the setup -- continue even without interaction with the outside.
+
+    .. _experiment_flow:
+
+    .. figure:: _static/fp/experiment_flow.png
+        :width: 100%
+        :align: center
+
+        Illustration of a typical experiment flow. Real-time playback programs are constructed on the experiment host and then asynchronously executed on the :term:`FPGA` ensuring real-time communication with the neuromorphic system. Responses to read requests as well as spike or trace data are buffered on the :term:`FPGA` and returned to the host for further processing. A typical experiment is often segmented into multiple programs to separate the initialization of the system from the actual network experiments. Host, :term:`FPGA`, :term:`PPUs<PPU>`, and the analog neuromorphic core operate in an independent and asynchronous fashion. The neuromorphic :term:`ASIC` can continue its emulation and even closed-loop :term:`PPU`-based experiments even without intervention of the host machine or :term:`FPGA`.
 
 This program flow and hardware abstraction is exposed by a sophisticated software stack [#muller2020extending]_.
 It consists of multiple layers from communication protocols to high-level experiment descriptions.

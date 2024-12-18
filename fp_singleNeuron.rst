@@ -17,13 +17,30 @@ Generally speaking the simplest hardware experiment can be divided in three step
 More sophisticated experiments can involve multiple iterations of these basic three steps or a subset of them.
 At the level of abstraction you will be working on for these lab exercises, most of the intricacies of the hardware configuration and execution will be hidden behind a common high-level :term:`API`, called `PyNN`.
 
-In the next section we will set up a connection to an RPC server that multiplexes connections to the hardware, which will allow us to work with the system interactively.
-This process is handled by a custom microscheduler (*quiggeldy*), a conceptual view of which you can see in the following figure.
-The actual hardware execution time has been colored in blue.
+.. only:: not latex
 
-.. image:: _static/tutorial/daas_multi.png
-    :width: 65%
-    :align: center
+    In the next section we will set up a connection to an RPC server that multiplexes connections to the hardware, which will allow us to work with the system interactively.
+    This process is handled by a custom microscheduler (*quiggeldy*), a conceptual view of which you can see in the following figure.
+    The actual hardware execution time has been colored in blue.
+
+    .. image:: _static/tutorial/daas_multi.png
+        :width: 65%
+        :align: center
+
+
+.. only:: latex
+
+    In the next section we will set up a connection to an RPC server that multiplexes connections to the hardware, which will allow us to work with the system interactively.
+    This process is handled by a custom microscheduler (*quiggeldy*), a conceptual view of which you can see in :numref:`quiggeldy`.
+    The actual hardware execution time has been colored in blue.
+
+    .. _quiggeldy:
+
+    .. figure:: _static/tutorial/daas_multi.png
+        :width: 65%
+        :align: center
+
+        Conceptual view of the custom microscheduler quiggeldy. The scheduler decouples hardware execution of experiments (blue) from required pre- and postprocessing time (yellow, green, red), thereby maximizing hardware utilization with minimal overhead for the individual users.
 
 At the end of this notebook you will find a number of exercises to complete.
 

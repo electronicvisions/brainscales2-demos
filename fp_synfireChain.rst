@@ -1,15 +1,33 @@
 A simple feedforward network
 ==============================
 
-In this task we consider a so-called synfire chain, an illustration of which can be seen in the next image:
-A synfire chain is a chain of ``numb_pops`` "excitatory" populations (red), each consisting of :math:`n_\text{exc}` neurons, which are connected via excitatory connections, such that events in a prior population excite the neurons in the following population.
-So, if the first population is activated, the activity begins traveling through the chain.
-In order to stop a population from firing as soon as it has excited the next population, it is also connected to an "inhibitory" population (blue) of :math:`n_\text{inh}` neurons via inhibitory synapses.
-This inhibitory population is excited by the spike events from the previous excitatory population.
+.. only:: not latex
 
-.. image:: _static/girlsday/girlsday_synfire_chain.png
-    :width: 300px
-    :align: center
+    In this task we consider a so-called synfire chain, an illustration of which can be seen in the next image:
+    A synfire chain is a chain of ``numb_pops`` "excitatory" populations (red), each consisting of :math:`n_\text{exc}` neurons, which are connected via excitatory connections, such that events in a prior population excite the neurons in the following population.
+    So, if the first population is activated, the activity begins traveling through the chain.
+    In order to stop a population from firing as soon as it has excited the next population, it is also connected to an "inhibitory" population (blue) of :math:`n_\text{inh}` neurons via inhibitory synapses.
+    This inhibitory population is excited by the spike events from the previous excitatory population.
+
+    .. image:: _static/girlsday/girlsday_synfire_chain.png
+        :width: 300px
+        :align: center
+
+.. only:: latex
+
+    In this task we consider a so-called synfire chain, an illustration of which can be seen in :numref:`synfire`:
+    A synfire chain is a chain of ``numb_pops`` "excitatory" populations (red), each consisting of :math:`n_\text{exc}` neurons, which are connected via excitatory connections, such that events in a prior population excite the neurons in the following population.
+    So, if the first population is activated, the activity begins traveling through the chain.
+    In order to stop a population from firing as soon as it has excited the next population, it is also connected to an "inhibitory" population (blue) of :math:`n_\text{inh}` neurons via inhibitory synapses.
+    This inhibitory population is excited by the spike events from the previous excitatory population.
+
+    .. _synfire:
+
+    .. figure:: _static/girlsday/girlsday_synfire_chain.png
+        :width: 300px
+        :align: center
+
+        Structure of the synfire chain presented in this section. The synfire chain is made up of several groups of excitatory (red) and inhibitory (blue) populations. The inhibitory population connects to the excitatory population within the same group. Each excitatory population is connected to the excitatory and inhibitory population of the next group. By repeating this construction schema chains of arbitrary length can be realized. The network is initially excited by an externally injected stimulus.
 
 The number of neurons in the "excitatory" and "inhibitory" populations, as well as the strength of the connections in between needs to be chosen carefully in order for the activity to travel neatly.
 The chain can also be closed by connecting the last population to the first one, making the activity travel through the chain repetitively.
