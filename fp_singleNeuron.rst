@@ -213,8 +213,7 @@ Hint: You may use, e.g., `np.diff <https://numpy.org/doc/stable/reference/genera
 
 .. only:: Solution
 
-   Solution:
-   ~~~~~~~~~
+   **Solution:**
 
    .. code:: ipython3
 

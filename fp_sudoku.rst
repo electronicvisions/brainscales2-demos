@@ -229,8 +229,7 @@ We start by creating a population with the required number of neurons. Additiona
 
 .. only:: Solution
 
-    Solution:
-    ~~~~~~~~~
+    **Solution:**
 
     .. code:: ipython3
 

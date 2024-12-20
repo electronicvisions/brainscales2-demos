@@ -63,8 +63,7 @@ A second set of cables allows you to read out the voltage at the lower node of :
 
 .. only:: Solution
 
-    Solution:
-    ~~~~~~~~~
+    **Solution:**
 
     .. code:: ipython3
 
