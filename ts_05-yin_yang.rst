@@ -925,14 +925,14 @@ and one for the ``Synapse`` layer.
             return grad_input, grad_weight, None
 
 
-    def eventprop_synapse(input: torch.Tensor, weight: torch.Tensor,
-                        _: torch.Tensor = None) -> torch.Tensor:
-        return EventPropSynapse.apply(input, weight)
+    def eventprop_synapse(input: hxsnn.NeuronHandle, weight: torch.Tensor,
+                        _: torch.Tensor = None) -> hxsnn.SynapseHandle:
+        return hxsnn.SynapseHandle(EventPropSynapse.apply(input.spikes, weight))
 
 
-    def eventprop_neuron(input: torch.Tensor, params: NamedTuple, dt: float,
-                        hw_data: Optional[torch.Tensor]) -> Tuple[torch.Tensor]:
-        return EventPropNeuron.apply(input, params, dt, hw_data)
+    def eventprop_neuron(input: hxsnn.SynapseHandle, params: NamedTuple, dt: float,
+                        hw_data: Optional[torch.Tensor]) -> hxsnn.NeuronHandle:
+        return hxsnn.NeuronHandle(*EventPropNeuron.apply(input.graded_spikes, params, dt, hw_data))
 
 
 .. code:: ipython3
