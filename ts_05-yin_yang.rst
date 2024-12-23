@@ -283,7 +283,7 @@ corresponds to one of the three classes: ying, yang and dot.
             # Execute on hardware
             hxtorch.snn.run(self.experiment, spikes.shape[0])
 
-            return self.y_o.v_cadc
+            return self.y_o.membrane_cadc
 
 .. code:: ipython3
 
@@ -591,7 +591,7 @@ function.
         update(
             model.network.s_in.detach(),
             model.network.s_h.spikes.detach(),
-            model.network.y_o.v_cadc.detach(),
+            model.network.y_o.membrane_cadc.detach(),
             data, target, scores,
             loss, 100 * acc, rate)
 
