@@ -44,7 +44,7 @@ for spiking neural networks. Scientific Reports 11, 12829 (2021).
 .. code:: ipython3
 
     %matplotlib inline
-    from typing import Tuple
+    from typing import Tuple, Optional
     import matplotlib.pyplot as plt
     import ipywidgets as w
     import numpy as np
@@ -187,11 +187,17 @@ corresponds to one of the three classes: ying, yang and dot.
             super().__init__()
 
             # Neuron parameters
-            lif_params = F.CUBALIFParams(tau_mem, tau_syn, alpha=alpha)
-            li_params = F.CUBALIParams(tau_mem, tau_syn)
+            self.lif_params = F.CUBALIFParams(tau_mem, tau_syn, alpha=alpha)
+            self.li_params = F.CUBALIParams(tau_mem, tau_syn)
             self.dt = dt
 
             # Instance to work on
+            self.n_in = n_in
+            self.n_hidden = n_hidden
+            self.input_repetitions = input_repetitions
+            self.weight_scale = weight_scale
+            self.trace_scale = trace_scale
+            self.trace_shift_hidden = trace_shift_hidden
 
             if not mock:
                 save_nightly_calibration('spiking2_cocolist.pbin')
@@ -222,8 +228,7 @@ corresponds to one of the three classes: ying, yang and dot.
             self.lif_h = hxsnn.Neuron(
                 n_hidden,
                 experiment=self.experiment,
-                func=F.cuba_lif_integration,
-                params=lif_params,
+                params=self.lif_params,
                 trace_scale=trace_scale,
                 cadc_time_shift=trace_shift_hidden,
                 shift_cadc_to_first=True)
@@ -240,8 +245,7 @@ corresponds to one of the three classes: ying, yang and dot.
             self.li_readout = hxsnn.ReadoutNeuron(
                 n_out,
                 experiment=self.experiment,
-                func=F.cuba_li_integration,
-                params=li_params,
+                params=self.li_params,
                 trace_scale=trace_scale,
                 cadc_time_shift=trace_shift_out,
                 shift_cadc_to_first=True,
@@ -755,7 +759,7 @@ and one for the ``Synapse`` layer.
 
     from typing import NamedTuple, Optional
 
-    class EventPropNeuron(torch.autograd.Function):
+    class EventPropNeuronFunction(torch.autograd.Function):
         """
         Gradient estimation with time-discretized EventProp using explicit Euler integration.
         """
@@ -872,7 +876,7 @@ and one for the ``Synapse`` layer.
                                 lambda_v - lambda_i)), None, None, None
 
 
-    class EventPropSynapse(torch.autograd.Function):
+    class EventPropSynapseFunction(torch.autograd.Function):
         """
         Synapse function for proper gradient transport when using EventPropNeuron.
         """
@@ -925,15 +929,18 @@ and one for the ``Synapse`` layer.
             return grad_input, grad_weight, None
 
 
-    def eventprop_synapse(input: hxsnn.NeuronHandle, weight: torch.Tensor,
-                        _: torch.Tensor = None) -> hxsnn.SynapseHandle:
-        return hxsnn.SynapseHandle(EventPropSynapse.apply(input.spikes, weight))
+    class EventPropSynapse(hxsnn.Synapse):
+        def forward_func(self, input: hxsnn.NeuronHandle) -> hxsnn.SynapseHandle:
+            return hxsnn.SynapseHandle(
+                EventPropSynapseFunction.apply(input.spikes, self.weight))
 
 
-    def eventprop_neuron(input: hxsnn.SynapseHandle, params: NamedTuple, dt: float,
-                        hw_data: Optional[torch.Tensor]) -> hxsnn.NeuronHandle:
-        return hxsnn.NeuronHandle(*EventPropNeuron.apply(input.graded_spikes, params, dt, hw_data))
-
+    class EventPropNeuron(hxsnn.Neuron):
+        def forward_func(self, input: hxsnn.SynapseHandle,
+                        hw_data: Optional[Tuple[torch.Tensor]] = None) \
+                -> hxsnn.NeuronHandle:
+            return hxsnn.NeuronHandle(*EventPropNeuronFunction.apply(
+                input.graded_spikes, self.params, self.experiment.dt, hw_data))
 
 .. code:: ipython3
 
@@ -942,11 +949,25 @@ and one for the ``Synapse`` layer.
         def __init__(self, *args, **kwargs):
             super().__init__(*args, **kwargs)
             # use EventProp in hidden (spiking) LIF layer
-            self.linear_h.func = eventprop_synapse
-            self.lif_h.func = eventprop_neuron
+            weight = self.linear_h.weight
+            self.linear_h = EventPropSynapse(
+                self.n_in * self.input_repetitions,
+                self.n_hidden,
+                experiment=self.experiment,
+                transform=partial(
+                    weight_transforms.linear_saturating, scale=self.weight_scale))
+            self.linear_h.weight = weight
+            # Hidden layer
             # trace information is not used in EventProp ->  disable cadc recording
             # of hidden layer
-            self.lif_h._enable_cadc_recording = False
+            self.lif_h = EventPropNeuron(
+                self.n_hidden,
+                experiment=self.experiment,
+                params=self.lif_params,
+                trace_scale=self.trace_scale,
+                enable_cadc_recording=False,
+                cadc_time_shift=self.trace_shift_hidden,
+                shift_cadc_to_first=True)
 
 .. code:: ipython3
 
