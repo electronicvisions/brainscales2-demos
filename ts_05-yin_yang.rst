@@ -186,26 +186,20 @@ corresponds to one of the three classes: ying, yang and dot.
             """
             super().__init__()
 
-            # Neuron parameters
-            self.lif_params = F.CUBALIFParams(tau_mem, tau_syn, alpha=alpha)
-            self.li_params = F.CUBALIParams(tau_mem, tau_syn)
             self.dt = dt
 
             # Instance to work on
             self.n_in = n_in
             self.n_hidden = n_hidden
+            self.tau_mem = tau_mem
+            self.tau_syn = tau_syn
             self.input_repetitions = input_repetitions
             self.weight_scale = weight_scale
             self.trace_scale = trace_scale
             self.trace_shift_hidden = trace_shift_hidden
 
-            if not mock:
-                save_nightly_calibration('spiking2_cocolist.pbin')
-                self.experiment = hxsnn.Experiment(mock=mock, dt=dt)
-                self.experiment.default_execution_instance.load_calib(
-                    calib_path='spiking2_cocolist.pbin')
-            else:
-                self.experiment = hxsnn.Experiment(mock=mock, dt=dt)
+            # Experiment instance
+            self.experiment = hxsnn.Experiment(mock=mock, dt=dt)
 
             # Repeat input
             self.input_repetitions = input_repetitions
@@ -228,7 +222,13 @@ corresponds to one of the three classes: ying, yang and dot.
             self.lif_h = hxsnn.Neuron(
                 n_hidden,
                 experiment=self.experiment,
-                params=self.lif_params,
+                tau_mem=tau_mem,
+                tau_syn=tau_syn,
+                leak=hxsnn.MixedHXModelParameter(0., 80),
+                reset=hxsnn.MixedHXModelParameter(0., 80),
+                threshold=hxsnn.MixedHXModelParameter(1., 150),
+                i_synin_gm=500,
+                synapse_dac_bias=1000,
                 trace_scale=trace_scale,
                 cadc_time_shift=trace_shift_hidden,
                 shift_cadc_to_first=True)
@@ -245,7 +245,11 @@ corresponds to one of the three classes: ying, yang and dot.
             self.li_readout = hxsnn.ReadoutNeuron(
                 n_out,
                 experiment=self.experiment,
-                params=self.li_params,
+                tau_mem=tau_mem,
+                tau_syn=tau_syn,
+                leak=hxsnn.MixedHXModelParameter(0., 80),
+                i_synin_gm=500,
+                synapse_dac_bias=1000,
                 trace_scale=trace_scale,
                 cadc_time_shift=trace_shift_out,
                 shift_cadc_to_first=True,
@@ -764,14 +768,27 @@ and one for the ``Synapse`` layer.
         Gradient estimation with time-discretized EventProp using explicit Euler integration.
         """
         @staticmethod
-        def forward(ctx, input: torch.Tensor, params: NamedTuple, dt: float,
-                hw_data: Optional[torch.Tensor] = None) -> Tuple[torch.Tensor]:
+        def forward(ctx,
+                    input: torch.Tensor, 
+                    leak: torch.Tensor,
+                    reset: torch.Tensor,
+                    threshold: torch.Tensor,
+                    tau_syn: torch.Tensor,
+                    tau_mem: torch.Tensor,
+                    hw_data: Optional[torch.Tensor] = None,
+                    dt: float = 1e-6) -> Tuple[torch.Tensor]:
             """
             Forward function, generating spikes at positions > 0.
 
             :param input: Weighted input spikes in shape (2, batch, time, neurons).
                 The 2 at dim 0 comes from stacked output in EventPropSynapse.
-            :param params: CUBALIFParams object holding neuron parameters.
+            :param leak: The leak voltage as torch.Tensor.
+            :param reset: The reset voltage as torch.Tensor.
+            :param threshold: The threshold voltage as torch.Tensor.
+            :param tau_syn: The synaptic time constant as torch.Tensor.
+            :param tau_mem: The membrane time constant as torch.Tensor.
+            :param dt: Step width of integration.
+            :param hw_data: Optionally available observables from hardware.
 
             :returns: Returns the spike trains and membrane trace.
                 Both tensors are of shape (batch, time, neurons).
@@ -779,7 +796,8 @@ and one for the ``Synapse`` layer.
             dev = input.device
             # If hardware observables are given, return them directly.
             if hw_data is not None:
-                ctx.extra_kwargs = {"params": params, "dt": dt}
+                ctx.extra_kwargs = {
+                    "params": (leak, reset, threshold, tau_syn, tau_mem), "dt": dt}
                 hw_data = tuple(
                     data.to(dev) if data is not None else None for data in hw_data)
                 ctx.save_for_backward(input, *hw_data)
@@ -787,63 +805,67 @@ and one for the ``Synapse`` layer.
 
             # Otherwise integrate the neuron dynamics in software
             T, bs, ps = input[0].shape
-            z = torch.zeros(bs, ps).to(dev)
-            i = torch.zeros(bs, ps).to(dev)
-            v = torch.empty(bs, ps).fill_(params.leak).to(dev)
+            z, i = torch.zeros(bs, ps).to(dev), torch.zeros(bs, ps).to(dev)
+            v = torch.empty(bs, ps, device=dev)
+            v[:, :] = leak
             spikes, current, membrane = [z], [i], [v]
-
             for ts in range(T - 1):
                 # Current
-                i = i * (1 - dt / params.tau_syn) + input[0][ts]
+                i = i * (1 - dt / tau_syn) + input[0][ts]
+                current.append(i)
 
                 # Membrane
-                dv = dt / params.tau_mem * (params.leak - v + i)
+                dv = dt / tau_mem * (leak - v + i)
                 v = dv + v
 
                 # Spikes
-                z = torch.gt(v - params.threshold, 0.0).to((v - params.threshold).dtype)
+                spike = torch.gt(v - threshold, 0.0).to((v - threshold).dtype)
+                z = spike
 
                 # Reset
-                v = (1 - z) * v + z * params.reset
+                v = (1 - z.detach()) * v + z.detach() * reset
 
                 # Save data
                 spikes.append(z)
                 membrane.append(v)
-                current.append(i)
 
             spikes = torch.stack(spikes)
             membrane = torch.stack(membrane)
             current = torch.stack(current)
 
             ctx.save_for_backward(input, spikes, membrane, current)
-            ctx.extra_kwargs = {"params": params, "dt": dt}
+            ctx.extra_kwargs = {
+                "params": (leak, reset, threshold, tau_syn, tau_mem), "dt": dt}
 
             return spikes, membrane, current
 
         @staticmethod
         def backward(ctx, grad_spikes: torch.Tensor, grad_membrane: torch.Tensor,
-                    grad_current: torch.Tensor) -> Tuple[Optional[torch.Tensor], ...]:
-            """
+                    grad_current: torch.Tensor) \
+                -> Tuple[Optional[torch.Tensor], ...]:
+            r"""
             Implements 'EventProp' for backward.
 
-            :param grad_spikes: Backpropagted gradient wrt output spikes.
-            :param _: backpropagated gradient wrt to membrane trace (currently not used).
+            :param grad_spikes: Gradient with respect to output spikes.
+            :param grad_membrane: Gradient with respect to membrane trace.
+                (Not considered in EventProp algorithm, therefore not used further)
+            :param grad_current: Gradient with respect to current.
+                (Not considered in EventProp algorithm, therefore not used further)
 
             :returns: Gradient given by adjoint function lambda_i of current.
             """
+
             # input and layer data
             input_current = ctx.saved_tensors[0][0]
             T, _, _ = input_current.shape
             z = ctx.saved_tensors[1]
-            params = ctx.extra_kwargs["params"]
+            leak, reset, threshold, tau_syn, tau_mem = ctx.extra_kwargs["params"]
             dt = ctx.extra_kwargs["dt"]
 
             # adjoints
             lambda_v = torch.zeros_like(input_current)
             lambda_i = torch.zeros_like(input_current)
 
-            # When executed on hardware, spikes and membrane voltage are injected but the synaptic
-            # current is not recorded. Approximate it:
             if ctx.saved_tensors[3] is not None:
                 i = ctx.saved_tensors[3]
             else:
@@ -851,31 +873,32 @@ and one for the ``Synapse`` layer.
                 # compute current
                 for ts in range(T - 1):
                     i[ts + 1] = \
-                        i[ts] * (1 - dt / params.tau_syn) \
-                        + input_current[ts]
+                        i[ts] * (1 - dt / tau_syn) + input_current[ts]
 
             for ts in range(T - 1, 0, -1):
-                dv_m = params.leak - params.threshold + i[ts - 1]
-                dv_p = params.leak - params.reset + i[ts - 1]
+                dv_m = leak - threshold + i[ts - 1]
+                dv_p = leak - reset + i[ts - 1]
 
                 lambda_i[ts - 1] = lambda_i[ts] + dt / \
-                    params.tau_syn * (lambda_v[ts] - lambda_i[ts])
-                lambda_v[ts - 1] = lambda_v[ts] * \
-                    (1 - dt / params.tau_mem)
+                    tau_syn * (lambda_v[ts] - lambda_i[ts])
+                lambda_v[ts - 1] = lambda_v[ts] * (1 - dt / tau_mem)
 
                 output_term = z[ts] / dv_m * grad_spikes[ts]
                 output_term[torch.isnan(output_term)] = 0.0
+                output_term[torch.isinf(output_term)] = 0.0
 
                 jump_term = z[ts] * dv_p / dv_m
                 jump_term[torch.isnan(jump_term)] = 0.0
+                jump_term[torch.isinf(jump_term)] = 0.0
 
                 lambda_v[ts - 1] = (
                     (1 - z[ts]) * lambda_v[ts - 1]
                     + jump_term * lambda_v[ts - 1]
                     + output_term
                 )
-            return torch.stack((lambda_i * params.tau_syn,
-                                lambda_v - lambda_i)), None, None, None
+
+            return (torch.stack((lambda_i * tau_syn, lambda_v - lambda_i)),
+                    None, None, None, None, None, None, None)
 
 
     class EventPropSynapseFunction(torch.autograd.Function):
@@ -941,8 +964,15 @@ and one for the ``Synapse`` layer.
         def forward_func(self, input: hxsnn.SynapseHandle,
                         hw_data: Optional[Tuple[torch.Tensor]] = None) \
                 -> hxsnn.NeuronHandle:
-            return hxsnn.NeuronHandle(*EventPropNeuronFunction.apply(
-                input.graded_spikes, self.params, self.experiment.dt, hw_data))
+            return hxsnn.NeuronHandle(*F.EventPropNeuronFunction.apply(
+                input.graded_spikes,
+                self.leak.model_value,
+                self.reset.model_value,
+                self.threshold.model_value,
+                self.tau_syn.model_value,
+                self.tau_mem.model_value,
+                hw_data,
+                self.experiment.dt))
 
 .. code:: ipython3
 
@@ -965,7 +995,13 @@ and one for the ``Synapse`` layer.
             self.lif_h = EventPropNeuron(
                 self.n_hidden,
                 experiment=self.experiment,
-                params=self.lif_params,
+                tau_mem=self.tau_mem,
+                tau_syn=self.tau_syn,
+                leak=hxsnn.MixedHXModelParameter(0., 80),
+                reset=hxsnn.MixedHXModelParameter(0., 80),
+                threshold=hxsnn.MixedHXModelParameter(1., 150),
+                i_synin_gm=500,
+                synapse_dac_bias=1000,
                 trace_scale=self.trace_scale,
                 enable_cadc_recording=False,
                 cadc_time_shift=self.trace_shift_hidden,
