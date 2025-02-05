@@ -776,14 +776,16 @@ and one for the ``Synapse`` layer.
             :returns: Returns the spike trains and membrane trace.
                 Both tensors are of shape (batch, time, neurons).
             """
+            dev = input.device
             # If hardware observables are given, return them directly.
             if hw_data is not None:
                 ctx.extra_kwargs = {"params": params, "dt": dt}
+                hw_data = tuple(
+                    data.to(dev) if data is not None else None for data in hw_data)
                 ctx.save_for_backward(input, *hw_data)
                 return hw_data
 
             # Otherwise integrate the neuron dynamics in software
-            dev = input.device
             T, bs, ps = input[0].shape
             z = torch.zeros(bs, ps).to(dev)
             i = torch.zeros(bs, ps).to(dev)
