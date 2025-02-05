@@ -588,14 +588,14 @@ function.
         pbar.close()
         print(f"Test epoch: {epoch}, average loss: {loss:.4f}, test acc={100 * acc:.2f}%")
 
-        scores = torch.stack(scores).reshape(-1, 3)
-        data = torch.stack(data).reshape(-1, 4)
-        target = torch.stack(target).reshape(-1)
+        scores = torch.stack(scores).reshape(-1, 3).cpu()
+        data = torch.stack(data).reshape(-1, 4).cpu()
+        target = torch.stack(target).reshape(-1).cpu()
 
         update(
-            model.network.s_in.detach(),
-            model.network.s_h.spikes.detach(),
-            model.network.y_o.membrane_cadc.detach(),
+            model.network.s_in.detach().cpu(),
+            model.network.s_h.spikes.detach().cpu(),
+            model.network.y_o.membrane_cadc.detach().cpu(),
             data, target, scores,
             loss, 100 * acc, rate)
 
