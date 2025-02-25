@@ -42,7 +42,9 @@ def plot_membrane_dynamics(pop):
         t_v = np.concatenate((t_v, vs.times))
         v = np.concatenate((v, np.array(vs)))
 
-    spike_times = pop[0:1].get_data().segments[-1].spiketrains[-1]
+    # we enable the current pulse in the second experiment snippet
+    # -> spiketrains[1]
+    spike_times = pop[0:1].get_data().segments[-1].spiketrains[1]
 
     fig = plt.figure(figsize=(11, 4))
     grid = gs.GridSpec(2, 2,
@@ -102,7 +104,7 @@ def plot_membrane_dynamics(pop):
     # cut (mask out) downswing after action potential from trace
     # to clean up phase trajectory plot
     spike_mask = np.zeros(n_samples, dtype=bool)
-    t = np.arange(n_samples) * np.mean(np.diff(t_v))
+    t = np.arange(n_samples) * np.mean(np.diff(t_v)) * quantities.ms
     for spike_time in spike_times:
         mask_start = spike_time - 0.1 * quantities.us
         mask_close = spike_time + 1.5 * quantities.us
