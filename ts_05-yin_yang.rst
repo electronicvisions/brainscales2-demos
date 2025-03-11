@@ -127,6 +127,12 @@ fire (LIF) layer projecting its spike events onto one leaky-integrator
 (LI) readout layer, as in [3]. Each neuron in the output layer
 corresponds to one of the three classes: ying, yang and dot.
 
+To avoid time-consuming implicit calibration from given "Neuron" parameters we
+load a prepared calibration. Note, that changing "Neuron" hardware parameters
+becomes not effective. You can comment out the lines loading the calibration
+if you want to use different parameters but be aware than the this will trigger
+a hardware calibration which might take a long time.
+
 .. code:: ipython3
 
     from functools import partial
@@ -200,6 +206,12 @@ corresponds to one of the three classes: ying, yang and dot.
 
             # Experiment instance
             self.experiment = hxsnn.Experiment(mock=mock, dt=dt)
+            # To avoid time-consuming implicit calibration from given parameters
+            # we load a prepared calibration. Note, that changing "Neuron"
+            # hardware parameters become ineffective
+            save_nightly_calibration('spiking2_calix-native.pkl')
+            self.experiment.default_execution_instance.load_calib(
+                "spiking2_calix-native.pkl")
 
             # Repeat input
             self.input_repetitions = input_repetitions
