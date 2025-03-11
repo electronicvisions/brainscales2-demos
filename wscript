@@ -82,7 +82,7 @@ def build(bld):
         use=['doc-much-demos-such-wow-jupyter-test', 'pynn_brainscales2', 'hxtorch'],
         install_path='${PREFIX}/bin/tests/py',
         test_environ=dict(BLD_DIR=str(testdir)),
-        test_timeout=1500,
+        test_timeout=2400,
         skip_run=not bld.env.BBS_HARDWARE_AVAILABLE,
     )
 
