@@ -32,7 +32,7 @@ def plot_training(inputs, target, epochs):
         loss_line.set_data(np.arange(len(losses)), losses)
         for i in range(3):
             pred_lines[i].set_data(
-                np.arange(0, 100), y.membrane_cadc.detach().numpy()[:, 0, i])
+                np.arange(0, 100), y.v_cadc.detach().numpy()[:, 0, i])
         display(fig)
     return update_plot
 
@@ -41,31 +41,22 @@ def plot_compare_traces(inputs, z):
     input_events = torch.nonzero(inputs)
     output_events = torch.nonzero(z.spikes)
 
-    _, axs = plt.subplots(nrows=2, sharex='col')
-    axs[0].vlines(input_events[:, 0], ymin=-100, ymax=0, color="orange", label="Inputs")
-    axs[0].vlines(output_events[:, 0], ymin=-100, ymax=0, color="red", label="Outputs")
-    axs[0].plot(z.membrane_cadc.detach().numpy().reshape(-1), color="blue")
-    axs[0].set_ylim(-60, 0)
-    axs[0].set_ylabel(r"$v_m^\mathrm{CADC}$ [CADC Value]")
-    axs[0].legend()
-    axs[1].plot(
-        z.membrane_madc[0, :].detach().numpy().reshape(-1) / 125,
-        z.membrane_madc[1, :].detach().numpy().reshape(-1), color="blue")
-    axs[1].vlines(input_events[:, 0], ymin=250, ymax=550, color="orange")
-    axs[1].vlines(output_events[:, 0], ymin=250, ymax=550, color="red")
-    axs[1].set_ylabel(r"$v_m^\mathrm{CADC}}$  [MADC Value]")
-    axs[1].set_ylim(250, 550)
-    axs[1].scatter(output_events[:, 0], output_events[:, 2])
-    axs[1].set_xlabel(r"time [$\mu$s]")
+    fig, axs = plt.subplots(nrows=1, figsize=(5, 3))
+    axs.vlines(input_events[:, 0], ymin=-100, ymax=0, color="orange", label="Inputs")
+    axs.vlines(output_events[:, 0], ymin=-100, ymax=0, color="red", label="Outputs")
+    axs.plot(z.v_cadc.detach().numpy().reshape(-1), color="blue")
+    axs.set_ylim(-60, 0)
+    axs.set_ylabel(r"$v_m^\mathrm{CADC}$ [CADC Value]")
+    axs.legend()
 
 
 def plot_mock(inputs, z):
     input_events = torch.nonzero(inputs)
     output_events = torch.nonzero(z.spikes)
-    _, axs = plt.subplots(nrows=1, sharex='col', figsize=(5, 3))
+    fig, axs = plt.subplots(nrows=1, sharex='col', figsize=(5, 3))
     axs.vlines(input_events[:, 0], ymin=60, ymax=140, color="orange", label="Inputs")
     axs.vlines(output_events[:, 0], ymin=60, ymax=140, color="red", label="Outputs")
-    axs.plot(z.membrane_cadc.detach().numpy().reshape(-1), color="blue")
+    axs.plot(z.v_cadc.detach().numpy().reshape(-1), color="blue")
     axs.set_ylim(60, 140)
     axs.set_ylabel(r"$v_m^\mathrm{CADC}$ [CADC Value]")
     axs.set_xlabel(r"time [$\mu$s]")
