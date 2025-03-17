@@ -1,5 +1,5 @@
 A default calibration is generated for every setup every night.
-We save the nightly calibration in two variables such that we can use it later when we define our neuronal network.
+We save the nightly calibration in a variable such that we can use it later when we define our experiment.
 
 .. code:: ipython3
 
