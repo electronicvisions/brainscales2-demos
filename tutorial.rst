@@ -41,8 +41,8 @@ In this session, we will cover the following topics:
    ts_08-adex_complex_dynamics
    ts_09-inside_realtime_hook
    ts_10-multiple_configs
-   ts_11-hxtorch_snn_intro
    ts_11-plasticity_homeostasis
+   ts_12-hxtorch_snn_intro
    tp_00-introduction
    tp_01-properties
    tp_02-yin_yang
