@@ -83,6 +83,12 @@ Note that in ``hxtorch`` the returned hardware data is mapped to a dense time gr
     hxtorch.release_hardware()
 
 
+.. image:: _static/tutorial/hxsnn_intro_cadc_vs_madc.png
+   :width: 90%
+   :align: center
+   :class: solution
+
+
 Great, we have now seen how easily spiking neural networks are emulated on BSS-2.
 In order to train them, each layer instance of ``HXModule`` has a PyTorch-differentiable numerical representation defined in a member function ``forward_func``.
 This function allows backpropagating gradients but also to simulate networks.
@@ -107,6 +113,12 @@ Simulation is enabled by setting ``mock=True`` in the ``Experiment`` instance:
 
     # Display
     plot_mock(inputs, z)
+
+
+.. image:: _static/tutorial/hxsnn_intro_mock_mode.png
+   :width: 90%
+   :align: center
+   :class: solution
 
 
 Since the dynamics of the numerics is used to compute gradients it is important to align them to the dynamics of the neurons on hardware.
@@ -209,6 +221,12 @@ For this, we assume ``leak=0``, ``reset=0`` and ``threshold=1`` for the LIF neur
     hxtorch.release_hardware()
 
 
+.. image:: _static/tutorial/hxsnn_intro_trace_scaling.png
+   :width: 90%
+   :align: center
+   :class: solution
+
+
 Now that we have aligned the dynamics on hardware and in the numerics, we can use the hardware to emulate out network and use the numerics to compute gradients for a given task.
 Training networks on BSS-2 using ``hxtorch.snn`` works the same as for plain PyTorch.
 Its easy… sometimes.
@@ -233,6 +251,12 @@ As the target pattern we use a sine:
 
     # Display
     plot_targets(targets)
+
+
+.. image:: _static/tutorial/hxsnn_intro_targets.png
+   :width: 90%
+   :align: center
+   :class: solution
 
 
 .. code:: ipython3
@@ -290,3 +314,8 @@ As the target pattern we use a sine:
             update_plot(loss.item(), y)
 
     hxtorch.release_hardware()
+
+.. image:: _static/tutorial/hxsnn_intro_training.png
+   :width: 90%
+   :align: center
+   :class: solution
