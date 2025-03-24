@@ -5,6 +5,7 @@ In this tutorial we will explore the ``hxtorch.snn`` framework used to train net
 
 .. code:: ipython3
 
+    %matplotlib inline
     from _static.tutorial.hxsnn_intro_plots import plot_training, plot_compare_traces, plot_mock, plot_scaled_trace, plot_targets
     from _static.common.helpers import setup_hardware_client, save_nightly_calibration
     setup_hardware_client()
@@ -83,7 +84,7 @@ Note that in ``hxtorch`` the returned hardware data is mapped to a dense time gr
 
 
 Great, we have now seen how easily spiking neural networks are emulated on BSS-2.
-In order to train them, each layer instance of :math:`HXModule` has a PyTorch-differentiable numerical representation defined in a member function ``forward_func``.
+In order to train them, each layer instance of ``HXModule`` has a PyTorch-differentiable numerical representation defined in a member function ``forward_func``.
 This function allows backpropagating gradients but also to simulate networks.
 Simulation is enabled by setting ``mock=True`` in the ``Experiment`` instance:
 
@@ -236,8 +237,6 @@ As the target pattern we use a sine:
 
 .. code:: ipython3
 
-    %matplotlib inline
-    import matplotlib.pyplot as plt
     import ipywidgets as w
 
     hxtorch.init_hardware()

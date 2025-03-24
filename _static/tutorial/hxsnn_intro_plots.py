@@ -53,7 +53,7 @@ def plot_compare_traces(inputs, z):
         z.membrane_madc[1, :].detach().numpy().reshape(-1), color="blue")
     axs[1].vlines(input_events[:, 0], ymin=250, ymax=550, color="orange")
     axs[1].vlines(output_events[:, 0], ymin=250, ymax=550, color="red")
-    axs[1].set_ylabel(r"$v_m^\mathrm{CADC}}$  [MADC Value]")
+    axs[1].set_ylabel(r"$v_m^\mathrm{MADC}$  [MADC Value]")
     axs[1].set_ylim(250, 550)
     axs[1].scatter(output_events[:, 0], output_events[:, 2])
     axs[1].set_xlabel(r"time [$\mu$s]")
