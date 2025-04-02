@@ -65,20 +65,137 @@ Tasks can be executed periodically, for which a timer object is to be supplied.
 The plasticity kernel
 ---------------------
 
-We now define the plasticity rule type with the C++-code which stabilizes the neurons' firing rate by alteration of the synaptic weights.
-We need the neurons' firing rate as observables in the plasticity rule function.
-Therefore, we require the rule to operate on both the synaptic weights as well as the target neurons.
+We now define the program code for the plasticity rule which stabilizes the neurons' firing rate by alteration of the synaptic weights.
 The entry point of the plasticity task is called ``PLASTICITY_RULE_KERNEL`` and is supplied with information about the synapse and neuron locations.
 This information corresponds to the projections and populations in PyNN.
 
-Within the task function, the program accesses synaptic weights row-wise via ``set_weights(weight_values, row)`` and ``get_weights(row)``.
-The neurons' firing rates are accessed via ``get_rate_counters(reset)``.
-The task, which corresponds to the execution of the plasticity rule, is scheduled periodically.
-Over time, this leads to the a stabilization of  the neurons' firing rate.
+Within the task function, we will access the neurons' firing rates via ``get_rate_counters(reset)``, compare it to a target firing rate and change the weight according to our learning rule.
+In order to change the weight, we read the synaptic weights row-wise via ``get_weights(row)``, increase/decrease the value by one and then write the weight with ``set_weights(weight_values, row)``.
+Over time, this leads to the stabilization of the neurons' firing rates.
+
+Here is the definition of the plasticity in C++.
+Since there is no syntax highlighting for C++ in our Python code, we will print a nicely formatted version below.
 
 .. code:: ipython3
 
     import textwrap
+
+    PLASTICITY_CODE = textwrap.dedent("""
+        #include "grenade/vx/ppu/synapse_array_view_handle.h"
+        #include "grenade/vx/ppu/neuron_view_handle.h"
+        #include "grenade/vx/ppu/time.h"
+        #include "libnux/vx/vector_if.h"
+        #include "hate/tuple.h"
+
+        using namespace grenade::vx::ppu;
+        using namespace libnux::vx;
+        extern volatile PPUOnDLS ppu;
+
+        /**
+         * Get the sign for each entry of a SIMD vector row (with 256 elements, one for each
+         * neuron column).
+         * We use signed fractional saturating SIMD arithmetics to express the sign.
+         */
+        VectorRowFracSat8 sign(VectorRowFracSat8 const& value)
+        {{
+            // (value == 0) ? 0 : ((value >= 0) ? 1 : -1);
+            // vector_if applies a conditional selection for each SIMD vector entry
+            return vector_if(
+                value,
+                VectorIfCondition::equal,
+                VectorRowFracSat8(0),
+                vector_if(
+                    value,
+                    VectorIfCondition::greater_equal,
+                    VectorRowFracSat8(1),
+                    VectorRowFracSat8(-1)));
+        }}
+
+        /**
+         * The plasticity rule function, which will be invoked at the requested times during the
+         * experiment.
+         *
+         * @tparam N Number of handles to synapses of the projection and neurons of the
+         *           population. The handles contain all synapses or neurons, which reside on
+         *           one hemisphere of the chip, therefore these can here be one or two.
+         */
+        template <size_t N>
+        void PLASTICITY_RULE_KERNEL(
+            std::array<SynapseArrayViewHandle, N>& synapses,
+            std::array<NeuronViewHandle, N>& neurons,
+            Recording& recording)
+        {{
+            // record the current time of the experiment
+            recording.time = now();
+
+            // for each part (synapses placed on the top or bottom hemisphere of the chip)
+            // of the projection perform the plasticity update
+            hate::for_each(
+                [&ppu](SynapseArrayViewHandle const& local_synapses,
+                    NeuronViewHandle& local_neurons,
+                    auto& local_recording_w) {{
+                    // Both PPUs execute the same code, we therefore check that we only apply
+                    // weight updates to the hemisphere/PPU-local synapses
+                    if (local_synapses.hemisphere != ppu) {{
+                        return;
+                    }}
+
+                    // get the number of spikes for each neuron in the population residing on
+                    // this hemisphere since the last rule execution (and reset the counter)
+                    auto const neuron_counters = local_neurons.get_rate_counters(true);
+
+                    // iterate over all synapse rows, which contain plastic synapses:
+                    //  - get the weights
+                    //  - calculate weight update
+                    //  - set updated weights
+                    //  - record current weight values
+                    for (size_t j = 0; j < local_synapses.rows.size(); ++j) {{
+                        auto weights = static_cast<VectorRowFracSat8>(local_synapses.get_weights(j));
+
+                        weights += sign(
+                            VectorRowFracSat8({target})
+                            - static_cast<VectorRowFracSat8>(neuron_counters));
+
+                        // ensure positive weight
+                        // (weights > 0) ? weights : 0
+                        weights = vector_if(
+                            weights,
+                            VectorIfCondition::greater,
+                            weights,
+                            VectorRowFracSat8(0));
+
+                        // ensure weight in hardware range
+                        // (weights > 63) ? 63 : weights
+                        weights = vector_if(
+                            weights -63,
+                            VectorIfCondition::greater,
+                            VectorRowFracSat8(63),
+                            weights);
+
+                        local_synapses.set_weights(static_cast<VectorRowMod8>(weights), j);
+
+                        for (size_t c = 0; c < local_synapses.columns.size(); ++c) {{
+                            local_recording_w[j][c] = weights[local_synapses.columns[c]];
+                        }}
+                    }}
+                }}, synapses, neurons, recording.w);
+        }}
+        """)
+
+.. code:: ipython3
+
+   import IPython.display
+   IPython.display.display_markdown(IPython.display.Markdown(f"``` c++ \n{PLASTICITY_CODE}\n```"))
+
+
+We now have to define a class which represents the plasticity rule in PyNN.
+With it we define which observables we want to record.
+Upon construction of the plasticity rule, we expect a `Timer` object which handles the execution of the plasticity rule.
+
+We need the neurons' firing rates as observables in the plasticity rule function.
+Therefore, we will later require the rule to operate on both the synaptic weights as well as the target neurons.
+
+.. code:: ipython3
 
     class PlasticityRule(pynn.PlasticityRule):
         def __init__(self, timer: pynn.Timer, target: int):
@@ -116,107 +233,7 @@ Over time, this leads to the a stabilization of  the neurons' firing rate.
 
             :return: PPU-code of plasticity-rule kernel as string.
             """
-            return textwrap.dedent("""
-            #include "grenade/vx/ppu/synapse_array_view_handle.h"
-            #include "grenade/vx/ppu/neuron_view_handle.h"
-            #include "grenade/vx/ppu/time.h"
-            #include "libnux/vx/vector_if.h"
-            #include "hate/tuple.h"
-
-            using namespace grenade::vx::ppu;
-            using namespace libnux::vx;
-            extern volatile PPUOnDLS ppu;
-
-            /**
-             * Get the sign for each entry of a SIMD vector row (with 256 elements, one for each
-             * neuron column).
-             * We use signed fractional saturating SIMD arithmetics to express the sign.
-             */
-            VectorRowFracSat8 sign(VectorRowFracSat8 const& value)
-            {{
-                // (value == 0) ? 0 : ((value >= 0) ? 1 : -1);
-                // vector_if applies a conditional selection for each SIMD vector entry
-                return vector_if(
-                    value,
-                    VectorIfCondition::equal,
-                    VectorRowFracSat8(0),
-                    vector_if(
-                        value,
-                        VectorIfCondition::greater_equal,
-                        VectorRowFracSat8(1),
-                        VectorRowFracSat8(-1)));
-            }}
-
-            /**
-             * The plasticity rule function, which will be invoked at the requested times during the
-             * experiment.
-             *
-             * @tparam N Number of handles to synapses of the projection and neurons of the
-             *           population. The handles contain all synapses or neurons, which reside on
-             *           one hemisphere of the chip, therefore these can here be one or two.
-             */
-            template <size_t N>
-            void PLASTICITY_RULE_KERNEL(
-                std::array<SynapseArrayViewHandle, N>& synapses,
-                std::array<NeuronViewHandle, N>& neurons,
-                Recording& recording)
-            {{
-                // record the current time of the experiment
-                recording.time = now();
-
-                // for each part (synapses placed on the top or bottom hemisphere of the chip)
-                // of the projection perform the plasticity update
-                hate::for_each(
-                    [&ppu](SynapseArrayViewHandle const& local_synapses,
-                        NeuronViewHandle& local_neurons,
-                        auto& local_recording_w) {{
-                        // Both PPUs execute the same code, we therefore check that we only apply
-                        // weight updates to the hemisphere/PPU-local synapses
-                        if (local_synapses.hemisphere != ppu) {{
-                            return;
-                        }}
-
-                        // get the number of spikes for each neuron in the population residing on
-                        // this hemisphere since the last rule execution (and reset the counter)
-                        auto const neuron_counters = local_neurons.get_rate_counters(true);
-
-                        // iterate over all synapse rows, which contain plastic synapses:
-                        //  - get the weights
-                        //  - calculate weight update
-                        //  - set updated weights
-                        //  - record current weight values
-                        for (size_t j = 0; j < local_synapses.rows.size(); ++j) {{
-                            auto weights = static_cast<VectorRowFracSat8>(local_synapses.get_weights(j));
-
-                            weights += sign(
-                                VectorRowFracSat8({target})
-                                - static_cast<VectorRowFracSat8>(neuron_counters));
-
-                            // ensure positive weight
-                            // (weights > 0) ? weights : 0
-                            weights = vector_if(
-                                weights,
-                                VectorIfCondition::greater,
-                                weights,
-                                VectorRowFracSat8(0));
-
-                            // ensure weight in hardware range
-                            // (weights > 63) ? 63 : weights
-                            weights = vector_if(
-                                weights -63,
-                                VectorIfCondition::greater,
-                                VectorRowFracSat8(63),
-                                weights);
-
-                            local_synapses.set_weights(static_cast<VectorRowMod8>(weights), j);
-
-                            for (size_t c = 0; c < local_synapses.columns.size(); ++c) {{
-                                local_recording_w[j][c] = weights[local_synapses.columns[c]];
-                            }}
-                        }}
-                    }}, synapses, neurons, recording.w);
-            }}
-            """.format(target=self._target))
+            return PLASTICITY_CODE.format(target=self._target)
 
 
 The experiment
