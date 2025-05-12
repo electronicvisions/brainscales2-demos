@@ -44,6 +44,7 @@ In this session, we will cover the following topics:
    ts_11-plasticity_homeostasis
    ts_12-hxtorch_snn_intro
    ts_13-network_partitioning
+   ts_14-jaxsnn_yin_yang
    tp_00-introduction
    tp_01-properties
    tp_02-yin_yang

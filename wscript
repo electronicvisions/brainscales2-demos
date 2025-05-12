@@ -7,6 +7,7 @@ def depends(dep):
     dep('haldls')
     dep("pynn-brainscales")
     dep("hxtorch")
+    dep("jax-snn")
     dep("libnux")
     dep('code-format')
 
@@ -79,7 +80,7 @@ def build(bld):
         target='doc-much-demos-such-wow_ipynb_executability_tests',
         tests=bld.path.ant_glob('tests/py/*.py'),
         features='use pytest',
-        use=['doc-much-demos-such-wow-jupyter-test', 'pynn_brainscales2', 'hxtorch'],
+        use=['doc-much-demos-such-wow-jupyter-test', 'pynn_brainscales2', 'hxtorch', 'jaxsnn'],
         install_path='${PREFIX}/bin/tests/py',
         test_environ=dict(BLD_DIR=str(testdir)),
         test_timeout=3600,
