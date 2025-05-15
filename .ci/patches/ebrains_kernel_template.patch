@@ -7,9 +7,9 @@
 -   "display_name": "Python",
 -   "language": "python3",
 -   "name": "python3"
-+   "display_name": "EBRAINS-experimental",
++   "display_name": "EBRAINS-VERSIONPLACEHOLDER",
 +   "language": "python",
-+   "name": "ebrains-experimental"
++   "name": "ebrains-VERSIONPLACEHOLDER"
    },
    "title": "BrainScaleS-2 single neuron experiments"
   },
