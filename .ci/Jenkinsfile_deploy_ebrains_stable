@@ -1,0 +1,66 @@
+@Library("jenlib") _
+
+final String PROJECT_NAME = "much-demos-such-wow"
+
+// Only deploy when triggered manually
+boolean deploy = env.GERRIT_CHANGE_NUMBER == null || env.GERRIT_CHANGE_NUMBER == ''
+
+// save message of last commit for deployment (will be filled in Checkout)
+def commitMessage = ""
+
+try {
+	stage("Checkout") {
+		runOnSlave(label: "frontend") {
+			checkout scm
+			if (params.GITHASH) {
+				jesh("git checkout ${params.GITHASH}")
+			}
+			commitMessage = sh(script: "git log --oneline -n 1", returnStdout: true).trim()
+		}
+	}
+
+	stage("Build") {
+		runOnSlave(label: "frontend") {
+			inSingularity(app: 'dls') {
+				jesh("mkdir -p build")
+				jesh("python -m sphinx -M jupyter . build")
+			}
+		}
+	}
+
+	stage("Apply Changes") {
+		runOnSlave(label: "frontend") {
+			dir("build/jupyter") {
+				jesh("git init")
+
+				// Apply patches
+				jesh("sed 's/VERSIONPLACEHOLDER/${params.VERSION}/g' ${env.WORKSPACE}/.ci/patches/ebrains_kernel_template.patch > ebrains_kernel.patch")
+				jesh("for fn in *.ipynb; do patch \"\$fn\" \"ebrains_kernel.patch\"; done")
+
+				jesh("sed 's/VERSIONPLACEHOLDER/${params.VERSION}/g' ${env.WORKSPACE}/.ci/patches/ebrains_stable_deployment_template.patch > ebrains_stable_deployment.patch")
+				jesh("patch -p1 < ebrains_stable_deployment.patch")
+
+				// Create commit
+				jesh("git add *.ipynb _static")
+				jesh("""git commit -m "Build ${currentBuild.displayName}" -m "Original commit: ${commitMessage}" """)
+			}
+		}
+	}
+
+	conditionalStage(name: "Deployment to GitHub", skip: !deploy) {
+		runOnSlave(label: "frontend") {
+			dir("build/jupyter") {
+				jesh("git remote add origin git@github-brainscales2-demos_jupyter-notebooks:electronicvisions/brainscales2-demos.git")
+				lock("much-demos-such-wow_GITHUB-UPLOAD") {
+					jesh("git push -f origin HEAD:jupyter-notebooks")
+				}
+			}
+		}
+	}
+} finally {
+	stage("Archive Results") {
+		runOnSlave(label: "frontend") {
+			archiveArtifacts("build/jupyter/**/*")
+		}
+	}
+}

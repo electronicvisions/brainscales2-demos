@@ -1,0 +1,40 @@
+--- a/_static/common/collab_helpers.py
++++ b/_static/common/collab_helpers.py
+@@ -10,7 +10,7 @@ def in_ebrains_collaboratory():
+ 
+ 
+ def check_kernel():
+-    expected_kernel = 'EBRAINS-experimental'
++    expected_kernel = 'EBRAINS-VERSIONPLACEHOLDER'
+     actual_kernel = os.environ.get('LAB_KERNEL_NAME', None)
+     if actual_kernel is None:
+         raise RuntimeError(
+--- a/tutorial.ipynb
++++ b/tutorial.ipynb
+@@ -61,7 +61,7 @@
+     "## Executing the Notebooks\n",
+     "\n",
+     "If you want to execute the notebooks yourself, you can clone them from our\n",
+-    "[github repository](https://github.com/electronicvisions/brainscales2-demos/tree/jupyter-notebooks-experimental) and\n",
++    "[github repository](https://github.com/electronicvisions/brainscales2-demos/tree/jupyter-notebooks) and\n",
+     "execute them on the [EBRAINS Platform](https://wiki.ebrains.eu).\n",
+     "Simply use an existing collabatory or create a new one in which you can clone the notebooks, e.g., via:"
+    ]
+@@ -74,7 +74,7 @@
+    },
+    "source": [
+     "```bash\n",
+-    "!git clone https://github.com/electronicvisions/brainscales2-demos.git --branch jupyter-notebooks-experimental\n",
++    "!git clone https://github.com/electronicvisions/brainscales2-demos.git --branch jupyter-notebooks\n",
+     "```\n"
+    ]
+   },
+@@ -85,7 +85,7 @@
+    "source": [
+     "in a notebook of your JupyterLab session.\n",
+     "\n",
+-    "To be able to use the EBRAINS software environment for your notebook, please select the `EBRAINS-experimental` kernel.\n",
++    "To be able to use the EBRAINS software environment for your notebook, please select the `EBRAINS-VERSIONPLACEHOLDER` kernel.\n",
+     "The currently used kernel is shown in the status line at the bottom of the notebook and in the upper right hand corner of the notebook. The default is `Python 3 (ipykernel)`, which does not have the EBRAINS software environment installed. To select a different kernel, please klick the kernel name, then select from the appearing list."
+    ]
+   },
