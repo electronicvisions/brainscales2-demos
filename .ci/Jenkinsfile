@@ -36,7 +36,7 @@ try {
 		runOnSlave(label: "frontend") {
 			dir("build/much-demos-such-wow/jupyter/jupyter") {
 				jesh("git init")
-				jesh("sed 's/VERSIONPLACEHOLDER/experimental/g' ${env.WORKSPACE}/much-demos-such-wow/.ci/patches/ebrains_kernel_template.patch > ebrain_kernel.patch")
+				jesh("sed 's/VERSIONPLACEHOLDER/experimental/g' ${env.WORKSPACE}/much-demos-such-wow/.ci/patches/ebrains_kernel_template.patch > ebrains_kernel.patch")
 				jesh("for fn in *.ipynb; do patch \"\$fn\" \"ebrains_kernel.patch\"; done")
 				jesh("git add *.ipynb _static")
 				jesh("git commit -m \"build ${currentBuild.displayName}\"")
