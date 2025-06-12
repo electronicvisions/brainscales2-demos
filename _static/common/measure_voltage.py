@@ -23,12 +23,16 @@ def measure_voltage(
     """
 
     # connect DAC to chip, set voltage on DAC
+    # pylint: disable=no-member
     init = sta.ExperimentInit()
-    init.shift_register.select_analog_readout_mux_1_input = \
+    init.asic_adapter_board.shift_register\
+        .select_analog_readout_mux_1_input = \
         hal.ShiftRegister.AnalogReadoutMux1Input.readout_chain_0
-    init.shift_register.select_analog_readout_mux_2_input = \
+    init.asic_adapter_board.shift_register\
+        .select_analog_readout_mux_2_input = \
         hal.ShiftRegister.AnalogReadoutMux2Input.v_reset
-    init.dac_channel_block.set_voltage(  # pylint: disable=no-member
+    # pylint: enable=no-member
+    init.asic_adapter_board.dac_channel_block.set_voltage(  # pylint: disable=no-member
         halco.DACChannelOnBoard.mux_dac_25,
         voltage)
     builder, _ = init.generate()
