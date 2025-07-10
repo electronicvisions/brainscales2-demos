@@ -304,6 +304,10 @@ In this task, we want to look at the membrane response of the neuron to stimulat
 Your goal is to reproduce the image of PSP-Stacking (summation) from the introduction.
 For this, you might find it helpful to look into pynn_introduction again.
 
+A remark about the calibration loaded above:
+While this calibration is not needed for the simple experiments above, it is essential when looking at synaptic inputs.
+Therefore, you should load it when setting up this experiment using: ``pynn.setup(initial_config=calib)``.
+
 Steps:
 
 - Set up a population of one neuron with the default neuron parameters to record its membrane potential.
