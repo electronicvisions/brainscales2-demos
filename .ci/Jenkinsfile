@@ -2,8 +2,6 @@
 
 final String PROJECT_NAME = "much-demos-such-wow"
 
-boolean deploy = env.GERRIT_EVENT_TYPE == "change-merged"
-
 try {
 	withCcache() {
 		wafDefaultPipeline(
@@ -18,7 +16,6 @@ try {
 			testOptions        : "--test-execall -j1",
 			notificationChannel: "#jenkins-trashbin",  // success is checked globally
 			configureInstallOptions: "--build-profile=ci",
-			ignoreGerritChanges: deploy
 		)
 	}
 
@@ -32,21 +29,6 @@ try {
 		}
 	}
 
-	conditionalStage(name: "Deployment to GitHub Pages", skip: !deploy) {
-		runOnSlave(label: "frontend") {
-			dir("build/much-demos-such-wow/jupyter/jupyter") {
-				jesh("git init")
-				jesh("sed 's/VERSIONPLACEHOLDER/experimental/g' ${env.WORKSPACE}/much-demos-such-wow/.ci/patches/ebrains_kernel_template.patch > ebrains_kernel.patch")
-				jesh("for fn in *.ipynb; do patch \"\$fn\" \"ebrains_kernel.patch\"; done")
-				jesh("git add *.ipynb _static")
-				jesh("git commit -m \"build ${currentBuild.displayName}\"")
-				jesh("git remote add origin git@github-brainscales2-demos_jupyter-notebooks:electronicvisions/brainscales2-demos.git")
-				lock("much-demos-such-wow_GITHUB-UPLOAD") {
-					jesh("git push -f origin HEAD:jupyter-notebooks-experimental")
-				}
-			}
-		}
-	}
 } catch (Throwable t) {
 	notifyFailure(mattermostChannel: "#dls-software")
 	throw t

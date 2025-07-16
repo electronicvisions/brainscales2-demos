@@ -32,9 +32,8 @@ def is_experimental_kernel() -> bool:
 
 def setup_hardware_client():
     if in_ebrains_collaboratory():
-        postfix = "_experimental" if is_experimental_kernel() else ""
         setup_url = 'https://brainscales-r.kip.uni-heidelberg.de:7443/nmpi/' \
-                    f'quiggeldy_setups{postfix}.csv'
+                    'quiggeldy_setups_experimental.csv'
         quiggeldy_setups = pd.read_csv(setup_url, dtype=str)
 
         os.environ['QUIGGELDY_ENABLED'] = '1'

@@ -9,27 +9,38 @@
      actual_kernel = os.environ.get('LAB_KERNEL_NAME', None)
      if actual_kernel is None:
          raise RuntimeError(
+--- a/_static/common/helpers.py
++++ b/_static/common/helpers.py
+@@ -33,7 +33,7 @@ def is_experimental_kernel() -> bool:
+ def setup_hardware_client():
+     if in_ebrains_collaboratory():
+         setup_url = 'https://brainscales-r.kip.uni-heidelberg.de:7443/nmpi/' \
+-                    'quiggeldy_setups_experimental.csv'
++                    'quiggeldy_setupsSETUPSPLACEHOLDER.csv'
+         quiggeldy_setups = pd.read_csv(setup_url, dtype=str)
+
+         os.environ['QUIGGELDY_ENABLED'] = '1'
 --- a/tutorial.ipynb
 +++ b/tutorial.ipynb
-@@ -61,7 +61,7 @@
+@@ -63,7 +63,7 @@
      "## Executing the Notebooks\n",
      "\n",
      "If you want to execute the notebooks yourself, you can clone them from our\n",
 -    "[github repository](https://github.com/electronicvisions/brainscales2-demos/tree/jupyter-notebooks-experimental) and\n",
-+    "[github repository](https://github.com/electronicvisions/brainscales2-demos/tree/jupyter-notebooks) and\n",
++    "[github repository](https://github.com/electronicvisions/brainscales2-demos/tree/BRANCHPLACEHOLDER) and\n",
      "execute them on the [EBRAINS Platform](https://wiki.ebrains.eu).\n",
      "Simply use an existing collabatory or create a new one in which you can clone the notebooks, e.g., via:"
     ]
-@@ -74,7 +74,7 @@
+@@ -76,7 +76,7 @@
     },
     "source": [
      "```bash\n",
 -    "!git clone https://github.com/electronicvisions/brainscales2-demos.git --branch jupyter-notebooks-experimental\n",
-+    "!git clone https://github.com/electronicvisions/brainscales2-demos.git --branch jupyter-notebooks\n",
++    "!git clone https://github.com/electronicvisions/brainscales2-demos.git --branch BRANCHPLACEHOLDER\n",
      "```\n"
     ]
    },
-@@ -85,7 +85,7 @@
+@@ -87,7 +87,7 @@
     "source": [
      "in a notebook of your JupyterLab session.\n",
      "\n",
