@@ -20,4 +20,5 @@ def check_kernel():
         raise RuntimeError(
             f"EBRAINS kernel mismatch. Expected: {expected_kernel} "
             f"Actual: {actual_kernel}. Please select the "
-            "appropriate kernel.")
+            "appropriate kernel or download a new version of the "
+            "demo notebooks.")
