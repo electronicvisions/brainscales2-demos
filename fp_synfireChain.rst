@@ -203,6 +203,11 @@ This scaffold can be used to investigate the behaviour of a synfire chain and an
             return spike_collector, mem_v
 
 
+For this task, you will use the oscilloscope to visualize the membrane potential trace of the first neuron from the first excitatory population of your defined network on the BrainScaleS-2 chip.
+This is achieved by connecting its voltage to an external pad and connecting the oscilloscope to the pad.
+Our system offers two pads for the readout.
+We already set the experiment up such that the voltage is available at pad 0 (`pop1exc[[0]].record('v', device='pad_0_buffered')` from above), and connected this pad (named ``ANA0`` on the printed circuit board) to the oscilloscope for you.
+
 .. only:: jupyter
 
     Visualize data
@@ -259,6 +264,9 @@ Adjusting weights
 - Tune the weights below to obtain a synfire chain behavior as seen in the figure above.
 - Which connection is the most sensitive one?
 - What happens if you disable inhibition?
+- Visualize the membrane potential of the neuron using the oscilloscope.
+  Include a picture of the obtained pulse in your protocol.
+  *Hint*: You might find it useful to use the ``normal`` mode of the oscilloscope and assign a trigger to detect your pulse.
 - Make comments in your lab book.
 
 After executing the cells above, you can execute this cell as oft as you want.
@@ -358,7 +366,7 @@ Closing the loop
 -----------------
 
 Close the loop from the last to the first population.
-Do the neurons still fire after the software has completed?
+Visualize the resulting membrane potential on the oscilloscope. Do the neurons still fire after the software has completed? Note the change over time in the membrane potential trace, and include pictures of these changes.
 Make comments in your lab book.
 
 .. only:: Solution
