@@ -267,7 +267,8 @@ Adjusting weights
 - Visualize the membrane potential of the neuron using the oscilloscope.
   Include a picture of the obtained pulse in your protocol.
   *Hint*: You might find it useful to use the ``normal`` mode of the oscilloscope and assign a trigger to detect your pulse.
-- Make comments in your lab book.
+
+Make comments in your lab book.
 
 After executing the cells above, you can execute this cell as oft as you want.
 
@@ -319,8 +320,10 @@ Adjusting the number of neurons per population
 ----------------------------------------------
 
 Reduce the number of neurons in each population and use the free neurons to increase the chain size.
-Which hardware feature limits the minimal number of neurons in each population?
-What is the maximal chain length that you can produce?
+
+- Which hardware feature limits the minimal number of neurons in each population?
+- What is the maximal chain length that you can produce?
+
 Make comments in your lab book.
 
 .. only:: not Solution
@@ -366,7 +369,10 @@ Closing the loop
 -----------------
 
 Close the loop from the last to the first population.
-Visualize the resulting membrane potential on the oscilloscope. Do the neurons still fire after the software has completed? Note the change over time in the membrane potential trace, and include pictures of these changes.
+
+- Visualize the membrane potential on the oscilloscope. Do the neurons still fire after the software has completed?
+- Note the change over time in the membrane potential trace, and include pictures of these changes.
+
 Make comments in your lab book.
 
 .. only:: Solution
