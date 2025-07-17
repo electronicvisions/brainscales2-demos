@@ -231,7 +231,7 @@ a hardware calibration which might take a long time.
                 self.linear_h.weight.data = w.repeat(1, input_repetitions)
 
             # Hidden layer
-            self.lif_h = hxsnn.Neuron(
+            self.lif_h = hxsnn.LIF(
                 n_hidden,
                 experiment=self.experiment,
                 tau_mem=tau_mem,
@@ -254,7 +254,7 @@ a hardware calibration which might take a long time.
                     weight_transforms.linear_saturating, scale=weight_scale))
 
             # Readout layer
-            self.li_readout = hxsnn.ReadoutNeuron(
+            self.li_readout = hxsnn.LI(
                 n_out,
                 experiment=self.experiment,
                 tau_mem=tau_mem,
@@ -283,7 +283,7 @@ a hardware calibration which might take a long time.
         def forward(self, spikes: torch.Tensor) -> torch.Tensor:
             """
             Perform a forward path.
-            :param spikes: NeuronHandle holding spikes as input.
+            :param spikes: LIFObservables holding spikes as input.
             :return: Returns the output of the network, i.e. membrane traces of the
             readout neurons.
             """
@@ -292,7 +292,7 @@ a hardware calibration which might take a long time.
             # Increase synapse strength by repeating each input
             spikes = spikes.repeat(1, 1, self.input_repetitions)
             # Spike input handle
-            spikes_handle = hxsnn.NeuronHandle(spikes)
+            spikes_handle = hxsnn.LIFObservables(spikes=spikes)
 
             # Forward
             c_h = self.linear_h(spikes_handle)
@@ -768,14 +768,14 @@ gradients which are used in the part above.
 
 To ensure appropriate backpropagation of the terms in the EventProp
 equations between layers one has to provide two functions handling
-the computation and propagation of gradients, one for ``Neuron`` layer
+the computation and propagation of gradients, one for ``LIF`` layer
 and one for the ``Synapse`` layer.
 
 .. code:: ipython3
 
     from typing import NamedTuple, Optional
 
-    class EventPropNeuronFunction(torch.autograd.Function):
+    class EventPropLIFFunction(torch.autograd.Function):
         """
         Gradient estimation with time-discretized EventProp using explicit Euler integration.
         """
@@ -915,14 +915,14 @@ and one for the ``Synapse`` layer.
 
     class EventPropSynapseFunction(torch.autograd.Function):
         """
-        Synapse function for proper gradient transport when using EventPropNeuron.
+        Synapse function for proper gradient transport when using EventPropLIF.
         """
         @staticmethod
         def forward(ctx, input: torch.Tensor, weight: torch.Tensor,
                     _: torch.Tensor = None
                     ) -> Tuple[torch.Tensor, torch.Tensor]:
             """
-            This should be used in combination with EventPropNeuron. Multiply input
+            This should be used in combination with EventPropLIF. Multiply input
             with weight and use a stacked output in order to be able to return two
             tensors (separate terms in EventProp algorithm), one for previous layer
             and the other one for weights.
@@ -943,7 +943,7 @@ and one for the ``Synapse`` layer.
                     ) -> Tuple[Optional[torch.Tensor],
                                 Optional[torch.Tensor]]:
             """
-            Split gradient_output coming from EventPropNeuron and return
+            Split gradient_output coming from EventPropLIF and return
             weight * (lambda_v - lambda_i) as input gradient and
             - tau_s * lambda_i * input (i.e. - tau_s * lambda_i at spiketimes)
             as weight gradient.
@@ -967,16 +967,17 @@ and one for the ``Synapse`` layer.
 
 
     class EventPropSynapse(hxsnn.Synapse):
-        def forward_func(self, input: hxsnn.NeuronHandle) -> hxsnn.SynapseHandle:
+        def forward_func(self, input: hxsnn.LIFObservables) -> hxsnn.SynapseHandle:
             return hxsnn.SynapseHandle(
-                EventPropSynapseFunction.apply(input.spikes, self.weight))
+                graded_spikes=EventPropSynapseFunction.apply(
+                    input.spikes, self.weight))
 
 
-    class EventPropNeuron(hxsnn.Neuron):
+    class EventPropLIF(hxsnn.LIF):
         def forward_func(self, input: hxsnn.SynapseHandle,
                         hw_data: Optional[Tuple[torch.Tensor]] = None) \
-                -> hxsnn.NeuronHandle:
-            return hxsnn.NeuronHandle(*F.EventPropNeuronFunction.apply(
+                -> hxsnn.LIFObservables:
+            spikes, membrane_cadc, current = F.EventPropLIFFunction.apply(
                 input.graded_spikes,
                 self.leak.model_value,
                 self.reset.model_value,
@@ -984,7 +985,9 @@ and one for the ``Synapse`` layer.
                 self.tau_syn.model_value,
                 self.tau_mem.model_value,
                 hw_data,
-                self.experiment.dt))
+                self.experiment.dt)
+            return hxsnn.LIFObservables(
+                spikes=spikes, membrane_cadc=membrane_cadc, current=current)
 
 .. code:: ipython3
 
@@ -1004,7 +1007,7 @@ and one for the ``Synapse`` layer.
             # Hidden layer
             # trace information is not used in EventProp ->  disable cadc recording
             # of hidden layer
-            self.lif_h = EventPropNeuron(
+            self.lif_h = EventPropLIF(
                 self.n_hidden,
                 experiment=self.experiment,
                 tau_mem=self.tau_mem,

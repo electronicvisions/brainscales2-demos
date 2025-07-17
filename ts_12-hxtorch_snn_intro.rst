@@ -24,9 +24,9 @@ In this tutorial we will explore the ``hxtorch.snn`` framework used to train net
 Emulate a network on BSS-2
 --------------------------
 
-To start, we create a small network with a single spiking leak-integrate and fire (LIF) ``Neuron``, receiving inputs through a linear ``Synapse`` layer.
+To start, we create a small network with a single spiking leak-integrate and fire (LIF) ``LIF``, receiving inputs through a linear ``Synapse`` layer.
 Network layers in ``hxtorch`` are derived from a parent class ``HXModule`` (similar to ``torch.nn.Module`` in PyTorch), requiring an instance of ``Experiment`` which keeps track of all network layers to be run within the same experiment on BSS-2.
-While ``Neuron``\ s can be parameterized individually, we keep the default parameters for now.
+While ``LIF``\ s can be parameterized individually, we keep the default parameters for now.
 
 Next we create some input spikes and emulate the network.
 The membrane potential of the LIF is measured using the columnar ADC (CADC) and the membrane (MADC).
@@ -51,7 +51,7 @@ Note that in ``hxtorch`` the returned hardware data is mapped to a dense time gr
         in_features=1,
         out_features=1,
         experiment=exp)
-    lif = hxsnn.Neuron(
+    lif = hxsnn.LIF(
         size=1,
         experiment=exp,
         enable_cadc_recording=True,
@@ -68,7 +68,7 @@ Note that in ``hxtorch`` the returned hardware data is mapped to a dense time gr
     inputs[[10, 15, 20, 30]] = 1  # in dt
 
     # Forward
-    g = syn(hxsnn.NeuronHandle(inputs))
+    g = syn(hxsnn.LIFObservables(spikes=inputs))
     z = lif(g)
 
     print(z.spikes, z.membrane_cadc)
@@ -102,10 +102,10 @@ Simulation is enabled by setting ``mock=True`` in the ``Experiment`` instance:
     # Modules
     syn = hxsnn.Synapse(1, 1, exp)
     syn.weight.data.fill_(50)  # weights are between -63 to 63
-    lif = hxsnn.Neuron(1, exp)
+    lif = hxsnn.LIF(1, exp)
 
     # Forward
-    g = syn(hxsnn.NeuronHandle(inputs))
+    g = syn(hxsnn.LIFObservables(spikes=inputs))
     z = lif(g)
 
     # Simulate
@@ -130,7 +130,7 @@ The second scaling is the scaling between the weights used in the sofware model 
 
 First we want to align the membrane ranges.
 For this, we assume ``leak=0``, ``reset=0`` and ``threshold=1`` for the LIF neuron in the numerics.
-``Neuron``\ s can be parameterized with different values for the ``model`` in software which is used for gradient computation and the neuron on ``hardware`` using a ``MixedHXModelParameter``:
+``LIF``\ s can be parameterized with different values for the ``model`` in software which is used for gradient computation and the neuron on ``hardware`` using a ``MixedHXModelParameter``:
 
 .. code:: ipython3
 
@@ -169,7 +169,7 @@ For this, we assume ``leak=0``, ``reset=0`` and ``threshold=1`` for the LIF neur
                 out_features=1,
                 experiment=exp,
                 transform=partial(linear_saturating, scale=weight_scale))
-            lif = hxsnn.Neuron(
+            lif = hxsnn.LIF(
                 size=1,
                 experiment=exp,
                 leak=hxsnn.MixedHXModelParameter(model_leak, bss2_leak),
@@ -180,7 +180,7 @@ For this, we assume ``leak=0``, ``reset=0`` and ``threshold=1`` for the LIF neur
                 trace_scale=trace_scale)
             syn.weight.data.fill_(1.)
             # Forward
-            g = syn(hxsnn.NeuronHandle(inputs))
+            g = syn(hxsnn.LIFObservables(spikes=inputs))
             z = lif(g)
             hxsnn.run(exp, 50)  # dt
             traces.append(z.membrane_cadc.detach().numpy().reshape(-1))
@@ -232,7 +232,7 @@ Training networks on BSS-2 using ``hxtorch.snn`` works the same as for plain PyT
 Its easy… sometimes.
 
 In the remainder of this demo we will train a non-spiking leak-integrator (LI) output neuron to resemble a target trace.
-LI neuron layers are created by using ``ReadoutNeurons``.
+LI neuron layers are created by using ``LIs``.
 
 As the target pattern we use a sine:
 
@@ -272,7 +272,7 @@ As the target pattern we use a sine:
 
     lin1 = hxsnn.Synapse(128, 3, exp, transform=partial(
                 linear_saturating, scale=55))
-    li = hxsnn.ReadoutNeuron(
+    li = hxsnn.LI(
         3,
         exp,
         tau_mem=10e-6,
@@ -297,7 +297,7 @@ As the target pattern we use a sine:
         optimizer.zero_grad()
 
         # Forward
-        g = lin1(hxsnn.NeuronHandle(inputs))
+        g = lin1(hxsnn.LIFObservables(spikes=inputs))
         y = li(g)
 
         # Run on BSS-2

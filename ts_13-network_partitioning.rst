@@ -282,9 +282,9 @@ This approach prevents weight over-saturation and helps maintain consistency bet
             self.weight_exp_rolloff = weight_exp_rolloff
             self.use_quantization = use_quantization
 
-        def forward_func(self, inputs: hxsnn.NeuronHandle) -> hxsnn.SynapseHandle:
+        def forward_func(self, inputs: hxsnn.LIFObservables) -> hxsnn.SynapseHandle:
             return hxsnn.SynapseHandle(
-                F.linear_exponential_clamp(
+                graded_spikes=F.linear_exponential_clamp(
                     inputs.spikes, self.weight, cap=self.cap, start_weight=self.weight_exp_rolloff,
                     quantize=self.use_quantization))
 
@@ -367,7 +367,7 @@ This approach prevents weight over-saturation and helps maintain consistency bet
                 self.linear_hidden.append(linear)
                 setattr(self, f"linear_hidden_{i}", linear)
 
-                neuron = hxsnn.Neuron(
+                neuron = hxsnn.LIF(
                     size=64,
                     **lif_params,
                     experiment=self.exp,
@@ -400,7 +400,7 @@ This approach prevents weight over-saturation and helps maintain consistency bet
                 self.linear_output.append(linear)
                 setattr(self, f"linear_output_{i}", linear)
 
-            self.neuron_output = hxsnn.ReadoutNeuron(
+            self.neuron_output = hxsnn.LI(
                 size=10,
                 **li_params,
                 experiment=self.exp,
@@ -431,7 +431,7 @@ This approach prevents weight over-saturation and helps maintain consistency bet
             """
             Perform a forward path.
 
-            :param spikes: NeuronHandle holding spikes as input.
+            :param spikes: LIFObservables holding spikes as input.
 
             :return: Returns the output of the network, i.e. membrane traces of
                 the readout neurons.
@@ -442,15 +442,15 @@ This approach prevents weight over-saturation and helps maintain consistency bet
 
             # Spike input
             inputs = spikes.view(spikes.shape[0], spikes.shape[1], -1)
-            
+
             # Input -> hidden
-            g1 = self.linear_hidden_0(hxsnn.NeuronHandle(inputs))
+            g1 = self.linear_hidden_0(hxsnn.LIFObservables(spikes=inputs))
             s1 = self.neuron_hidden_0(g1)
-            g2 = self.linear_hidden_1(hxsnn.NeuronHandle(inputs))
+            g2 = self.linear_hidden_1(hxsnn.LIFObservables(spikes=inputs))
             s2 = self.neuron_hidden_1(g2)
-            g3 = self.linear_hidden_2(hxsnn.NeuronHandle(inputs))
+            g3 = self.linear_hidden_2(hxsnn.LIFObservables(spikes=inputs))
             s3 = self.neuron_hidden_2(g3)
-            g4 = self.linear_hidden_3(hxsnn.NeuronHandle(inputs))
+            g4 = self.linear_hidden_3(hxsnn.LIFObservables(spikes=inputs))
             s4 = self.neuron_hidden_3(g4)
 
             # Hidden -> output
