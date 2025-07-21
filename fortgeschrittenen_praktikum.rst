@@ -52,7 +52,7 @@ In addition to the technical aspects, this course aims to provide the necessary 
 
     There are further experiments that are not part of the usual course, but can be both very instructive and helpful in case you want to do a long/short report.
     These experiments include working on the calibration, studying the synaptic input, dealing with more complex neuron models, and training neural networks.
-    If you are interested, you can have a look online at the `Electronic Visions github page <https://github.com/electronicvisions/brainscales2-demos/tree/jupyter-notebooks>`_.
+    If you are interested, you can have a look online at the `Electronic Visions github page <https://github.com/electronicvisions/brainscales2-demos/tree/jupyter-notebooks-fp_0>`_.
 
 .. only:: not html
 
