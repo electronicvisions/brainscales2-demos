@@ -24,7 +24,7 @@ def measure_voltage(
 
     # connect DAC to chip, set voltage on DAC
     # pylint: disable=no-member
-    init = sta.ExperimentInit()
+    init = sta.ExperimentInit(connection.get_hwdb_entry())
     init.asic_adapter_board.shift_register\
         .select_analog_readout_mux_1_input = \
         hal.ShiftRegister.AnalogReadoutMux1Input.readout_chain_0
