@@ -696,8 +696,7 @@ More specifically, we...
 .. code:: ipython3
 
     # download latest calibration
-    save_nightly_calibration(
-        filename="correlation_calix-native.pkl", source_folder="latest-weekly")
+    save_nightly_calibration(filename="correlation_calix-native.pkl")
 
     # load calibration
     with open("correlation_calix-native.pkl", "rb") as calibfile:

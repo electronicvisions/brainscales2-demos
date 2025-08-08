@@ -123,7 +123,7 @@ def save_nightly_calibration(filename: str = 'spiking_cocolist.pbin',
             version = "experimental" if is_experimental_kernel() else "stable"
             source_folder = f"ebrains-{version}"
         else:
-            source_folder = "latest"
+            source_folder = "latest-weekly"
 
     if in_ebrains_collaboratory():
         with hxcomm.ManagedConnection() as connection:
