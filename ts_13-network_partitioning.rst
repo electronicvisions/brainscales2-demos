@@ -486,7 +486,7 @@ This approach prevents weight over-saturation and helps maintain consistency bet
             :returns: Firing rate per neuron and input image for all spiking
                 neurons in the network.
             """
-            rate = torch.tensor(0.)
+            rate = torch.tensor(0., device=self.device)
             batch_size = self.spikes[0].shape[1]
             for spikes in self.spikes:
                 rate += spikes.sum() / batch_size / self.hidden_size

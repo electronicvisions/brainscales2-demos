@@ -977,13 +977,14 @@ and one for the ``Synapse`` layer.
         def forward_func(self, input: hxsnn.SynapseHandle,
                         hw_data: Optional[Tuple[torch.Tensor]] = None) \
                 -> hxsnn.LIFObservables:
+            dev = input.graded_spikes.device
             spikes, membrane_cadc, current = F.EventPropLIFFunction.apply(
                 input.graded_spikes,
-                self.leak.model_value,
-                self.reset.model_value,
-                self.threshold.model_value,
-                self.tau_syn.model_value,
-                self.tau_mem.model_value,
+                torch.as_tensor(self.leak.model_value, device=dev),
+                torch.as_tensor(self.reset.model_value, device=dev),
+                torch.as_tensor(self.threshold.model_value, device=dev),
+                torch.as_tensor(self.tau_syn.model_value, device=dev),
+                torch.as_tensor(self.tau_mem.model_value, device=dev),
                 hw_data,
                 self.experiment.dt)
             return hxsnn.LIFObservables(
