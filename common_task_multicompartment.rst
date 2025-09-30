@@ -57,7 +57,7 @@ We continue by importing several Python packages, which we need to perform our e
 
     import pynn_brainscales.brainscales2 as pynn
     from pynn_brainscales.brainscales2.morphology import create_mc_neuron, \
-        Compartment, SharedLineConnection
+        PlacedCompartment, SharedLineConnection
 
 .. include:: common_nightly_calibration.rst
 
@@ -98,10 +98,10 @@ Once we defined all compartments and connections, we can create a new neuron typ
         connect_conductance = None if n_comp == (length - 1) else \
             [(positions[1], 200)]
         compartments.append(
-            Compartment(positions=positions,
-                        label=f'comp_{n_comp}',
-                        connect_conductance=connect_conductance,
-                        connect_shared_line=connect_shared_line))
+            PlacedCompartment(positions=positions,
+                              label=f'comp_{n_comp}',
+                              connect_conductance=connect_conductance,
+                              connect_shared_line=connect_shared_line))
 
 
     # close shared line between neighboring compartments
