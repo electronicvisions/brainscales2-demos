@@ -11,7 +11,7 @@ try {
 				singularityArgs: "--overlay /containers/overlays/2021-09-27_bullseye_texlive.img"
 			],
 			moduleOptions      : [modules: ["ppu-toolchain"]],
-			testSlurmResource  : getHxTestResource(3) << [gres: "gpu"],
+			testSlurmResource  : getHxTestResource(3),
 			preTestHook        : { configureHxCubeBitfile() },
 			testOptions        : "--test-execall -j1",
 			notificationChannel: "#jenkins-trashbin",  // success is checked globally
