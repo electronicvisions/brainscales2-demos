@@ -14,7 +14,7 @@
 @@ -33,7 +33,7 @@ def is_experimental_kernel() -> bool:
  def setup_hardware_client():
      if in_ebrains_collaboratory():
-         setup_url = 'https://brainscales-r.kip.uni-heidelberg.de:7443/nmpi/' \
+         setup_url = 'https://quiggeldy.bioai.eu/nmpi/' \
 -                    'quiggeldy_setups_experimental.csv'
 +                    'quiggeldy_setupsSETUPSPLACEHOLDER.csv'
          quiggeldy_setups = pd.read_csv(setup_url, dtype=str)
