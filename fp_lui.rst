@@ -1,6 +1,9 @@
 Lu.i experiment
 ===============
 
+Overview
+~~~~~~~~
+
 To get accustomed to the concept of neuromorphic computation, you will work with *Lu.i*.
 Lu.i is an electronic neuron circuit mimicking and illustrating the basic dynamics of real, biological neurons.
 The printed circuit board (PCB) features a configurable, fully analog implementation of the leaky integrate-and-fire model and visualizes the internal state, the membrane potential, through a VU-meter-style chain of LEDs.
@@ -25,7 +28,7 @@ Neurons communicate by exchanging these spikes because multiple boards can be co
 
         Photograph of a Lu.i electronic neuron circuit, with a 2-euro coin included for scale.
 
-You may find additional information including schematics on the project's homepage, `giantaxon.org <http://giantaxon.org>`_.
+You may find additional information including schematics in the `main paper <https://doi.org/10.1016/j.tine.2025.100248>`_ and on the project's homepage, `giantaxon.org <http://giantaxon.org>`_.
 
 Exercises
 ~~~~~~~~~
@@ -77,18 +80,23 @@ The output current of this circuit is governed by the following equation:
 .. math::
     I(U) = \frac{V_\text{CC}-U}{R_\text{sense}}
 
-In the present case, :math:`R_\text{sense}` is 10 kΩ.
+In the present case, :math:`R_\text{sense}` is 10 kΩ and the supply voltage of the voltage-controlled current source :math:`V_\text{CC}` is 5V.
+Note that this supply voltage is different from that of the Lu.i. board, which is 3.3V, as indicated on its battery.
 
 Make sure that Lu.i's membrane is connected to both the oscilloscope and the current source.
 A second set of cables allows you to read out the voltage at the lower node of :math:`R_\text{sense}` at the same time such that you can calculate the voltage drop across the resistor and thus the current.
 
-- Now measure about 20 firing frequencies as a function of the voltage drop in a range from :math:`1.75V` to :math:`5V` (here referring to the absolute potential).
+- Set the leak potential at its minimum. Now measure about 20 firing frequencies as a function of the input current to Lu.i.'s membrane.
+  Make sure that the controlling voltage drop :math:`U` measured on the oscilloscope is in a range of :math:`1.75V` to :math:`5V`.
 - Plot your results.
-- Derive an equation for :math:`f_\text{theo}(\vartheta, \tau_m, R, I)`.
+- Derive an equation for :math:`f_\text{theo}(I)`.
+  Your function should depend on the chosen parametrization of the :term:`LIF` equation, namely :math:`\vartheta`, :math:`C_m`, :math:`R`, and :math:`\tau_\text{ref}`.
+  Here :math:`R` is the membrane resistance of the Lu.i. board, the inverse of the membrane conductance, and :math:`C_m` is the membrane capacitance.
   You might need to define your integration limits.
   (Hint 1: Consult equation :eq:`eq:lif` as a starting point;
   hint 2: You'll find :math:`R\cdot I > \vartheta` as a condition)
 - Fit the function to your measurements.
+  You might find it helpful to extract the membrane capacitance value from the `circuit diagram <https://github.com/giant-axon/lu.i-neuron-pcb/blob/master/README.md>`_.
 
 .. only:: Solution
 
