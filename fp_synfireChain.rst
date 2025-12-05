@@ -4,7 +4,7 @@ A simple feedforward network
 In this task we consider a so-called synfire chain, an illustration of which can be seen in the next image:
 A synfire chain is a chain of ``numb_pops`` "excitatory" populations (red), each consisting of :math:`n_\text{exc}` neurons, which are connected via excitatory connections, such that events in a prior population excite the neurons in the following population.
 So, if the first population is activated, the activity begins traveling through the chain.
-In order to stop a population from firing as soon as it has excited the next population it is also connected to an "inhibitory" population (blue) of :math:`n_\text{inh}` neurons via inhibitory synapses.
+In order to stop a population from firing as soon as it has excited the next population, it is also connected to an "inhibitory" population (blue) of :math:`n_\text{inh}` neurons via inhibitory synapses.
 This inhibitory population is excited by the spike events from the previous excitatory population.
 
 .. image:: _static/girlsday/girlsday_synfire_chain.png
@@ -261,8 +261,9 @@ Exercises
 Adjusting weights
 -----------------
 
-- Tune the weights below to obtain a synfire chain behavior as seen in the figure above.
-- Which connection is the most sensitive one?
+- Tune the weights to obtain a synfire chain behavior. Explain your strategy.
+- Explain how the visualized plot relates to the synfire chain behavior.
+- Which connection affects the synfire chain behavior the most?
 - What happens if you disable inhibition?
 - Visualize the membrane potential of the neuron using the oscilloscope.
   Include a picture of the obtained pulse in your protocol.
