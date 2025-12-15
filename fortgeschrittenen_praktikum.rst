@@ -3,7 +3,7 @@ Welcome to the Advanced Physics Lab for Physicists by the Electronic Vision(s) G
 
 .. image:: _static/fp/bss2.jpg
 
-Hello and welcome to this lab course!
+Welcome to this lab course!
 You will learn about BrainScaleS-2, a neuromorphic platform developed in Heidelberg, and gain hands-on experience with the tools required to conduct experiments on this platform.
 For that, we will familiarize you with concepts in neuromorphic computing and how they originated from neuroscience.
 We start with an overview of the biological behavior of neurons and synapses and present models from literature that are useful in neuromorphic computing.
@@ -11,7 +11,12 @@ We then introduce the BrainScaleS-2 system and the software module used to inter
 In the experiment part, you will first investigate the behavior of silicon neurons using Lu.i, an analog electronic implementation of a simple neuron model.
 Following this, you will learn how to set up and run experiments on BrainScaleS-2 and apply your knowledge in configuring a feedforward network and solving sudoku using neural networks.
 
-Throughout this course, we will use the Python programming language to interact with the neuromorphic hardware and analyze the resulting data. To guide your experiments, we provide Jupyter notebooks containing pre-written scripts. These scripts serve as starting points and will require small modifications or extensions to fulfill the tasks at hand. We will demonstrate the fundamental operations of the hardware and the necessary Python packages using clear examples, making it easy to follow along. However, a basic understanding of Python programming is highly beneficial for a smooth experience. If you’re unfamiliar with Python, we recommend starting with the introductory tutorial provided here:
+Throughout this course, we will use the Python programming language to interact with the neuromorphic hardware and analyze the resulting data.
+To guide your experiments, we provide Jupyter notebooks containing pre-written scripts.
+These scripts serve as starting points and will require small modifications or extensions to fulfill the tasks at hand.
+We will demonstrate the fundamental operations of the hardware and the necessary Python packages using clear examples, making it easy to follow along.
+However, a basic understanding of Python programming is highly beneficial for a smooth experience.
+If you’re unfamiliar with Python, we recommend starting with the introductory tutorial provided here:
 http://www.physi.uni-heidelberg.de/Einrichtungen/AP/Python.php.
 
 In addition to the technical aspects, this course aims to provide the necessary neuroscientific background for the lab. Nonetheless, consulting some of the referenced literature is highly recommended. For example, `Gerstner (2014) <https://courses.edx.org/c4x/EPFLx/BIO465x/asset/nd_ch1.pdf>`_ offers a comprehensive overview of various neuron models, including the leaky integrate-and-fire model that you will use in this experiment. Additionally, we encourage you to read the following material before you start the lab course to ensure you are well-prepared.
@@ -38,7 +43,7 @@ In addition to the technical aspects, this course aims to provide the necessary 
      .. toctree::
         :maxdepth: 0
         :titlesonly:
-     
+
         fp_calibration.rst
         fp_synapticInput.rst
         fp_adex_complex_dynamics.rst
