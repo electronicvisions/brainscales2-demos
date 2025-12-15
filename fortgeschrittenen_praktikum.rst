@@ -84,6 +84,7 @@ If you are curious and want to learn more about the kind of work that has been d
 * `Spiking neuromorphic chip learns entangled quantum states <https://arxiv.org/abs/2008.01039>`_
 * `Structural plasticity on an accelerated analog neuromorphic hardware system <https://www.sciencedirect.com/science/article/pii/S0893608020303555>`_
 * `Emulating dendritic computing paradigms on analog neuromorphic hardware <https://www.sciencedirect.com/science/article/pii/S0306452221004218>`_
+* `The BrainScaleS-2 multi-chip system: Interconnecting continuous-time neuromorphic compute substrates <https://doi.org/10.48550/arXiv.2512.03781>`_
 
 Glossary
 ~~~~~~~~
