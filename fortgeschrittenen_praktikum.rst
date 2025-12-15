@@ -90,11 +90,20 @@ Glossary
 
 .. glossary::
 
+    LIF
+        Leaky integrate-and-fire.
+
+    AdEx
+        Adaptive exponential integrate-and-fire.
+
     ADC
         Analog-to-digital converter.
 
     DAC
         Digital-to-analog converter.
+
+    CADC
+        Column-wise analog-to-digital converter.
 
     ASIC
         Application-specific integrated circuit.
@@ -125,3 +134,6 @@ Glossary
 
     ANN
         Artificial neural network.
+
+    SNN
+        Spiking neural network.
