@@ -58,6 +58,12 @@ We start with a leaky integrator (a neuron that does not elicit action potential
 Next, we enable the spiking mechanism and see how the different parameters influence the firing behavior of the neuron.
 Apart from the LIF neuron, this tutorial also shows how we define experiments for the BrainScaleS-2 system and how its parameters relate to the parameters of the model.
 
+3. The Exponential Leaky-Integrate-and-Fire Neuron Model
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+In this notebook, we introduce an exponential term to our LIF model.
+In a so-called strength-duration curve, we illustrate how the strength and duration of a step current influence the spiking behavior of our neuron model.
+
 
 Table of Contents
 ^^^^^^^^^^^^^^^^^
@@ -66,3 +72,4 @@ Table of Contents
    :maxdepth: 1
 
    cns_01_lif_parameters
+   cns_03_exponential_lif
