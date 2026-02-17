@@ -58,6 +58,14 @@ We start with a leaky integrator (a neuron that does not elicit action potential
 Next, we enable the spiking mechanism and see how the different parameters influence the firing behavior of the neuron.
 Apart from the LIF neuron, this tutorial also shows how we define experiments for the BrainScaleS-2 system and how its parameters relate to the parameters of the model.
 
+2. Spiking Characteristics of Leaky Integrate-and-Fire Models
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+In this tutorial, we investigate the firing dynamics of neurons following the LIF model under constant current injection.
+We use a graphical representation, the frequency-current (f-I) curve to visualize these characteristics.
+We also study the effect of different parameters on these characteristics.
+Such graphical representations provide insights into the neurons' encoding behavior.
+
 3. The Exponential Leaky-Integrate-and-Fire Neuron Model
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
@@ -72,4 +80,5 @@ Table of Contents
    :maxdepth: 1
 
    cns_01_lif_parameters
+   cns_02_lif_fIcurve
    cns_03_exponential_lif
