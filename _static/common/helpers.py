@@ -63,7 +63,7 @@ def setup_hardware_client():
                         "available or slurm in reach)")
 
     with hxcomm.ManagedConnection() as connection:
-        identifier = connection.get_unique_identifier()
+        identifier = connection.get_unique_identifier()[0]
 
     logger.INFO(f'Connection to {identifier} established')
 
@@ -79,7 +79,7 @@ def get_nightly_calibration(filename='spiking_cocolist.pbin'):
     '''
     if in_ebrains_collaboratory():
         with hxcomm.ManagedConnection() as connection:
-            identifier = connection.get_unique_identifier()
+            identifier = connection.get_unique_identifier()[0]
 
         # download calibration file
         version = "experimental" if is_experimental_kernel() else "stable"
@@ -127,7 +127,7 @@ def save_nightly_calibration(filename: str = 'spiking_cocolist.pbin',
 
     if in_ebrains_collaboratory():
         with hxcomm.ManagedConnection() as connection:
-            identifier = connection.get_unique_identifier()
+            identifier = connection.get_unique_identifier()[0]
 
         download_url = \
             "https://openproject.bioai.eu/data_calibration/" \
