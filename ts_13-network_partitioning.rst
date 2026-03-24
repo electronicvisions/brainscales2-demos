@@ -359,9 +359,7 @@ This approach prevents weight over-saturation and helps maintain consistency bet
                     cap=1. if mock else 63. / weight_scale_hidden,
                     weight_exp_rolloff=weight_exp_rolloff,
                     use_quantization=use_quantization,
-                    transform=partial(
-                        weight_transforms.linear_saturating,
-                        scale=weight_scale_hidden))
+                    weight_scale=weight_scale_hidden)
                 self.linear_hidden.append(linear)
                 setattr(self, f"linear_hidden_{i}", linear)
 
@@ -389,9 +387,7 @@ This approach prevents weight over-saturation and helps maintain consistency bet
                     cap=1. if mock else 63. / weight_scale_output,
                     weight_exp_rolloff=weight_exp_rolloff,
                     use_quantization=use_quantization,
-                    transform=partial(
-                        weight_transforms.linear_saturating,
-                        scale=weight_scale_output))
+                    weight_scale=weight_scale_output)
                 self.linear_output.append(linear)
                 setattr(self, f"linear_output_{i}", linear)
 

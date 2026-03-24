@@ -135,12 +135,10 @@ a hardware calibration which might take a long time.
 
 .. code:: ipython3
 
-    from functools import partial
     import hxtorch
     import hxtorch.snn as hxsnn
     import hxtorch.snn.functional as F
     from hxtorch.core.utils import calib_helper
-    from hxtorch.snn.transforms import weight_transforms
     from dlens_vx_v3 import halco
 
     log = hxtorch.logger.get("grenade.backend")
@@ -222,8 +220,7 @@ a hardware calibration which might take a long time.
                 n_in * input_repetitions,
                 n_hidden,
                 experiment=self.experiment,
-                transform=partial(
-                    weight_transforms.linear_saturating, scale=weight_scale))
+                weight_scale=self.weight_scale)
 
             # Initialize weights
             if weight_init_hidden:
@@ -251,8 +248,7 @@ a hardware calibration which might take a long time.
                 n_hidden,
                 n_out,
                 experiment=self.experiment,
-                transform=partial(
-                    weight_transforms.linear_saturating, scale=weight_scale))
+                weight_scale=self.weight_scale)
 
             # Readout layer
             self.li_readout = hxsnn.LI(
@@ -1067,9 +1063,7 @@ and one for the ``Synapse`` layer.
                 self.n_in * self.input_repetitions,
                 self.n_hidden,
                 experiment=self.experiment,
-                transform=partial(
-                    weight_transforms.linear_saturating, scale=self.weight_scale))
-
+                weight_scale=self.weight_scale)
             # Initialize weights
             if weight_init_hidden:
                 w = torch.zeros(n_hidden, n_in)
@@ -1099,8 +1093,7 @@ and one for the ``Synapse`` layer.
                 n_hidden,
                 n_out,
                 experiment=self.experiment,
-                transform=partial(
-                    weight_transforms.linear_saturating, scale=weight_scale))
+                weight_scale=self.weight_scale)
 
             # Readout layer
             self.li_readout = hxsnn.LI(

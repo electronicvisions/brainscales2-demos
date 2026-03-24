@@ -12,7 +12,6 @@ In this tutorial we will explore the ``hxtorch.snn`` framework used to train net
 
 .. code:: ipython3
 
-    from functools import partial
     import matplotlib.pyplot as plt
     import numpy as np
 
@@ -137,8 +136,6 @@ For this, we assume ``leak=0``, ``reset=0`` and ``threshold=1`` for the LIF neur
 
 .. code:: ipython3
 
-    from hxtorch.snn.transforms.weight_transforms import linear_saturating
-
     hxtorch.init_hardware()
 
     # Model parameters
@@ -172,7 +169,7 @@ For this, we assume ``leak=0``, ``reset=0`` and ``threshold=1`` for the LIF neur
                 in_features=1,
                 out_features=1,
                 experiment=exp,
-                transform=partial(linear_saturating, scale=weight_scale))
+                weight_scale=weight_scale)
             lif = hxsnn.LIF(
                 size=1,
                 experiment=exp,
@@ -275,8 +272,7 @@ As the target pattern we use a sine:
     exp.calibration = calib_helper.fixture_calibration_from_file(
         "spiking_cocolist.pbin")
 
-    lin1 = hxsnn.Synapse(128, 3, exp, transform=partial(
-                linear_saturating, scale=55))
+    lin1 = hxsnn.Synapse(128, 3, exp, weight_scale=55)
     li = hxsnn.LI(
         3,
         exp,
