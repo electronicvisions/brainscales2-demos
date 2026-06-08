@@ -258,7 +258,8 @@
             # self.solve_sudoku(sudoku, runtime, num_clues, seed=seed)
     
             if grid:
-                fig = plt.figure(figsize=figsize)
+                # tight layout is incompatible with the figure axes of the sudoku, so we disable it
+                fig = plt.figure(figsize=figsize, layout='none')
     
                 grid = GridSpec(3, 8, figure=fig, wspace=1.5)
     
@@ -272,3 +273,4 @@
                 self.plot_sudoku()
                 self.plot_activities()
 
+            plt.show()
