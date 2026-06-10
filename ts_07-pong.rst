@@ -695,25 +695,24 @@ More specifically, we...
 
 .. code:: ipython3
 
-    ## download latest calibration
-    #save_nightly_calibration(filename="correlation_calix-native.pkl")
+    # download latest calibration
+    save_nightly_calibration(filename="correlation_calix-native.pkl")
 
-    ## load calibration
-    #with open("correlation_calix-native.pkl", "rb") as calibfile:
-    #    calib_result = pickle.load(calibfile)
+    # load calibration
+    with open("correlation_calix-native.pkl", "rb") as calibfile:
+        calib_result = pickle.load(calibfile)
 
-    ## The correlation voltages are set on the board and therefore
-    ## are not contained in lola.Chip(), so we inject them as a builder
+    # The correlation voltages are set on the board and therefore
+    # are not contained in lola.Chip(), so we inject them as a builder
     injected_config = pynn.InjectedConfiguration()
-    #calib_builder = sta.PlaybackProgramBuilder()
-    #calib_result.apply(calib_builder)
-    #injected_config.pre_static_config = calib_builder
+    calib_builder = sta.PlaybackProgramBuilder()
+    calib_result.apply(calib_builder)
+    injected_config.pre_static_config = calib_builder
 
-    #calib_dumper = sta.PlaybackProgramBuilderDumper()
-    #calib_result.apply(calib_dumper)
-    #calib_dumper = calib_dumper.done()
-    #calib = sta.convert_to_chip(calib_dumper, lola.Chip())
-    calib = lola.Chip()
+    calib_dumper = sta.PlaybackProgramBuilderDumper()
+    calib_result.apply(calib_dumper)
+    calib_dumper = calib_dumper.done()
+    calib = sta.convert_to_chip(calib_dumper, lola.Chip())
 
     # disable neuron readout to CADC (observe correlation instead)
     for cadc_config in calib.cadc_readout_chains:

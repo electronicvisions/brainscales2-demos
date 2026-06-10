@@ -210,9 +210,9 @@ a hardware calibration which might take a long time.
             # To avoid time-consuming implicit calibration from given parameters
             # we load a prepared calibration. Note, that changing "Neuron"
             # hardware parameters become ineffective
-            #save_nightly_calibration('spiking2_calix-native.pkl')
-            #experiment.calibration = calib_helper.fixture_calibration_from_file(
-            #    "spiking2_calix-native.pkl")
+            save_nightly_calibration('spiking2_cocolist.pbin')
+            self.experiment.calibration = calib_helper.fixture_calibration_from_file(
+                "spiking2_cocolist.pbin")
 
             # Repeat input
             self.input_repetitions = input_repetitions
@@ -1055,9 +1055,9 @@ and one for the ``Synapse`` layer.
             # To avoid time-consuming implicit calibration from given parameters
             # we load a prepared calibration. Note, that changing "Neuron"
             # hardware parameters become ineffective
-            #save_nightly_calibration('spiking2_calix-native.pkl')
-            #experiment.calibration = calib_helper.fixture_calibration_from_file(
-            #    "spiking2_calix-native.pkl")
+            save_nightly_calibration('spiking2_cocolist.pbin')
+            self.experiment.calibration = calib_helper.fixture_calibration_from_file(
+                "spiking2_cocolist.pbin")
 
             # Repeat input
             self.input_repetitions = input_repetitions
