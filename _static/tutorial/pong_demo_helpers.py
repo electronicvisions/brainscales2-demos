@@ -18,7 +18,8 @@ import matplotlib
 from mpl_toolkits.axes_grid1 import make_axes_locatable
 
 import pynn_brainscales.brainscales2 as pynn
-
+from pygrenade_vx.network.abstract.reverse_mapping import \
+    get_locally_placed_neuron_coordinates
 from dlens_vx_v3 import hal
 
 
@@ -867,15 +868,17 @@ class PongGame:
         pop_init = pynn.Population(
             1, pynn.cells.SpikeSourceArray(spike_times=[]))
 
+        pynn.run(None, command=pynn.RunCommand.PREPARE)
+
         synapses_right = pynn.standardmodels.synapses.PlasticSynapse(
             plasticity_rule=InferenceReadoutRule(
                 timer=inference_readout_timer,
                 neuron_ids=np.array([
-                    int(pynn.simulator.state.neuron_placement
-                        .id2logicalneuron(index)
-                        .get_atomic_neurons()[0].toEnum())
-                    for index in range(pop_output_right.first_id,
-                                       pop_output_right.last_id + 1)]),
+                    int(coord.get_atomic_neurons()[0].toEnum())
+                    for coord in get_locally_placed_neuron_coordinates(
+                        pop_output_right.grenade_descriptor,
+                        pynn.simulator.state.grenade_experiment
+                        .snippets[-1].mapped_topology)]),
                 same_id=0),
             weight=learned_weights)
         pynn.Projection(
@@ -891,11 +894,11 @@ class PongGame:
             plasticity_rule=InferenceReadoutRule(
                 timer=inference_readout_timer,
                 neuron_ids=np.array([
-                    int(pynn.simulator.state.neuron_placement
-                        .id2logicalneuron(index)
-                        .get_atomic_neurons()[0].toEnum())
-                    for index in range(pop_output_left.first_id,
-                                       pop_output_left.last_id + 1)]),
+                    int(coord.get_atomic_neurons()[0].toEnum())
+                    for coord in get_locally_placed_neuron_coordinates(
+                        pop_output_left.grenade_descriptor,
+                        pynn.simulator.state.grenade_experiment
+                        .snippets[-1].mapped_topology)]),
                 same_id=1),
             weight=ideal_weights)
         pynn.Projection(

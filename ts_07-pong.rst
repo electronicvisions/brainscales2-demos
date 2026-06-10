@@ -855,8 +855,11 @@ able to observe an onset of the diagonal in the weights.
             for index, _ in enumerate(connections):
                 routing[connections[index].pop_pre_index,
                         connections[index].pop_post_index] = \
-                    np.array([placed_connections[index][0].synapse_row,
-                              placed_connections[index][0].synapse_on_row])
+                    np.array([halco.SynapseRowOnDLS(
+                                placed_connections[index][0].toSynapseOnSynram()
+                                .toSynapseRowOnSynram(),
+                                placed_connections[index][0].toSynramOnDLS()),
+                              placed_connections[index][0].toSynapseOnSynapseRow()])
 
         post_realtime_reads = pynn.get_post_realtime_read()
         weights = post_realtime_reads[halco.SynramOnDLS()].weights.to_numpy()

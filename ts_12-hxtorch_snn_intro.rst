@@ -19,6 +19,8 @@ In this tutorial we will explore the ``hxtorch.snn`` framework used to train net
     import torch
     import hxtorch
     import hxtorch.snn as hxsnn
+    from hxtorch.core.utils import calib_helper
+    from hxtorch.snn.transforms import weight_transforms
 
 
 Emulate a network on BSS-2
@@ -44,7 +46,8 @@ Note that in ``hxtorch`` the returned hardware data is mapped to a dense time gr
     # Experiment
     exp = hxsnn.Experiment(dt=1e-6)
     # To avoid time consuming implict calibration we load a prepared calibration
-    exp.default_execution_instance.load_calib("spiking_calix-native.pkl")
+    exp.calibration = calib_helper.fixture_calibration_from_file(
+        "spiking_calix-native.pkl")
 
     # Modules
     syn = hxsnn.Synapse(
@@ -161,7 +164,8 @@ For this, we assume ``leak=0``, ``reset=0`` and ``threshold=1`` for the LIF neur
         for i in range(n_runs):
             # Experiment
             exp = hxsnn.Experiment(dt=1e-6, mock=mock)
-            exp.default_execution_instance.load_calib("spiking_calix-native.pkl")
+            exp.calibration = calib_helper.fixture_calibration_from_file(
+                "spiking_calix-native.pkl")
 
             # Modules
             syn = hxsnn.Synapse(
@@ -268,7 +272,8 @@ As the target pattern we use a sine:
     EPOCHS = 200
 
     exp = hxsnn.Experiment(mock=False)
-    exp.default_execution_instance.load_calib("spiking_calix-native.pkl")
+    exp.calibration = calib_helper.fixture_calibration_from_file(
+        "spiking_calix-native.pkl")
 
     lin1 = hxsnn.Synapse(128, 3, exp, transform=partial(
                 linear_saturating, scale=55))

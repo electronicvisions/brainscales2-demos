@@ -345,19 +345,17 @@ This approach prevents weight over-saturation and helps maintain consistency bet
             self.exp = hxsnn.Experiment(mock=mock, dt=dt)
             self.exp.inter_batch_entry_wait = 125 * 50  # 50 us
 
-            morph_hidden = hxsnn.morphology.SingleCompartmentNeuron(
+            morph_hidden = hxtorch.core.morphology.SingleCompartmentNeuron(
                 size=8, expand_horizontally=False)
 
             # Hidden Layers
             self.hidden_size = 256
             self.linear_hidden, neurons_hidden = [], []
             for i in range(4):
-                inst = hxsnn.ExecutionInstance()
                 linear = Synapse(
                     in_features=784,
                     out_features=64,
                     experiment=self.exp,
-                    execution_instance=inst,
                     cap=1. if mock else 63. / weight_scale_hidden,
                     weight_exp_rolloff=weight_exp_rolloff,
                     use_quantization=use_quantization,
@@ -371,7 +369,6 @@ This approach prevents weight over-saturation and helps maintain consistency bet
                     size=64,
                     **lif_params,
                     experiment=self.exp,
-                    execution_instance=inst,
                     trace_scale=trace_scale_hidden,
                     cadc_time_shift=trace_shift_hidden,
                     shift_cadc_to_first=True,
@@ -380,16 +377,14 @@ This approach prevents weight over-saturation and helps maintain consistency bet
                 neurons_hidden.append(neuron)
 
             # Output Layer
-            morph_out = hxsnn.morphology.SingleCompartmentNeuron(
+            morph_out = hxtorch.core.morphology.SingleCompartmentNeuron(
                 size=2, expand_horizontally = False)
 
-            inst = hxsnn.ExecutionInstance()
             self.linear_output = []
             for i in range(4):
                 linear = Synapse(
                     in_features=64,
                     out_features=10,
-                    execution_instance=inst,
                     experiment=self.exp,
                     cap=1. if mock else 63. / weight_scale_output,
                     weight_exp_rolloff=weight_exp_rolloff,
@@ -404,7 +399,6 @@ This approach prevents weight over-saturation and helps maintain consistency bet
                 size=10,
                 **li_params,
                 experiment=self.exp,
-                execution_instance=inst,
                 trace_scale=trace_scale_output,
                 cadc_time_shift=trace_shift_out,
                 shift_cadc_to_first=True,
@@ -736,21 +730,21 @@ The calibration might take a while so feel free to read on until it is finished.
         # Measure weight scaling SW - HW weight
         weight_scale_hidden = get_weight_scaling(
             lif_params, weight_step=10,
-            neuron_structure=hxsnn.morphology.SingleCompartmentNeuron(
+            neuron_structure=hxtorch.core.morphology.SingleCompartmentNeuron(
                 size=8, expand_horizontally=False))
         weight_scale_output = get_weight_scaling(
             lif_params, weight_step=10,
-            neuron_structure=hxsnn.morphology.SingleCompartmentNeuron(
+            neuron_structure=hxtorch.core.morphology.SingleCompartmentNeuron(
                 size=2, expand_horizontally=False))
         print(f"Weight scale hidden {weight_scale_hidden}, "
             + f"weight scale out {weight_scale_output}.")
 
         # Measure trace scaling SW - HW
         trace_scale_hidden = get_trace_scaling(
-            lif_params, neuron_structure=hxsnn.morphology.SingleCompartmentNeuron(
+            lif_params, neuron_structure=hxtorch.core.morphology.SingleCompartmentNeuron(
                 size=8, expand_horizontally=False)).item()
         trace_scale_output = get_trace_scaling(
-            lif_params, neuron_structure=hxsnn.morphology.SingleCompartmentNeuron(
+            lif_params, neuron_structure=hxtorch.core.morphology.SingleCompartmentNeuron(
                 size=2, expand_horizontally=False)).item()
         print(f"Trace scale hidden {trace_scale_hidden}, "
             + f"trace scale out {trace_scale_output}.")

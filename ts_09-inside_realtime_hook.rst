@@ -133,9 +133,12 @@ synapses.
     for j in range(64):
         row_values = lola.SynapseWeightRow()
         for i,coordinate in enumerate(synapse_coordinates):
-            row_values.values[coordinate[0].synapse_on_row] = int(image[-i,j])
+            row_values.values[coordinate[0].toSynapseOnSynapseRow()] = int(image[-i,j])
         builder.write(hal.Timer.Value(j*int(hal.Timer.Value.fpga_clock_cycles_per_us)*10000),
-            coordinate[0].synapse_row.toSynapseWeightRowOnDLS(), row_values)
+            halco.SynapseRowOnDLS(
+                coordinate[0].toSynapseOnSynram().toSynapseRowOnSynram(),
+                coordinate[0].toSynramOnDLS()).toSynapseWeightRowOnDLS(),
+            row_values)
 
 Execution and evaluation
 ------------------------

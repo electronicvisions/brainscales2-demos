@@ -116,16 +116,17 @@ subthreshold adaptation strength.
 .. code:: ipython3
 
     import pyhalco_hicann_dls_vx_v3 as halco
+    import pylola_vx_v3 as lola
 
-    def adjust_calibration():
+    def get_initial_config():
+        config = lola.Chip()
         for i in halco.iter_all(halco.CommonNeuronBackendConfigOnDLS):
-            pynn.simulator.state.grenade_chip_config.neuron_block.backends[i].enable_clocks = True
-            pynn.simulator.state.grenade_chip_config.neuron_block.backends[i].clock_scale_fast = 3
-            pynn.simulator.state.grenade_chip_config.neuron_block.backends[i].clock_scale_slow = 3
-            pynn.simulator.state.grenade_chip_config.neuron_block.backends[i].\
-                clock_scale_adaptation_pulse = 7
-            pynn.simulator.state.grenade_chip_config.neuron_block.backends[i].\
-                clock_scale_post_pulse = 5
+            config.neuron_block.backends[i].enable_clocks = True
+            config.neuron_block.backends[i].clock_scale_fast = 3
+            config.neuron_block.backends[i].clock_scale_slow = 3
+            config.neuron_block.backends[i].clock_scale_adaptation_pulse = 7
+            config.neuron_block.backends[i].clock_scale_post_pulse = 5
+        return config
 
 .. code:: ipython3
 
@@ -135,7 +136,10 @@ subthreshold adaptation strength.
 
         target_neuron = kwargs.pop("target_neuron", 0)
 
-        pynn.setup(neuronPermutation=[target_neuron, target_neuron + 1])
+        pynn.setup(
+            neuronPermutation=[target_neuron, target_neuron + 1],
+            initial_config=get_initial_config()
+        )
 
         pop = pynn.Population(2, pynn.cells.HXNeuron())
 
@@ -182,8 +186,6 @@ subthreshold adaptation strength.
 
         pop[0:1].record(["adaptation", "spikes"])
         pop[1:2].record(["v"])
-
-        adjust_calibration()
 
         # schedule and execute hardware run
         pop[0:1].set(constant_current_enable=False)
