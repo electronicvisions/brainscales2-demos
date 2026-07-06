@@ -82,6 +82,10 @@ Next we run the network multiple times with various configurations.
             population = pynn.Population(number_of_neurons,
                                          pynn.cells.HXNeuron())
 
+            # We have to perform the mapping to BrainScaleS-2 before we
+            # can access the parameters of the neurons
+            pynn.run(None, pynn.RunCommand.PREPARE)
+
             # disable spiking
             population.set(threshold_enable=False)
 

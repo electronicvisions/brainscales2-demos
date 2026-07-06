@@ -130,6 +130,10 @@ The class functions are summarized in the following:
             '''
             pop = pynn.Population(self.length * 2, pynn.cells.HXNeuron())
 
+            # We have to perform the mapping to BrainScaleS-2 before we
+            # can access the parameters of the neurons
+            pynn.run(None, pynn.RunCommand.PREPARE)
+
             # Combine two neuron circuits to one compartment; "disable" second
             # neuron circuit
             pynn.PopulationView(pop, np.arange(0, 2 * self.length, 2)).set(
