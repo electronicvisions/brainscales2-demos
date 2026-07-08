@@ -173,7 +173,7 @@ In neuroscience, this equation, which describes a leaky integrator, is the equat
 Currently, it fulfills the requirement of integrating incoming spikes (see equation :eq:`eq:psp_stacking`), but it lacks an active part in the form of a spiking mechanism.
 For the basic model, we define a threshold value :math:`\vartheta`.
 When this value is crossed from below, an additional circuit emits a voltage spike that propagates to all connected neurons.
-At the same time, the potential of the capacitance is clamped to a defined value :math:`u_\text{reset}` and kept at this level for the *refractory period* :math:`\tau_\text{r}`.
+At the same time, the potential of the capacitance is clamped to a defined value :math:`u_\text{reset}` and kept at this level for the *refractory period* :math:`\tau_\text{ref}`.
 
 Adaptive exponential (AdEx) model
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^

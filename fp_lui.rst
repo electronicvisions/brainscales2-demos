@@ -43,7 +43,7 @@ Before you begin, connect Lu.i's membrane to the oscilloscope.
   Can you observe the membrane time constant?
   Note the impact of the individual potentiometers.
 - Connect two or multiple neurons to form a simple network and note how signals propagate across neurons, e.g., while playing with the synaptic weights and the synaptic time constant.
-- Pick a configuration where you can approximately measure :math:`\tau_\text{ref}` and the threshold :math:`\vartheta`.
+- Pick a configuration where you can approximately measure the *refractory period* :math:`\tau_\text{ref}` and the threshold :math:`\vartheta`.
   Take notes of your results and your methods of determining the individual parameters.
 
 .. note::
