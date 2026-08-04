@@ -8,7 +8,7 @@ try {
 			projects           : ["${PROJECT_NAME}"],
 			container          : [
 				app: "dls",
-				singularityArgs: "--overlay /containers/overlays/2021-09-27_bullseye_texlive.img"
+				singularityArgs: "--overlay /containers/overlays/texlive_latest"
 			],
 			moduleOptions      : [modules: ["ppu-toolchain"]],
 			testSlurmResource  : getHxTestResource(3),
