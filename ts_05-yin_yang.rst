@@ -985,7 +985,8 @@ and one for the ``Synapse`` layer.
                 hw_data,
                 self.experiment.dt)
             return hxsnn.LIFObservables(
-                spikes=spikes, membrane_cadc=membrane_cadc, current=current)
+                spikes=spikes, membrane_cadc=membrane_cadc,
+                current_sim=current)
 
 .. code:: ipython3
 
